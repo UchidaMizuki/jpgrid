@@ -60,8 +60,8 @@ XY_to_mesh <- function(X, Y, size) {
         code_X_500m <- floor(X)
         X <- X - code_X_500m
 
-        code_500m <- code_YX_to_2x2(code_Y = code_Y_500m,
-                                    code_X = code_X_500m)
+        code_500m <- code_XY_to_2x2(code_X = code_X_500m,
+                                    code_Y = code_Y_500m)
 
         if (size == "500m") {
           mesh(code_Y_80km = code_Y_80km,
@@ -85,8 +85,8 @@ XY_to_mesh <- function(X, Y, size) {
           code_X_250m <- floor(X)
           X <- X - code_X_250m
 
-          code_250m <- code_YX_to_2x2(code_Y = code_Y_250m,
-                                      code_X = code_X_250m)
+          code_250m <- code_XY_to_2x2(code_X = code_X_250m,
+                                      code_Y = code_Y_250m)
 
           if (size == "250m") {
             mesh(code_Y_80km = code_Y_80km,
@@ -105,8 +105,8 @@ XY_to_mesh <- function(X, Y, size) {
           } else {
             code_Y_125m <- floor(Y * 2)
             code_X_125m <- floor(X * 2)
-            code_125m <- code_YX_to_2x2(code_Y = code_Y_125m,
-                                        code_X = code_X_125m)
+            code_125m <- code_XY_to_2x2(code_X = code_X_125m,
+                                        code_Y = code_Y_125m)
 
             mesh(code_Y_80km = code_Y_80km,
                  code_X_80km = code_X_80km,
@@ -144,11 +144,4 @@ XY_to_mesh <- function(X, Y, size) {
       }
     }
   }
-}
-
-code_YX_to_2x2 <- function(code_Y, code_X) {
-  dplyr::case_when(code_Y == 0 & code_X == 0 ~ 1L,
-                   code_Y == 0 & code_X == 1 ~ 2L,
-                   code_Y == 1 & code_X == 0 ~ 3L,
-                   code_Y == 1 & code_X == 1 ~ 4L)
 }

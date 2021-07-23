@@ -43,12 +43,11 @@ mesh <- function(code_Y_80km = integer(),
                             code_X_100m = code_X_100m) %>%
     as_list_of(.ptype = integer())
 
-  if (is_mesh_100m) {
+  if (is_mesh_100m || !is_null(size) && size == "100m") {
     res$code_500m <- dplyr::case_when(res$code_Y_100m %in% 0:4 & res$code_X_100m %in% 0:4 ~ 1L,
                                       res$code_Y_100m %in% 0:4 & res$code_X_100m %in% 5:9 ~ 2L,
                                       res$code_Y_100m %in% 5:9 & res$code_X_100m %in% 0:4 ~ 3L,
                                       res$code_Y_100m %in% 5:9 & res$code_X_100m %in% 5:9 ~ 4L)
-
   }
 
   if (is_null(size) && any(are_na(code_Y_10km)) || !is_null(size) && size == "80km") {
@@ -56,7 +55,6 @@ mesh <- function(code_Y_80km = integer(),
 
     size <- "80km"
     res <- res[c("code_Y_80km", "code_X_80km")]
-
   } else if (is_null(size) && any(are_na(code_Y_1km)) || !is_null(size) && size == "10km") {
     stopifnot(are_na(code_Y_10km) | code_Y_10km %in% 0:7 & code_X_10km %in% 0:7)
 
@@ -66,7 +64,6 @@ mesh <- function(code_Y_80km = integer(),
       purrr::modify_at(c("code_Y_80km", "code_X_80km"),
                        purrr::partial(na_if_na,
                                       y = code_Y_10km))
-
   } else if (is_null(size) && any(are_na(code_500m)) || !is_null(size) && size == "1km") {
     stopifnot(are_na(code_Y_1km) | code_Y_1km %in% 0:9 & code_X_1km %in% 0:9)
 
@@ -78,7 +75,6 @@ mesh <- function(code_Y_80km = integer(),
                          "code_Y_10km", "code_X_10km"),
                        purrr::partial(na_if_na,
                                       y = code_Y_1km))
-
   } else if (is_null(size) && any(are_na(code_250m)) || !is_null(size) && size == "500m") {
     stopifnot(are_na(code_500m) | code_500m %in% 1:4)
 
@@ -92,7 +88,6 @@ mesh <- function(code_Y_80km = integer(),
                          "code_Y_1km", "code_X_1km"),
                        purrr::partial(na_if_na,
                                       y = code_500m))
-
   } else if (is_null(size) && any(are_na(code_125m)) || !is_null(size) && size == "250m") {
     stopifnot(are_na(code_250m) | code_250m %in% 1:4)
 
@@ -107,7 +102,6 @@ mesh <- function(code_Y_80km = integer(),
                          "code_500m"),
                        purrr::partial(na_if_na,
                                       y = code_250m))
-
   } else if (is_null(size) || !is_null(size) && size == "125m") {
     stopifnot(are_na(code_125m) | code_125m %in% 1:4)
 
@@ -122,7 +116,6 @@ mesh <- function(code_Y_80km = integer(),
                          "code_500m", "code_250m"),
                        purrr::partial(na_if_na,
                                       y = code_125m))
-
   } else if (!is_null(size) && size == "100m") {
     stopifnot(are_na(code_Y_100m) | code_Y_100m %in% 0:9 & code_X_100m %in% 0:9)
 
@@ -211,11 +204,15 @@ vec_ptype_abbr.mesh_125m <- function(x) "msh125"
 #' @export
 vec_ptype_abbr.mesh_100m <- function(x) "msh100"
 
-#' @export
-is_mesh <- function(x) inherits(x, "mesh")
+
+# as_mesh -----------------------------------------------------------------
 
 #' @export
-as_mesh <- function(x, ...) UseMethod("as_mesh")
+as_mesh <- function(x,
+                    size = NULL,
+                    ...) {
+  UseMethod("as_mesh")
+}
 #' @export
 as_mesh.default <- function(x,
                             size = NULL,
@@ -237,7 +234,7 @@ as_mesh.default <- function(x,
                                 code_Y_100m = code_Y_100m,
                                 code_X_100m = code_X_100m,
                                 size = "100m",
-                                is_mesh_100m = is_mesh_100m)) %>%
+                                is_mesh_100m = T)) %>%
       dplyr::pull(mesh)
   } else {
     x %>%
@@ -257,7 +254,7 @@ as_mesh.default <- function(x,
                                 code_250m = code_250m,
                                 code_125m = code_125m,
                                 size = size,
-                                is_mesh_100m = is_mesh_100m)) %>%
+                                is_mesh_100m = F)) %>%
       dplyr::pull(mesh)
   }
 }

@@ -1,15 +1,16 @@
 #' @export
-mesh_to_XY <- function(x, center) {
+mesh_to_XY <- function(mesh,
+                       center = T) {
   UseMethod("mesh_to_XY")
 }
 #' @export
-mesh_to_XY.mesh_80km <- function(x,
+mesh_to_XY.mesh_80km <- function(mesh,
                                  center = T) {
   len_X <- length_X("80km")
   len_Y <- length_Y("80km")
 
-  res <- tibble::tibble(X_min = field(x, "code_X_80km") + 100,
-                        Y_min = field(x, "code_Y_80km") / 1.5) %>%
+  res <- tibble::tibble(X_min = field(mesh, "code_X_80km") + 100,
+                        Y_min = field(mesh, "code_Y_80km") / 1.5) %>%
     dplyr::mutate(X_max = X_min + len_X,
                   Y_max = Y_min + len_Y)
 
@@ -19,7 +20,7 @@ mesh_to_XY.mesh_80km <- function(x,
   res
 }
 #' @export
-mesh_to_XY.mesh_10km <- function(x,
+mesh_to_XY.mesh_10km <- function(mesh,
                                  center = T) {
   len_X <- length_X("10km")
   len_Y <- length_Y("10km")
@@ -38,7 +39,7 @@ mesh_to_XY.mesh_10km <- function(x,
   res
 }
 #' @export
-mesh_to_XY.mesh_1km <- function(x,
+mesh_to_XY.mesh_1km <- function(mesh,
                                 center = T) {
   len_X <- length_X("1km")
   len_Y <- length_Y("1km")
@@ -57,7 +58,7 @@ mesh_to_XY.mesh_1km <- function(x,
   res
 }
 #' @export
-mesh_to_XY.mesh_500m <- function(x,
+mesh_to_XY.mesh_500m <- function(mesh,
                                  center = T) {
   len_X <- length_X("500m")
   len_Y <- length_Y("500m")
@@ -78,7 +79,7 @@ mesh_to_XY.mesh_500m <- function(x,
   res
 }
 #' @export
-mesh_to_XY.mesh_250m <- function(x,
+mesh_to_XY.mesh_250m <- function(mesh,
                                  center = T) {
   len_X <- length_X("250m")
   len_Y <- length_Y("250m")
@@ -99,7 +100,7 @@ mesh_to_XY.mesh_250m <- function(x,
   res
 }
 #' @export
-mesh_to_XY.mesh_125m <- function(x,
+mesh_to_XY.mesh_125m <- function(mesh,
                                  center = T) {
   len_X <- length_X("125m")
   len_Y <- length_Y("125m")
@@ -120,7 +121,7 @@ mesh_to_XY.mesh_125m <- function(x,
   res
 }
 #' @export
-mesh_to_XY.mesh_100m <- function(x,
+mesh_to_XY.mesh_100m <- function(mesh,
                                  center = T) {
   len_X <- length_X("100m")
   len_Y <- length_Y("100m")
@@ -168,14 +169,4 @@ center_mesh <- function(x) {
     dplyr::mutate(X_center = (X_min + X_max) / 2,
                   Y_center = (Y_min + Y_max) / 2,
                   .keep = "unused")
-}
-
-code_2x2_to_X <- function(code_2x2) {
-  dplyr::case_when(code_2x2 %in% c(1, 3) ~ 0,
-                   code_2x2 %in% c(2, 4) ~ 1)
-}
-
-code_2x2_to_Y <- function(code_2x2) {
-  dplyr::case_when(code_2x2 %in% c(1, 2) ~ 0,
-                   code_2x2 %in% c(3, 4) ~ 1)
 }
