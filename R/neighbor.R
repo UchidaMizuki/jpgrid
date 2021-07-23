@@ -1,14 +1,16 @@
 #' @export
 mesh_neighbor <- function(mesh,
                           moore = T,
-                          simplify = T) {
+                          simplify = T,
+                          ...) {
   UseMethod("mesh_neighbor")
 }
 #' @export
 mesh_neighbor.default <- function(mesh,
                                   moore = T,
-                                  simplify = T) {
-  mesh <- as_mesh(mesh)
+                                  simplify = T,
+                                  ...) {
+  mesh <- as_mesh(mesh, ...)
   mesh_neighbor(mesh, moore, simplify)
 }
 #' @export

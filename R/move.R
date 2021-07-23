@@ -1,6 +1,11 @@
 #' @export
-mesh_move <- function(mesh, n_X, n_Y) {
+mesh_move <- function(mesh, n_X, n_Y, ...) {
   UseMethod("mesh_move")
+}
+#' @export
+mesh_move.default <- function(mesh, n_X, n_Y, ...) {
+  mesh <- as_mesh(mesh, ...)
+  mesh_move(mesh, n_X, n_Y)
 }
 #' @export
 mesh_move.mesh_80km <- function(mesh, n_X, n_Y) {

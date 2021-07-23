@@ -1,12 +1,11 @@
 Package: japanmesh
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Title: Tools for mesh codes in Japan
+Version: 0.0.0.9000
+Authors@R: person("Mizuki", "Uchida", email = "uchidamizuki@vivaldi.net", role = c("aut", "cre"))
+Description: Tools for mesh codes in Japan. 
+    Conversion between mesh and longitude/latitude, and between meshe codes of different scales.
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports: 
@@ -19,3 +18,6 @@ Imports:
     units,
     vctrs
 RoxygenNote: 7.1.1
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3

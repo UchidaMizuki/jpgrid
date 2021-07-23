@@ -1,7 +1,15 @@
 #' @export
 mesh_to_XY <- function(mesh,
-                       center = T) {
+                       center = T,
+                       ...) {
   UseMethod("mesh_to_XY")
+}
+#' @export
+mesh_to_XY.default <- function(mesh,
+                               center = T,
+                               ...) {
+  mesh <- as_mesh(mesh, ...)
+  mesh_to_XY(mesh, center)
 }
 #' @export
 mesh_to_XY.mesh_80km <- function(mesh,
