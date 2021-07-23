@@ -15,6 +15,7 @@ Imports:
     purrr,
     rlang,
     stringr,
+    tidyr,
     units,
     vctrs
 RoxygenNote: 7.1.1
