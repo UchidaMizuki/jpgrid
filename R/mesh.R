@@ -16,17 +16,9 @@ mesh <- function(code_Y_80km = integer(),
                  code_X_100m = NA_integer_,
 
                  size = NULL,
-                 is_mesh100m = F) {
+                 is_mesh_100m = F) {
   if (!is_null(size)) {
-    if (inherits(size, "units")) {
-      if (size >= units::set_units(1, km)) {
-        size <- units::set_units(size, km)
-      } else {
-        size <- units::set_units(size, m)
-      }
-      size <- stringr::str_c(units::drop_units(size), units::deparse_unit(size))
-    }
-    arg_match(size, c("80km", "10km", "1km", "500m", "250m", "125m", "100m"))
+    size <- size_match(size)
   }
 
   stopifnot(!xor(are_na(code_Y_80km), are_na(code_X_80km)),
@@ -51,7 +43,7 @@ mesh <- function(code_Y_80km = integer(),
                             code_X_100m = code_X_100m) %>%
     as_list_of(.ptype = integer())
 
-  if (is_mesh100m) {
+  if (is_mesh_100m) {
     res$code_500m <- dplyr::case_when(res$code_Y_100m %in% 0:4 & res$code_X_100m %in% 0:4 ~ 1L,
                                       res$code_Y_100m %in% 0:4 & res$code_X_100m %in% 5:9 ~ 2L,
                                       res$code_Y_100m %in% 5:9 & res$code_X_100m %in% 0:4 ~ 3L,
@@ -138,18 +130,18 @@ mesh <- function(code_Y_80km = integer(),
     res <- res[c("code_Y_80km", "code_X_80km",
                  "code_Y_10km", "code_X_10km",
                  "code_Y_1km", "code_X_1km",
-                 "code_500m", "code_100m")] %>%
+                 "code_500m",
+                 "code_Y_100m", "code_X_100m")] %>%
       purrr::modify_at(c("code_Y_80km", "code_X_80km",
                          "code_Y_10km", "code_X_10km",
                          "code_Y_1km", "code_X_1km"),
                        purrr::partial(na_if_na,
-                                      y = code_100m))
+                                      y = code_Y_100m))
   }
 
   res %>%
     as_list_of(.ptype = integer()) %>%
     new_rcrd(class = switch(size,
-
                             `80km` = "mesh_80km",
                             `10km` = c("mesh_10km", "mesh_80km"),
                             `1km` = c("mesh_1km", "mesh_10km", "mesh_80km"),
@@ -162,7 +154,6 @@ mesh <- function(code_Y_80km = integer(),
 }
 
 # printing ----------------------------------------------------------------
-
 #' @export
 format.mesh_80km <- function(x, ...) {
   stringr::str_c(field(x, "code_Y_80km"),
@@ -203,6 +194,9 @@ format.mesh_100m <- function(x, ...) {
 }
 
 #' @export
+as.character.mesh_80km <- function(x, ...) format(x)
+
+#' @export
 vec_ptype_abbr.mesh_80km <- function(x) "msh80k"
 #' @export
 vec_ptype_abbr.mesh_10km <- function(x) "msh10k"
@@ -221,18 +215,12 @@ vec_ptype_abbr.mesh_100m <- function(x) "msh100"
 is_mesh <- function(x) inherits(x, "mesh")
 
 #' @export
-as_mesh <- function(x,
-                    size = NULL,
-                    is_mesh100m = F) {
-  if (inherits(x, "mesh_80km") && is_null(size)) {
-    x
-  } else if (inherits(x, "mesh_80km")) {
-    args <- fields(x) %>%
-      purrr::map(~ field(x, .x))
-    names(args) <- fields(x)
-    exec(mesh, !!!args,
-         size = size)
-  } else if (is_mesh100m) {
+as_mesh <- function(x, ...) UseMethod("as_mesh")
+#' @export
+as_mesh.default <- function(x,
+                            size = NULL,
+                            is_mesh_100m = F) {
+  if (is_mesh_100m) {
     x %>%
       stringr::str_match("^(\\d{2})(\\d{2})(\\d)(\\d)(\\d)(\\d)(\\d)(\\d)$") %>%
       tibble::as_tibble(.name_repair = ~ c("x",
@@ -249,7 +237,7 @@ as_mesh <- function(x,
                                 code_Y_100m = code_Y_100m,
                                 code_X_100m = code_X_100m,
                                 size = "100m",
-                                is_mesh100m = is_mesh100m)) %>%
+                                is_mesh_100m = is_mesh_100m)) %>%
       dplyr::pull(mesh)
   } else {
     x %>%
@@ -269,57 +257,20 @@ as_mesh <- function(x,
                                 code_250m = code_250m,
                                 code_125m = code_125m,
                                 size = size,
-                                is_mesh100m = is_mesh100m)) %>%
+                                is_mesh_100m = is_mesh_100m)) %>%
       dplyr::pull(mesh)
   }
 }
-
-# mesh1km_to_XY <- function(mesh1km,
-#                           center = T) {
-#   length_X <- 1 / 8 / 10
-#   length_Y <- 1 / 1.5 / 8 / 10
-#   res <- mesh1km %>%
-#     str_match("^(\\d{2})(\\d{2})(\\d)(\\d)(\\d)(\\d)$") %>%
-#     as_tibble(.name_repair = ~ c(".", "digit_1to2", "digit_3to4", str_c("digit_", 5:8))) %>%
-#     select(-.) %>%
-#     mutate(across(everything(),
-#                   as.numeric)) %>%
-#     mutate(X_center = 100 +
-#              digit_3to4 +
-#              digit_6 / 8 +
-#              digit_8 / 8 / 10 +
-#              length_X / 2,
-#            Y_center = digit_1to2 / 1.5 +
-#              digit_5 / 1.5 / 8 +
-#              digit_7 / 1.5 / 8 / 10 +
-#              length_Y / 2,
-#            .keep = "unused")
-#   if (!center) {
-#     res <- res %>%
-#       mutate(X_min = X_center - length_X / 2,
-#              X_max = X_center + length_X / 2,
-#              Y_min = Y_center - length_Y / 2,
-#              Y_max = Y_center + length_Y / 2,
-#              .keep = "unused")
-#   }
-#   res
-# }
-# XY_to_mesh1km <- function(X, Y) {
-#   Y <- Y * 1.5
-#   digit_1to2 <- floor(Y)
-#   Y <- Y - digit_1to2
-#   X <- X - 100
-#   digit_3to4 <- floor(X)
-#   X <- X - digit_3to4
-#   Y <- Y * 8
-#   digit_5 <- floor(Y)
-#   Y <- Y - digit_5
-#   X <- X * 8
-#   digit_6 <- floor(X)
-#   X <- X - digit_6
-#   Y <- Y * 10
-#   digit_7 <- floor(Y)
-#   X <- X * 10
-#   digit_8 <- floor(X)
-#   str_c(digit_1to2, digit_3to4, digit_5, digit_6, digit_7, digit_8)
-# }
+#' @export
+as_mesh.mesh_80km <- function(x,
+                              size = NULL) {
+  if (is_null(size)) {
+    x
+  } else {
+    args <- fields(x) %>%
+      purrr::map(~ field(x, .x))
+    names(args) <- fields(x)
+    exec(mesh, !!!args,
+         size = size)
+  }
+}

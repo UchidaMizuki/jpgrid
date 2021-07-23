@@ -10,3 +10,16 @@ na_if_na <- function(x, y) {
                  vec_cast(NA, x),
                  x)
 }
+
+size_match <- function(size) {
+  if (inherits(size, "units")) {
+    if (size >= units::set_units(1, km)) {
+      size <- units::set_units(size, km)
+    } else {
+      size <- units::set_units(size, m)
+    }
+    size <- stringr::str_c(units::drop_units(size), units::deparse_unit(size))
+  }
+  arg_match(size, c("80km", "10km", "1km", "500m", "250m", "125m", "100m"))
+  size
+}
