@@ -44,10 +44,11 @@ mesh <- function(code_Y_80km = integer(),
     as_list_of(.ptype = integer())
 
   if (is_mesh_100m || !is_null(size) && size == "100m") {
-    res$code_500m <- dplyr::case_when(res$code_Y_100m %in% 0:4 & res$code_X_100m %in% 0:4 ~ 1L,
-                                      res$code_Y_100m %in% 0:4 & res$code_X_100m %in% 5:9 ~ 2L,
-                                      res$code_Y_100m %in% 5:9 & res$code_X_100m %in% 0:4 ~ 3L,
-                                      res$code_Y_100m %in% 5:9 & res$code_X_100m %in% 5:9 ~ 4L)
+    code_500m <- dplyr::case_when(res$code_Y_100m %in% 0:4 & res$code_X_100m %in% 0:4 ~ 1L,
+                                  res$code_Y_100m %in% 0:4 & res$code_X_100m %in% 5:9 ~ 2L,
+                                  res$code_Y_100m %in% 5:9 & res$code_X_100m %in% 0:4 ~ 3L,
+                                  res$code_Y_100m %in% 5:9 & res$code_X_100m %in% 5:9 ~ 4L)
+    res$code_500m <- code_500m
   }
 
   if (is_null(size) && any(are_na(code_Y_10km)) || !is_null(size) && size == "80km") {
@@ -217,7 +218,7 @@ as_mesh <- function(x,
 as_mesh.default <- function(x,
                             size = NULL,
                             is_mesh_100m = F) {
-  if (is_mesh_100m) {
+  if (!is_null(size) && size == "100m" || is_mesh_100m) {
     x %>%
       stringr::str_match("^(\\d{2})(\\d{2})(\\d)(\\d)(\\d)(\\d)(\\d)(\\d)$") %>%
       tibble::as_tibble(.name_repair = ~ c("x",
@@ -233,7 +234,7 @@ as_mesh.default <- function(x,
                                 code_Y_1km, code_X_1km,
                                 code_Y_100m = code_Y_100m,
                                 code_X_100m = code_X_100m,
-                                size = "100m",
+                                size = size,
                                 is_mesh_100m = T)) %>%
       dplyr::pull(mesh)
   } else {

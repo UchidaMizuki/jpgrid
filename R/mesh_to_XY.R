@@ -9,7 +9,8 @@ mesh_to_XY.default <- function(mesh,
                                center = T,
                                ...) {
   mesh <- as_mesh(mesh, ...)
-  mesh_to_XY(mesh, center)
+  mesh_to_XY(mesh,
+             center = center)
 }
 #' @export
 mesh_to_XY.mesh_80km <- function(mesh,
@@ -35,8 +36,8 @@ mesh_to_XY.mesh_10km <- function(mesh,
 
   res <- NextMethod(center = F) %>%
     dplyr::select(X_min, Y_min) %>%
-    dplyr::mutate(X_min = X_min + field(x, "code_X_10km") / 8,
-                  Y_min = Y_min + field(x, "code_Y_10km") / 1.5 / 8,
+    dplyr::mutate(X_min = X_min + field(mesh, "code_X_10km") / 8,
+                  Y_min = Y_min + field(mesh, "code_Y_10km") / 1.5 / 8,
 
                   X_max = X_min + len_X,
                   Y_max = Y_min + len_Y)
@@ -54,8 +55,8 @@ mesh_to_XY.mesh_1km <- function(mesh,
 
   res <- NextMethod(center = F) %>%
     dplyr::select(X_min, Y_min) %>%
-    dplyr::mutate(X_min = X_min + field(x, "code_X_1km") / 8 / 10,
-                  Y_min = Y_min + field(x, "code_Y_1km") / 1.5 / 8 / 10,
+    dplyr::mutate(X_min = X_min + field(mesh, "code_X_1km") / 8 / 10,
+                  Y_min = Y_min + field(mesh, "code_Y_1km") / 1.5 / 8 / 10,
 
                   X_max = X_min + len_X,
                   Y_max = Y_min + len_Y)
@@ -71,7 +72,7 @@ mesh_to_XY.mesh_500m <- function(mesh,
   len_X <- length_X("500m")
   len_Y <- length_Y("500m")
 
-  code_500m <- field(x, "code_500m")
+  code_500m <- field(mesh, "code_500m")
 
   res <- NextMethod(center = F) %>%
     dplyr::select(X_min, Y_min) %>%
@@ -92,7 +93,7 @@ mesh_to_XY.mesh_250m <- function(mesh,
   len_X <- length_X("250m")
   len_Y <- length_Y("250m")
 
-  code_250m <- field(x, "code_250m")
+  code_250m <- field(mesh, "code_250m")
 
   res <- NextMethod(center = F) %>%
     dplyr::select(X_min, Y_min) %>%
@@ -113,7 +114,7 @@ mesh_to_XY.mesh_125m <- function(mesh,
   len_X <- length_X("125m")
   len_Y <- length_Y("125m")
 
-  code_125m <- field(x, "code_125m")
+  code_125m <- field(mesh, "code_125m")
 
   res <- NextMethod(center = F) %>%
     dplyr::select(X_min, Y_min) %>%
@@ -136,8 +137,8 @@ mesh_to_XY.mesh_100m <- function(mesh,
 
   res <- NextMethod(center = F) %>%
     dplyr::select(X_min, Y_min) %>%
-    dplyr::mutate(X_min = X_min + field(x, "code_X_100m") / 8 / 10 / 10,
-                  Y_min = Y_min + field(x, "code_Y_100m") / 1.5 / 8 / 10 / 10,
+    dplyr::mutate(X_min = X_min + field(mesh, "code_X_100m") / 8 / 10 / 10,
+                  Y_min = Y_min + field(mesh, "code_Y_100m") / 1.5 / 8 / 10 / 10,
 
                   X_max = X_min + len_X,
                   Y_max = Y_min + len_Y)
