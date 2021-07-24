@@ -1,3 +1,4 @@
+#' @export
 XY_to_mesh <- function(X, Y, size) {
   size <- size_match(size)
 
