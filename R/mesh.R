@@ -26,115 +26,131 @@ mesh <- function(code_Y_80km = integer(),
             !xor(are_na(code_Y_1km), are_na(code_X_1km)),
             !xor(are_na(code_Y_100m), are_na(code_X_100m)))
 
-  res <- vec_recycle_common(code_Y_80km = code_Y_80km,
-                            code_X_80km = code_X_80km,
+  df <- vec_recycle_common(code_Y_80km = code_Y_80km,
+                           code_X_80km = code_X_80km,
 
-                            code_Y_10km = code_Y_10km,
-                            code_X_10km = code_X_10km,
+                           code_Y_10km = code_Y_10km,
+                           code_X_10km = code_X_10km,
 
-                            code_Y_1km = code_Y_1km,
-                            code_X_1km = code_X_1km,
+                           code_Y_1km = code_Y_1km,
+                           code_X_1km = code_X_1km,
 
-                            code_500m = code_500m,
-                            code_250m = code_250m,
-                            code_125m = code_125m,
+                           code_500m = code_500m,
+                           code_250m = code_250m,
+                           code_125m = code_125m,
 
-                            code_Y_100m = code_Y_100m,
-                            code_X_100m = code_X_100m) %>%
-    as_list_of(.ptype = integer())
+                           code_Y_100m = code_Y_100m,
+                           code_X_100m = code_X_100m) %>%
+    as_list_of(.ptype = integer()) %>%
+    new_data_frame()
+
+  remove(code_Y_80km, code_X_80km,
+         code_Y_10km, code_X_10km,
+         code_Y_1km, code_X_1km,
+         code_500m, code_250m, code_125m,
+         code_Y_100m, code_X_100m)
 
   if (is_mesh_100m || !is_null(size) && size == "100m") {
-    code_500m <- dplyr::case_when(res$code_Y_100m %in% 0:4 & res$code_X_100m %in% 0:4 ~ 1L,
-                                  res$code_Y_100m %in% 0:4 & res$code_X_100m %in% 5:9 ~ 2L,
-                                  res$code_Y_100m %in% 5:9 & res$code_X_100m %in% 0:4 ~ 3L,
-                                  res$code_Y_100m %in% 5:9 & res$code_X_100m %in% 5:9 ~ 4L)
-    res$code_500m <- code_500m
+    df <- df %>%
+      dplyr::mutate(code_500m = dplyr::case_when(code_Y_100m %in% 0:4 & code_X_100m %in% 0:4 ~ 1L,
+                                                 code_Y_100m %in% 0:4 & code_X_100m %in% 5:9 ~ 2L,
+                                                 code_Y_100m %in% 5:9 & code_X_100m %in% 0:4 ~ 3L,
+                                                 code_Y_100m %in% 5:9 & code_X_100m %in% 5:9 ~ 4L))
   }
 
-  if (is_null(size) && any(are_na(code_Y_10km)) || !is_null(size) && size == "80km") {
-    stopifnot(are_na(code_Y_80km) | stringr::str_length(code_Y_80km) == 2 & stringr::str_length(code_X_80km) == 2)
+  df_drop_na <- df %>%
+    tidyr::drop_na(code_Y_80km)
+
+  if (is_null(size) && any(are_na(df_drop_na$code_Y_10km)) || !is_null(size) && size == "80km") {
+    stopifnot(are_na(df$code_Y_80km) | stringr::str_length(df$code_Y_80km) == 2 & stringr::str_length(df$code_X_80km) == 2)
 
     size <- "80km"
-    res <- res[c("code_Y_80km", "code_X_80km")]
-  } else if (is_null(size) && any(are_na(code_Y_1km)) || !is_null(size) && size == "10km") {
-    stopifnot(are_na(code_Y_10km) | code_Y_10km %in% 0:7 & code_X_10km %in% 0:7)
+    df <- df %>%
+      dplyr::select(code_Y_80km, code_X_80km)
+  } else if (is_null(size) && any(are_na(df_drop_na$code_Y_1km)) || !is_null(size) && size == "10km") {
+    stopifnot(are_na(df$code_Y_10km) | df$code_Y_10km %in% 0:7 & df$code_X_10km %in% 0:7)
 
     size <- "10km"
-    res <- res[c("code_Y_80km", "code_X_80km",
-                 "code_Y_10km", "code_X_10km")] %>%
-      purrr::modify_at(c("code_Y_80km", "code_X_80km"),
-                       purrr::partial(na_if_na,
-                                      y = code_Y_10km))
-  } else if (is_null(size) && any(are_na(code_500m)) || !is_null(size) && size == "1km") {
-    stopifnot(are_na(code_Y_1km) | code_Y_1km %in% 0:9 & code_X_1km %in% 0:9)
+    df <- df %>%
+      dplyr::select(code_Y_80km, code_X_80km,
+                    code_Y_10km, code_X_10km) %>%
+      dplyr::mutate(dplyr::across(c(code_Y_80km, code_X_80km),
+                                  purrr::partial(na_if_na,
+                                                 y = code_Y_10km)))
+  } else if (is_null(size) && any(are_na(df_drop_na$code_500m)) || !is_null(size) && size == "1km") {
+    stopifnot(are_na(df$code_Y_1km) | df$code_Y_1km %in% 0:9 & df$code_X_1km %in% 0:9)
 
     size <- "1km"
-    res <- res[c("code_Y_80km", "code_X_80km",
-                 "code_Y_10km", "code_X_10km",
-                 "code_Y_1km", "code_X_1km")] %>%
-      purrr::modify_at(c("code_Y_80km", "code_X_80km",
-                         "code_Y_10km", "code_X_10km"),
-                       purrr::partial(na_if_na,
-                                      y = code_Y_1km))
-  } else if (is_null(size) && any(are_na(code_250m)) || !is_null(size) && size == "500m") {
-    stopifnot(are_na(code_500m) | code_500m %in% 1:4)
+    df <- df %>%
+      dplyr::select(c(code_Y_80km, code_X_80km,
+                      code_Y_10km, code_X_10km,
+                      code_Y_1km, code_X_1km)) %>%
+      dplyr::mutate(dplyr::across(c(code_Y_80km, code_X_80km,
+                                    code_Y_10km, code_X_10km),
+                                  purrr::partial(na_if_na,
+                                                 y = code_Y_1km)))
+  } else if (is_null(size) && any(df_drop_na$are_na(code_250m)) || !is_null(size) && size == "500m") {
+    stopifnot(are_na(df$code_500m) | df$code_500m %in% 1:4)
 
     size <- "500m"
-    res <- res[c("code_Y_80km", "code_X_80km",
-                 "code_Y_10km", "code_X_10km",
-                 "code_Y_1km", "code_X_1km",
-                 "code_500m")] %>%
-      purrr::modify_at(c("code_Y_80km", "code_X_80km",
-                         "code_Y_10km", "code_X_10km",
-                         "code_Y_1km", "code_X_1km"),
-                       purrr::partial(na_if_na,
-                                      y = code_500m))
-  } else if (is_null(size) && any(are_na(code_125m)) || !is_null(size) && size == "250m") {
-    stopifnot(are_na(code_250m) | code_250m %in% 1:4)
+    df <- df %>%
+      dplyr::select(c(code_Y_80km, code_X_80km,
+                      code_Y_10km, code_X_10km,
+                      code_Y_1km, code_X_1km,
+                      code_500m)) %>%
+      dplyr::mutate(dplyr::across(c(code_Y_80km, code_X_80km,
+                                    code_Y_10km, code_X_10km,
+                                    code_Y_1km, code_X_1km),
+                                  purrr::partial(na_if_na,
+                                                 y = code_500m)))
+  } else if (is_null(size) && any(are_na(df_drop_na$code_125m)) || !is_null(size) && size == "250m") {
+    stopifnot(are_na(df$code_250m) | df$code_250m %in% 1:4)
 
     size <- "250m"
-    res <- res[c("code_Y_80km", "code_X_80km",
-                 "code_Y_10km", "code_X_10km",
-                 "code_Y_1km", "code_X_1km",
-                 "code_500m", "code_250m")] %>%
-      purrr::modify_at(c("code_Y_80km", "code_X_80km",
-                         "code_Y_10km", "code_X_10km",
-                         "code_Y_1km", "code_X_1km",
-                         "code_500m"),
-                       purrr::partial(na_if_na,
-                                      y = code_250m))
+    df <- df %>%
+      dplyr::select(c(code_Y_80km, code_X_80km,
+                      code_Y_10km, code_X_10km,
+                      code_Y_1km, code_X_1km,
+                      code_500m, code_250m)) %>%
+      dplyr::mutate(dplyr::across(c(code_Y_80km, code_X_80km,
+                                    code_Y_10km, code_X_10km,
+                                    code_Y_1km, code_X_1km,
+                                    code_500m),
+                                  purrr::partial(na_if_na,
+                                                 y = code_250m)))
   } else if (is_null(size) || !is_null(size) && size == "125m") {
-    stopifnot(are_na(code_125m) | code_125m %in% 1:4)
+    stopifnot(are_na(df$code_125m) | df$code_125m %in% 1:4)
 
     size <- "125m"
-    res <- res[c("code_Y_80km", "code_X_80km",
-                 "code_Y_10km", "code_X_10km",
-                 "code_Y_1km", "code_X_1km",
-                 "code_500m", "code_250m", "code_125m")] %>%
-      purrr::modify_at(c("code_Y_80km", "code_X_80km",
-                         "code_Y_10km", "code_X_10km",
-                         "code_Y_1km", "code_X_1km",
-                         "code_500m", "code_250m"),
-                       purrr::partial(na_if_na,
-                                      y = code_125m))
+    df <- df %>%
+      dplyr::select(c(code_Y_80km, code_X_80km,
+                      code_Y_10km, code_X_10km,
+                      code_Y_1km, code_X_1km,
+                      code_500m, code_250m, code_125m)) %>%
+      dplyr::mutate(dplyr::across(c(code_Y_80km, code_X_80km,
+                                    code_Y_10km, code_X_10km,
+                                    code_Y_1km, code_X_1km,
+                                    code_500m, code_250m),
+                                  purrr::partial(na_if_na,
+                                                 y = code_125m)))
   } else if (!is_null(size) && size == "100m") {
-    stopifnot(are_na(code_Y_100m) | code_Y_100m %in% 0:9 & code_X_100m %in% 0:9)
+    stopifnot(are_na(df$code_Y_100m) | df$code_Y_100m %in% 0:9 & df$code_X_100m %in% 0:9)
 
     size <- "100m"
-    res <- res[c("code_Y_80km", "code_X_80km",
-                 "code_Y_10km", "code_X_10km",
-                 "code_Y_1km", "code_X_1km",
-                 "code_500m",
-                 "code_Y_100m", "code_X_100m")] %>%
-      purrr::modify_at(c("code_Y_80km", "code_X_80km",
-                         "code_Y_10km", "code_X_10km",
-                         "code_Y_1km", "code_X_1km"),
-                       purrr::partial(na_if_na,
-                                      y = code_Y_100m))
+    df <- df %>%
+      dplyr::select(c(code_Y_80km, code_X_80km,
+                      code_Y_10km, code_X_10km,
+                      code_Y_1km, code_X_1km,
+                      code_500m,
+                      code_Y_100m, code_X_100m)) %>%
+      dplyr::mutate(dplyr::across(c(code_Y_80km, code_X_80km,
+                                    code_Y_10km, code_X_10km,
+                                    code_Y_1km, code_X_1km),
+                                  purrr::partial(na_if_na,
+                                                 y = code_Y_100m)))
   }
 
-  res %>%
-    as_list_of(.ptype = integer()) %>%
+  df %>%
     new_rcrd(class = switch(size,
                             `80km` = "mesh_80km",
                             `10km` = c("mesh_10km", "mesh_80km"),
