@@ -135,7 +135,7 @@ tibble(mesh = c("5339452660", "5235034590")) %>%
 本パッケージの`jpmesh`との優位点として，以下が挙げられます．
 
 -   処理速度が`jpmesh`パッケージより速い場合があります．
--   `jpmesh::meshcode`と違い，`as_mesh`に`NA`を入力してもエラーを吐きません．
+-   `jpmesh::meshcode()`と違い，`as_mesh()`に`NA`を入力してもエラーを吐きません．
 
 ### `jpmesh`パッケージとの処理速度の比較
 
@@ -162,7 +162,7 @@ head(df_jpmesh)
 #> 5  140.  39.8   59395618
 #> 6  140.  39.4   59390561
 tictoc::toc()
-#> 6.73 sec elapsed
+#> 7.2 sec elapsed
 
 # japanmesh
 tictoc::tic()
@@ -170,7 +170,7 @@ df_japanmesh <- df %>%
   mutate(mesh = XY_to_mesh(X, Y,
                            size = "1km"))
 tictoc::toc()
-#> 0.02 sec elapsed
+#> 0.01 sec elapsed
 
 # mesh to XY
 # jpmesh
@@ -189,7 +189,7 @@ head(df_jpmesh)
 #> 5  140.  39.8   59395618       140.       39.8   0.00625   0.00417
 #> 6  140.  39.4   59390561       140.       39.4   0.00625   0.00417
 tictoc::toc()
-#> 7.16 sec elapsed
+#> 7.74 sec elapsed
 
 # japanmesh
 tictoc::tic()
