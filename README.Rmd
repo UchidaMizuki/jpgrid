@@ -136,6 +136,7 @@ tictoc::tic()
 df_japanmesh <- df %>% 
   mutate(mesh = XY_to_mesh(X, Y,
                            size = "1km"))
+head(df_japanmesh)
 tictoc::toc()
 
 # mesh to XY

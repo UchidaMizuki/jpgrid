@@ -162,15 +162,25 @@ head(df_jpmesh)
 #> 5  140.  39.8   59395618
 #> 6  140.  39.4   59390561
 tictoc::toc()
-#> 7.2 sec elapsed
+#> 6.89 sec elapsed
 
 # japanmesh
 tictoc::tic()
 df_japanmesh <- df %>% 
   mutate(mesh = XY_to_mesh(X, Y,
                            size = "1km"))
+head(df_japanmesh)
+#> # A tibble: 6 x 3
+#>       X     Y     mesh
+#>   <dbl> <dbl>  <msh1k>
+#> 1  139.  39.8 59396009
+#> 2  140.  39.5 59391489
+#> 3  140.  39.1 58395438
+#> 4  140.  39.4 59390429
+#> 5  140.  39.8 59395618
+#> 6  140.  39.4 59390561
 tictoc::toc()
-#> 0.01 sec elapsed
+#> 0.03 sec elapsed
 
 # mesh to XY
 # jpmesh
@@ -189,7 +199,7 @@ head(df_jpmesh)
 #> 5  140.  39.8   59395618       140.       39.8   0.00625   0.00417
 #> 6  140.  39.4   59390561       140.       39.4   0.00625   0.00417
 tictoc::toc()
-#> 7.74 sec elapsed
+#> 7.09 sec elapsed
 
 # japanmesh
 tictoc::tic()
