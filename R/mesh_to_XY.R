@@ -24,7 +24,7 @@ mesh_to_XY.mesh_80km <- function(mesh,
                   Y_max = Y_min + len_Y)
 
   if (center) {
-    res <- center_mesh(res)
+    res <- mesh_center(res)
   }
   res
 }
@@ -43,7 +43,7 @@ mesh_to_XY.mesh_10km <- function(mesh,
                   Y_max = Y_min + len_Y)
 
   if (center) {
-    res <- center_mesh(res)
+    res <- mesh_center(res)
   }
   res
 }
@@ -62,7 +62,7 @@ mesh_to_XY.mesh_1km <- function(mesh,
                   Y_max = Y_min + len_Y)
 
   if (center) {
-    res <- center_mesh(res)
+    res <- mesh_center(res)
   }
   res
 }
@@ -83,7 +83,7 @@ mesh_to_XY.mesh_500m <- function(mesh,
                   Y_max = Y_min + len_Y)
 
   if (center) {
-    res <- center_mesh(res)
+    res <- mesh_center(res)
   }
   res
 }
@@ -104,7 +104,7 @@ mesh_to_XY.mesh_250m <- function(mesh,
                   Y_max = Y_min + len_Y)
 
   if (center) {
-    res <- center_mesh(res)
+    res <- mesh_center(res)
   }
   res
 }
@@ -125,7 +125,7 @@ mesh_to_XY.mesh_125m <- function(mesh,
                   Y_max = Y_min + len_Y)
 
   if (center) {
-    res <- center_mesh(res)
+    res <- mesh_center(res)
   }
   res
 }
@@ -144,7 +144,7 @@ mesh_to_XY.mesh_100m <- function(mesh,
                   Y_max = Y_min + len_Y)
 
   if (center) {
-    res <- center_mesh(res)
+    res <- mesh_center(res)
   }
   res
 }
@@ -173,7 +173,7 @@ length_Y <- function(size) {
          `100m` = 1 / 1.5 / 8 / 10 / 10)
 }
 
-center_mesh <- function(x) {
+mesh_center <- function(x) {
   x %>%
     dplyr::mutate(X_center = (X_min + X_max) / 2,
                   Y_center = (Y_min + Y_max) / 2,

@@ -1,4 +1,3 @@
-#' @export
 mesh <- function(code_Y_80km = integer(),
                  code_X_80km = integer(),
 
