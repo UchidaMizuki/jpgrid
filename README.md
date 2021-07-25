@@ -128,3 +128,83 @@ tibble(mesh = c("5339452660", "5235034590")) %>%
 
 -   `mesh_move()`関数により，東西南北方向の地域メッシュを算出できます．
 -   `mesh_neighbor()`関数により，隣接するメッシュを算出できます．
+
+## 他パッケージとの比較
+
+地域メッシュを扱うRパッケージとして，本パッケージの他に`jpmesh`パッケージがあります．
+本パッケージの`jpmesh`との優位点として，以下が挙げられます．
+
+-   処理速度が`jpmesh`パッケージより速い場合があります．
+-   `jpmesh::meshcode`と違い，`as_mesh`に`NA`を入力してもエラーを吐きません．
+
+### `jpmesh`パッケージとの処理速度の比較
+
+以下の例では，本パッケージの計算速度は，`jpmesh`パッケージと比べて数百倍程度，高速です．
+
+``` r
+set.seed(1234)
+df <- tibble(X = runif(10 ^ 3, 139, 140),
+             Y = runif(10 ^ 3, 39, 40))
+
+# XY to mesh
+# jpmesh
+tictoc::tic()
+df_jpmesh <- df %>% 
+  mutate(mesh = jpmesh::coords_to_mesh(X, Y))
+head(df_jpmesh)
+#> # A tibble: 6 x 3
+#>       X     Y       mesh
+#>   <dbl> <dbl> <meshcode>
+#> 1  139.  39.8   59396009
+#> 2  140.  39.5   59391489
+#> 3  140.  39.1   58395438
+#> 4  140.  39.4   59390429
+#> 5  140.  39.8   59395618
+#> 6  140.  39.4   59390561
+tictoc::toc()
+#> 6.73 sec elapsed
+
+# japanmesh
+tictoc::tic()
+df_japanmesh <- df %>% 
+  mutate(mesh = XY_to_mesh(X, Y,
+                           size = "1km"))
+tictoc::toc()
+#> 0.02 sec elapsed
+
+# mesh to XY
+# jpmesh
+tictoc::tic()
+df_jpmesh <- df_jpmesh %>% 
+  mutate(jpmesh::mesh_to_coords(mesh),
+         .keep = "unused")
+head(df_jpmesh)
+#> # A tibble: 6 x 7
+#>       X     Y   meshcode lng_center lat_center lng_error lat_error
+#>   <dbl> <dbl> <meshcode>      <dbl>      <dbl>     <dbl>     <dbl>
+#> 1  139.  39.8   59396009       139.       39.8   0.00625   0.00417
+#> 2  140.  39.5   59391489       140.       39.5   0.00625   0.00417
+#> 3  140.  39.1   58395438       140.       39.1   0.00625   0.00417
+#> 4  140.  39.4   59390429       140.       39.4   0.00625   0.00417
+#> 5  140.  39.8   59395618       140.       39.8   0.00625   0.00417
+#> 6  140.  39.4   59390561       140.       39.4   0.00625   0.00417
+tictoc::toc()
+#> 7.16 sec elapsed
+
+# japanmesh
+tictoc::tic()
+df_japanmesh <- df_japanmesh %>% 
+  mutate(mesh_to_XY(mesh))
+head(df_japanmesh)
+#> # A tibble: 6 x 5
+#>       X     Y     mesh X_center Y_center
+#>   <dbl> <dbl>  <msh1k>    <dbl>    <dbl>
+#> 1  139.  39.8 59396009     139.     39.8
+#> 2  140.  39.5 59391489     140.     39.5
+#> 3  140.  39.1 58395438     140.     39.1
+#> 4  140.  39.4 59390429     140.     39.4
+#> 5  140.  39.8 59395618     140.     39.8
+#> 6  140.  39.4 59390561     140.     39.4
+tictoc::toc()
+#> 0.04 sec elapsed
+```

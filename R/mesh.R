@@ -43,12 +43,6 @@ mesh <- function(code_Y_80km = integer(),
     as_list_of(.ptype = integer()) %>%
     new_data_frame()
 
-  remove(code_Y_80km, code_X_80km,
-         code_Y_10km, code_X_10km,
-         code_Y_1km, code_X_1km,
-         code_500m, code_250m, code_125m,
-         code_Y_100m, code_X_100m)
-
   if (is_mesh_100m || !is_null(size) && size == "100m") {
     df <- df %>%
       dplyr::mutate(code_500m = dplyr::case_when(code_Y_100m %in% 0:4 & code_X_100m %in% 0:4 ~ 1L,
@@ -88,7 +82,7 @@ mesh <- function(code_Y_80km = integer(),
                                     code_Y_10km, code_X_10km),
                                   purrr::partial(na_if_na,
                                                  y = code_Y_1km)))
-  } else if (is_null(size) && any(df_drop_na$are_na(code_250m)) || !is_null(size) && size == "500m") {
+  } else if (is_null(size) && any(are_na(df_drop_na$code_250m)) || !is_null(size) && size == "500m") {
     stopifnot(are_na(df$code_500m) | df$code_500m %in% 1:4)
 
     size <- "500m"
