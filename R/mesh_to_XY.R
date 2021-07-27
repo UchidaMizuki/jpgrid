@@ -1,20 +1,14 @@
 #' @export
-mesh_to_XY <- function(mesh,
-                       center = T,
-                       ...) {
+mesh_to_XY <- function(mesh, center = T, ...) {
   UseMethod("mesh_to_XY")
 }
 #' @export
-mesh_to_XY.default <- function(mesh,
-                               center = T,
-                               ...) {
+mesh_to_XY.default <- function(mesh, center = T, ...) {
   mesh <- as_mesh(mesh, ...)
-  mesh_to_XY(mesh,
-             center = center)
+  mesh_to_XY(mesh, center)
 }
 #' @export
-mesh_to_XY.mesh_80km <- function(mesh,
-                                 center = T) {
+mesh_to_XY.mesh_80km <- function(mesh, center = T, ...) {
   len_X <- length_X("80km")
   len_Y <- length_Y("80km")
 
@@ -29,8 +23,7 @@ mesh_to_XY.mesh_80km <- function(mesh,
   res
 }
 #' @export
-mesh_to_XY.mesh_10km <- function(mesh,
-                                 center = T) {
+mesh_to_XY.mesh_10km <- function(mesh, center = T, ...) {
   len_X <- length_X("10km")
   len_Y <- length_Y("10km")
 
@@ -48,8 +41,7 @@ mesh_to_XY.mesh_10km <- function(mesh,
   res
 }
 #' @export
-mesh_to_XY.mesh_1km <- function(mesh,
-                                center = T) {
+mesh_to_XY.mesh_1km <- function(mesh, center = T, ...) {
   len_X <- length_X("1km")
   len_Y <- length_Y("1km")
 
@@ -67,8 +59,7 @@ mesh_to_XY.mesh_1km <- function(mesh,
   res
 }
 #' @export
-mesh_to_XY.mesh_500m <- function(mesh,
-                                 center = T) {
+mesh_to_XY.mesh_500m <- function(mesh, center = T, ...) {
   len_X <- length_X("500m")
   len_Y <- length_Y("500m")
 
@@ -88,8 +79,7 @@ mesh_to_XY.mesh_500m <- function(mesh,
   res
 }
 #' @export
-mesh_to_XY.mesh_250m <- function(mesh,
-                                 center = T) {
+mesh_to_XY.mesh_250m <- function(mesh, center = T, ...) {
   len_X <- length_X("250m")
   len_Y <- length_Y("250m")
 
@@ -109,8 +99,7 @@ mesh_to_XY.mesh_250m <- function(mesh,
   res
 }
 #' @export
-mesh_to_XY.mesh_125m <- function(mesh,
-                                 center = T) {
+mesh_to_XY.mesh_125m <- function(mesh, center = T, ...) {
   len_X <- length_X("125m")
   len_Y <- length_Y("125m")
 
@@ -130,8 +119,7 @@ mesh_to_XY.mesh_125m <- function(mesh,
   res
 }
 #' @export
-mesh_to_XY.mesh_100m <- function(mesh,
-                                 center = T) {
+mesh_to_XY.mesh_100m <- function(mesh, center = T, ...) {
   len_X <- length_X("100m")
   len_Y <- length_Y("100m")
 

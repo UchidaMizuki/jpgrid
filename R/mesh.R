@@ -218,15 +218,11 @@ vec_ptype_abbr.mesh_100m <- function(x) "msh100"
 # as_mesh -----------------------------------------------------------------
 
 #' @export
-as_mesh <- function(x,
-                    size = NULL,
-                    ...) {
+as_mesh <- function(x, size = NULL, ...) {
   UseMethod("as_mesh")
 }
 #' @export
-as_mesh.default <- function(x,
-                            size = NULL,
-                            is_mesh_100m = F) {
+as_mesh.default <- function(x, size = NULL, is_mesh_100m = F, ...) {
   if (!is_null(size) && size == "100m" || is_mesh_100m) {
     x %>%
       stringr::str_match("^(\\d{2})(\\d{2})(\\d)(\\d)(\\d)(\\d)(\\d)(\\d)$") %>%
@@ -269,8 +265,7 @@ as_mesh.default <- function(x,
   }
 }
 #' @export
-as_mesh.mesh_80km <- function(x,
-                              size = NULL) {
+as_mesh.mesh_80km <- function(x, size = NULL, ...) {
   if (is_null(size)) {
     x
   } else {

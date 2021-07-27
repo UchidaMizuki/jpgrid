@@ -8,7 +8,7 @@ mesh_move.default <- function(mesh, n_X, n_Y, ...) {
   mesh_move(mesh, n_X, n_Y)
 }
 #' @export
-mesh_move.mesh_80km <- function(mesh, n_X, n_Y) {
+mesh_move.mesh_80km <- function(mesh, n_X, n_Y, ...) {
   move_X <- move_mesh_80km(n_X,
                            code_80km = field(mesh, "code_X_80km"))
   move_Y <- move_mesh_80km(n_Y,
@@ -20,7 +20,7 @@ mesh_move.mesh_80km <- function(mesh, n_X, n_Y) {
        size = "80km")
 }
 #' @export
-mesh_move.mesh_10km <- function(mesh, n_X, n_Y) {
+mesh_move.mesh_10km <- function(mesh, n_X, n_Y, ...) {
   move_X <- move_mesh_10km(n_X,
                            code_80km = field(mesh, "code_X_80km"),
                            code_10km = field(mesh, "code_X_10km"))
@@ -37,7 +37,7 @@ mesh_move.mesh_10km <- function(mesh, n_X, n_Y) {
        size = "10km")
 }
 #' @export
-mesh_move.mesh_1km <- function(mesh, n_X, n_Y) {
+mesh_move.mesh_1km <- function(mesh, n_X, n_Y, ...) {
   move_X <- move_mesh_1km(n_X,
                           code_80km = field(mesh, "code_X_80km"),
                           code_10km = field(mesh, "code_X_10km"),
@@ -59,7 +59,7 @@ mesh_move.mesh_1km <- function(mesh, n_X, n_Y) {
        size = "1km")
 }
 #' @export
-mesh_move.mesh_500m <- function(mesh, n_X, n_Y) {
+mesh_move.mesh_500m <- function(mesh, n_X, n_Y, ...) {
   move_X <- move_mesh_500m(n_X,
                            code_80km = field(mesh, "code_X_80km"),
                            code_10km = field(mesh, "code_X_10km"),
@@ -86,7 +86,7 @@ mesh_move.mesh_500m <- function(mesh, n_X, n_Y) {
        size = "500m")
 }
 #' @export
-mesh_move.mesh_250m <- function(mesh, n_X, n_Y) {
+mesh_move.mesh_250m <- function(mesh, n_X, n_Y, ...) {
   move_X <- move_mesh_250m(n_X,
                            code_80km = field(mesh, "code_X_80km"),
                            code_10km = field(mesh, "code_X_10km"),
@@ -117,7 +117,7 @@ mesh_move.mesh_250m <- function(mesh, n_X, n_Y) {
        size = "250m")
 }
 #' @export
-mesh_move.mesh_125m <- function(mesh, n_X, n_Y) {
+mesh_move.mesh_125m <- function(mesh, n_X, n_Y, ...) {
   move_X <- move_mesh_125m(n_X,
                            code_80km = field(mesh, "code_X_80km"),
                            code_10km = field(mesh, "code_X_10km"),
@@ -152,7 +152,7 @@ mesh_move.mesh_125m <- function(mesh, n_X, n_Y) {
        size = "125m")
 }
 #' @export
-mesh_move.mesh_100m <- function(mesh, n_X, n_Y) {
+mesh_move.mesh_100m <- function(mesh, n_X, n_Y, ...) {
   move_X <- move_mesh_100m(n_X,
                            code_80km = field(mesh, "code_X_80km"),
                            code_10km = field(mesh, "code_X_10km"),
