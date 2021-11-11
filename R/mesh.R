@@ -15,9 +15,15 @@ mesh <- function(code_Y_80km = integer(),
                  code_X_100m = NA_integer_,
 
                  size = NULL,
+                 size_to = NULL,
+
+                 # FIXME
                  is_mesh_100m = F) {
-  if (!is_null(size)) {
+  if (!is.null(size)) {
     size <- size_match(size)
+  }
+  if (!is.null(size_to)) {
+    size_to <- size_match(size_to)
   }
 
   stopifnot(!xor(are_na(code_Y_80km), are_na(code_X_80km)),
@@ -25,25 +31,30 @@ mesh <- function(code_Y_80km = integer(),
             !xor(are_na(code_Y_1km), are_na(code_X_1km)),
             !xor(are_na(code_Y_100m), are_na(code_X_100m)))
 
-  df <- vec_recycle_common(code_Y_80km = code_Y_80km,
-                           code_X_80km = code_X_80km,
+  # FIXME
+  data <- vec_recycle_common(code_Y_80km = code_Y_80km,
+                             code_X_80km = code_X_80km,
 
-                           code_Y_10km = code_Y_10km,
-                           code_X_10km = code_X_10km,
+                             code_Y_10km = code_Y_10km,
+                             code_X_10km = code_X_10km,
 
-                           code_Y_1km = code_Y_1km,
-                           code_X_1km = code_X_1km,
+                             code_Y_1km = code_Y_1km,
+                             code_X_1km = code_X_1km,
 
-                           code_500m = code_500m,
-                           code_250m = code_250m,
-                           code_125m = code_125m,
+                             code_500m = code_500m,
+                             code_250m = code_250m,
+                             code_125m = code_125m,
 
-                           code_Y_100m = code_Y_100m,
-                           code_X_100m = code_X_100m) %>%
-    as_list_of(.ptype = integer()) %>%
-    new_data_frame()
+                             code_Y_100m = code_Y_100m,
+                             code_X_100m = code_X_100m)
+  data <- as_list_of(data,
+                     .ptype = integer())
 
-  if (is_mesh_100m || !is_null(size) && size == "100m") {
+
+
+
+  # FIXME
+  if (is_mesh_100m || !is.null(size) && size == "100m") {
     df <- df %>%
       dplyr::mutate(code_500m = dplyr::case_when(code_Y_100m %in% 0:4 & code_X_100m %in% 0:4 ~ 1L,
                                                  code_Y_100m %in% 0:4 & code_X_100m %in% 5:9 ~ 2L,
@@ -54,13 +65,13 @@ mesh <- function(code_Y_80km = integer(),
   df_drop_na <- df %>%
     tidyr::drop_na(code_Y_80km)
 
-  if (is_null(size) && any(are_na(df_drop_na$code_Y_10km)) || !is_null(size) && size == "80km") {
+  if (is.null(size) && any(are_na(df_drop_na$code_Y_10km)) || !is.null(size) && size == "80km") {
     stopifnot(are_na(df$code_Y_80km) | stringr::str_length(df$code_Y_80km) == 2 & stringr::str_length(df$code_X_80km) == 2)
 
     size <- "80km"
     df <- df %>%
       dplyr::select(code_Y_80km, code_X_80km)
-  } else if (is_null(size) && any(are_na(df_drop_na$code_Y_1km)) || !is_null(size) && size == "10km") {
+  } else if (is.null(size) && any(are_na(df_drop_na$code_Y_1km)) || !is.null(size) && size == "10km") {
     stopifnot(are_na(df$code_Y_10km) | df$code_Y_10km %in% 0:7 & df$code_X_10km %in% 0:7)
 
     size <- "10km"
@@ -70,7 +81,7 @@ mesh <- function(code_Y_80km = integer(),
       dplyr::mutate(dplyr::across(c(code_Y_80km, code_X_80km),
                                   purrr::partial(na_if_na,
                                                  y = code_Y_10km)))
-  } else if (is_null(size) && any(are_na(df_drop_na$code_500m)) || !is_null(size) && size == "1km") {
+  } else if (is.null(size) && any(are_na(df_drop_na$code_500m)) || !is.null(size) && size == "1km") {
     stopifnot(are_na(df$code_Y_1km) | df$code_Y_1km %in% 0:9 & df$code_X_1km %in% 0:9)
 
     size <- "1km"
@@ -82,7 +93,7 @@ mesh <- function(code_Y_80km = integer(),
                                     code_Y_10km, code_X_10km),
                                   purrr::partial(na_if_na,
                                                  y = code_Y_1km)))
-  } else if (is_null(size) && any(are_na(df_drop_na$code_250m)) || !is_null(size) && size == "500m") {
+  } else if (is.null(size) && any(are_na(df_drop_na$code_250m)) || !is.null(size) && size == "500m") {
     stopifnot(are_na(df$code_500m) | df$code_500m %in% 1:4)
 
     size <- "500m"
@@ -96,7 +107,7 @@ mesh <- function(code_Y_80km = integer(),
                                     code_Y_1km, code_X_1km),
                                   purrr::partial(na_if_na,
                                                  y = code_500m)))
-  } else if (is_null(size) && any(are_na(df_drop_na$code_125m)) || !is_null(size) && size == "250m") {
+  } else if (is.null(size) && any(are_na(df_drop_na$code_125m)) || !is.null(size) && size == "250m") {
     stopifnot(are_na(df$code_250m) | df$code_250m %in% 1:4)
 
     size <- "250m"
@@ -111,7 +122,7 @@ mesh <- function(code_Y_80km = integer(),
                                     code_500m),
                                   purrr::partial(na_if_na,
                                                  y = code_250m)))
-  } else if (is_null(size) || !is_null(size) && size == "125m") {
+  } else if (is.null(size) || !is.null(size) && size == "125m") {
     stopifnot(are_na(df$code_125m) | df$code_125m %in% 1:4)
 
     size <- "125m"
@@ -126,7 +137,7 @@ mesh <- function(code_Y_80km = integer(),
                                     code_500m, code_250m),
                                   purrr::partial(na_if_na,
                                                  y = code_125m)))
-  } else if (!is_null(size) && size == "100m") {
+  } else if (!is.null(size) && size == "100m") {
     stopifnot(are_na(df$code_Y_100m) | df$code_Y_100m %in% 0:9 & df$code_X_100m %in% 0:9)
 
     size <- "100m"
@@ -223,7 +234,7 @@ as_mesh <- function(x, size = NULL, ...) {
 }
 #' @export
 as_mesh.default <- function(x, size = NULL, is_mesh_100m = F, ...) {
-  if (!is_null(size) && size == "100m" || is_mesh_100m) {
+  if (!is.null(size) && size == "100m" || is_mesh_100m) {
     x %>%
       stringr::str_match("^(\\d{2})(\\d{2})(\\d)(\\d)(\\d)(\\d)(\\d)(\\d)$") %>%
       tibble::as_tibble(.name_repair = ~ c("x",
@@ -266,7 +277,7 @@ as_mesh.default <- function(x, size = NULL, is_mesh_100m = F, ...) {
 }
 #' @export
 as_mesh.mesh_80km <- function(x, size = NULL, ...) {
-  if (is_null(size)) {
+  if (is.null(size)) {
     x
   } else {
     args <- fields(x) %>%
