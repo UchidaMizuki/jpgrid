@@ -5,34 +5,53 @@ mesh_to_sfc <- function(mesh,
   stopifnot(is_mesh(mesh))
   arg_match(type, c("POLYGON", "POINT"))
 
-  geom <- tibble::tibble(mesh = vec_unique(mesh)) %>%
-    dplyr::mutate(mesh_to_XY(mesh,
-                             center = type == "POINT")) %>%
-    dplyr::rowwise() %>%
-    dplyr::mutate(geom = {
-      if (type == "POLYGON") {
-        if (is_na(X_min) || is_na(Y_min) || is_na(X_max) || is_na(Y_max)) {
-          sf::st_polygon() %>%
-            sf::st_sfc(crs = crs)
-        } else {
-          sf::st_bbox(c(xmin = X_min,
-                        ymin = Y_min,
-                        xmax = X_max,
-                        ymax = Y_max)) %>%
-            sf::st_as_sfc(crs = crs)
-        }
-      } else {
-        sf::st_point(c(X, Y)) %>%
-          sf::st_sfc(crs = crs)
-      }
-    },
-    .keep = "unused") %>%
-    dplyr::ungroup()
+  mesh_unique <- vec_unique(mesh)
+  mesh_unique <- mesh_unique %>%
+    vec_slice(!is.na(mesh_unique))
 
-  tibble::tibble(mesh = mesh) %>%
-    dplyr::left_join(geom,
-                     by = "mesh") %>%
-    dplyr::pull(geom)
+  if (vec_is_empty(mesh_unique)) {
+    if (type == "POLYGON") {
+      geom <- sf::st_polygon()
+    } else {
+      geom <- sf::st_point()
+    }
+
+    geom %>%
+      sf::st_sfc(crs = crs) %>%
+      vec_rep(vec_size(mesh))
+  } else {
+    if (type == "POLYGON") {
+      geom <- tibble::tibble(mesh = mesh_unique) %>%
+        dplyr::mutate(mesh_to_XY(mesh,
+                                 center = F)) %>%
+        dplyr::rowwise() %>%
+        dplyr::mutate(geom = {
+          if (is.na(X_min) || is.na(Y_min) || is.na(X_max) || is.na(Y_max)) {
+            sf::st_polygon() %>%
+              sf::st_sfc(crs = crs)
+          } else {
+            sf::st_bbox(c(xmin = X_min,
+                          ymin = Y_min,
+                          xmax = X_max,
+                          ymax = Y_max)) %>%
+              sf::st_as_sfc(crs = crs)
+          }
+        },
+        .keep = "unused") %>%
+        dplyr::ungroup()
+    } else {
+      geom <- tibble::tibble(mesh = mesh_unique) %>%
+        dplyr::mutate(mesh_to_XY(mesh)) %>%
+        sf::st_as_sf(coords = c("X", "Y"),
+                     crs = crs)
+    }
+
+    tibble::tibble(mesh = mesh) %>%
+      dplyr::left_join(geom,
+                       by = "mesh") %>%
+      sf::st_as_sf() %>%
+      sf::st_geometry()
+  }
 }
 
 #' @export

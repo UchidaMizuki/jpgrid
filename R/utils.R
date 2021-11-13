@@ -20,7 +20,7 @@ size_match <- function(size) {
 
 code_to_number <- function(code, code_min, code_max) {
   code <- as.integer(code)
-  stopifnot(are_na(code) | code_min <= code & code <= code_max)
+  stopifnot(is.na(code) | code_min <= code & code <= code_max)
   code
 }
 

@@ -27,7 +27,7 @@ mesh_neighbor <- function(mesh, moore = T, simplify = T, ...) {
     neighbor <- neighbor %>%
       dplyr::rowwise() %>%
       dplyr::mutate(neighbor = neighbor %>%
-                      dplyr::pull(mesh_neighbor) %>%
+                      purrr::chuck("mesh_neighbor") %>%
                       list()) %>%
       dplyr::ungroup()
   }
@@ -35,5 +35,5 @@ mesh_neighbor <- function(mesh, moore = T, simplify = T, ...) {
   tibble::tibble(mesh = mesh) %>%
     dplyr::left_join(neighbor,
                      by = "mesh") %>%
-    dplyr::pull(neighbor)
+    purrr::chuck("neighbor")
 }

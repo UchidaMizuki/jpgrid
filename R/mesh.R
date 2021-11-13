@@ -53,7 +53,7 @@ code_to_mesh <- function(code_X_80km = integer(),
   n_X_80km <- code_to_number(code$code_X_80km, 0, 99)
   n_Y_80km <- code_to_number(code$code_Y_80km, 0, 99)
 
-  if (is_null(size) && (vec_is_empty(code) || any(are_na(code$code_Y_10km))) || !is_null(size) && size == 80000) {
+  if (is.null(size) && (vec_is_empty(code) || any(is.na(code$code_Y_10km))) || !is.null(size) && size == 80000) {
     size <- 80000
     n_X <- n_X_80km
     n_Y <- n_Y_80km
@@ -61,7 +61,7 @@ code_to_mesh <- function(code_X_80km = integer(),
     n_X_10km <- n_X_80km * 8 + code_to_number(code$code_X_10km, 0, 7)
     n_Y_10km <- n_Y_80km * 8 + code_to_number(code$code_Y_10km, 0, 7)
 
-    if (is_null(size) && any(are_na(code$code_Y_1km)) || !is_null(size) && size == 10000) {
+    if (is.null(size) && any(is.na(code$code_Y_1km)) || !is.null(size) && size == 10000) {
       size <- 10000
       n_X <- n_X_10km
       n_Y <- n_Y_10km
@@ -69,17 +69,17 @@ code_to_mesh <- function(code_X_80km = integer(),
       n_X_1km <- n_X_10km * 10 + code_to_number(code$code_X_1km, 0, 9)
       n_Y_1km <- n_Y_10km * 10 + code_to_number(code$code_Y_1km, 0, 9)
 
-      if (is_null(size) && any(are_na(code$code_500m)) || !is_null(size) && size == 1000) {
+      if (is.null(size) && any(is.na(code$code_500m)) || !is.null(size) && size == 1000) {
         size <- 1000
         n_X <- n_X_1km
         n_Y <- n_Y_1km
-      } else if (is_null(size) || !is_null(size) && size %in% c(500, 250, 125)) {
+      } else if (is.null(size) || !is.null(size) && size %in% c(500, 250, 125)) {
         # 500m, 250m, 125m
         code_500m <- code_to_number(code$code_500m, 1, 4)
         n_X_500m <- n_X_1km * 2 + code_2x2_to_X(code_500m)
         n_Y_500m <- n_Y_1km * 2 + code_2x2_to_Y(code_500m)
 
-        if (is_null(size) && any(are_na(code$code_250m)) || !is_null(size) && size == 500) {
+        if (is.null(size) && any(is.na(code$code_250m)) || !is.null(size) && size == 500) {
           size <- 500
           n_X <- n_X_500m
           n_Y <- n_Y_500m
@@ -88,7 +88,7 @@ code_to_mesh <- function(code_X_80km = integer(),
           n_X_250m <- n_X_500m * 2 + code_2x2_to_X(code_250m)
           n_Y_250m <- n_Y_500m * 2 + code_2x2_to_Y(code_250m)
 
-          if (is_null(size) && any(are_na(code$code_125m)) || !is_null(size) && size == 250) {
+          if (is.null(size) && any(is.na(code$code_125m)) || !is.null(size) && size == 250) {
             size <- 250
             n_X <- n_X_250m
             n_Y <- n_Y_250m
@@ -293,11 +293,11 @@ as_mesh <- function(x, size, ...) {
 as_mesh.default <- function(x,
                             size = NULL,
                             ...) {
-  if (!is_null(size)) {
+  if (!is.null(size)) {
     size <- size_match(size)
   }
 
-  if (!is_null(size) && size == 100) {
+  if (!is.null(size) && size == 100) {
     x <- x %>%
       stringr::str_match("^(\\d{2})(\\d{2})(\\d)(\\d)(\\d)(\\d)(\\d)(\\d)$") %>%
       tibble::as_tibble(.name_repair = ~ c("code",
@@ -346,7 +346,7 @@ as_mesh.default <- function(x,
 as_mesh.mesh <- function(x,
                          size = NULL,
                          ...) {
-  if (is_null(size)) {
+  if (is.null(size)) {
     x
   } else {
     size <- size_match(size)
