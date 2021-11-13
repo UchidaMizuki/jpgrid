@@ -7,7 +7,7 @@ mesh_to_sfc <- function(mesh,
 
   geom <- tibble::tibble(mesh = vec_unique(mesh)) %>%
     dplyr::mutate(mesh_to_XY(mesh,
-                             center = F)) %>%
+                             center = type == "POINT")) %>%
     dplyr::rowwise() %>%
     dplyr::mutate(geom = {
       if (type == "POLYGON") {
