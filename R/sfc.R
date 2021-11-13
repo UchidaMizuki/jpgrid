@@ -4,8 +4,8 @@ mesh_to_sfc <- function(mesh, crs = sf::NA_crs_, ...) {
   stopifnot(is_mesh(mesh))
 
   bbox <- tibble::tibble(mesh = vec_unique(mesh)) %>%
-    dplyr::mutate(mesh %>%
-                    mesh_to_XY(center = F)) %>%
+    dplyr::mutate(mesh_to_XY(mesh,
+                             center = F)) %>%
     dplyr::rowwise() %>%
     dplyr::mutate(bbox = {
       if (is_na(X_min) || is_na(Y_min) || is_na(X_max) || is_na(Y_max)) {
@@ -29,4 +29,11 @@ mesh_to_sfc <- function(mesh, crs = sf::NA_crs_, ...) {
     dplyr::left_join(bbox,
                      by = "mesh") %>%
     dplyr::pull(bbox)
+}
+
+#' @export
+plot.mesh <- function(x, y, ...) {
+  x %>%
+    mesh_to_sfc() %>%
+    plot()
 }
