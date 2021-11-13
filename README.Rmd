@@ -66,15 +66,11 @@ as_mesh(x, size = "125m")
 また，100 mメッシュから500 mメッシュへの変換も対応しています．
 
 ```{r}
-tibble(mesh_10km = as_mesh(x, 
-                           size = "10km")) %>% 
-  mutate(mesh_80km = as_mesh(mesh_10km,
-                             size = "80km"))
+tibble(mesh_10km = as_mesh(x, size = "10km")) %>%
+   mutate(mesh_80km = as_mesh(mesh_10km, size = "80km"))
 
-tibble(mesh_100m = as_mesh(x,
-                           size = "100m")) %>% 
-  mutate(mesh_500m = as_mesh(mesh_100m,
-                             size = "500m"))
+tibble(mesh_100m = as_mesh(x, size = "100m")) %>%
+  mutate(mesh_500m = as_mesh(mesh_100m, size = "500m"))
 ```
 
 ### 経度・緯度から地域メッシュへの変換
@@ -83,11 +79,9 @@ tibble(mesh_100m = as_mesh(x,
 
 ```{r}
 tibble(X = c(139.7008, 135.4375), # 経度
-       Y = c(35.68906, 34.70833)) %>%  # 緯度
-  mutate(mesh_100m = XY_to_mesh(X, Y,
-                                size = "100m"),
-         mesh_125m = XY_to_mesh(X, Y,
-                                size = "125m"))
+       Y = c(35.68906, 34.70833)) %>% # 緯度
+  mutate(mesh_100m = XY_to_mesh(X, Y, size = "100m"),
+         mesh_125m = XY_to_mesh(X, Y, size = "125m"))
 ```
 
 ### 地域メッシュから経度・緯度への変換
@@ -97,8 +91,9 @@ tibble(X = c(139.7008, 135.4375), # 経度
 
 ```{r}
 tibble(mesh = c("5339452660", "5235034590")) %>% 
-  mutate(mesh_to_XY(mesh,
-                    size = "100m"))
+  mutate(mesh %>% 
+           as_mesh(size = "100m") %>% 
+           mesh_to_XY())
 ```
 
 
@@ -134,8 +129,7 @@ tictoc::toc()
 # japanmesh
 tictoc::tic()
 df_japanmesh <- df %>% 
-  mutate(mesh = XY_to_mesh(X, Y,
-                           size = "1km"))
+  mutate(mesh = XY_to_mesh(X, Y, size = "1km"))
 head(df_japanmesh)
 tictoc::toc()
 
@@ -143,6 +137,7 @@ tictoc::toc()
 # jpmesh
 tictoc::tic()
 df_jpmesh <- df_jpmesh %>% 
+  select(mesh) %>% 
   mutate(jpmesh::mesh_to_coords(mesh),
          .keep = "unused")
 head(df_jpmesh)
@@ -151,6 +146,7 @@ tictoc::toc()
 # japanmesh
 tictoc::tic()
 df_japanmesh <- df_japanmesh %>% 
+  select(mesh) %>% 
   mutate(mesh_to_XY(mesh))
 head(df_japanmesh)
 tictoc::toc()

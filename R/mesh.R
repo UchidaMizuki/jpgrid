@@ -48,8 +48,7 @@ code_to_mesh <- function(code_X_80km = integer(),
                              code_125m = code_125m,
 
                              code_X_100m = code_X_100m,
-                             code_Y_100m = code_Y_100m) %>%
-    new_data_frame()
+                             code_Y_100m = code_Y_100m)
 
   n_X_80km <- code_to_number(code$code_X_80km, 0, 99)
   n_Y_80km <- code_to_number(code$code_Y_80km, 0, 99)
@@ -172,6 +171,7 @@ mesh_to_code_impl <- function(n_X, n_Y, size) {
              code_Y_100m = n_Y %% 10))
     code$code_500m <- code_100m_to_500m(code_X = code$code_X_100m,
                                         code_Y = code$code_Y_100m)
+    code
   }
 }
 

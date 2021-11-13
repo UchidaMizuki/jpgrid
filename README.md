@@ -60,10 +60,8 @@ as_mesh(x, size = "125m")
 また，100 mメッシュから500 mメッシュへの変換も対応しています．
 
 ``` r
-tibble(mesh_10km = as_mesh(x, 
-                           size = "10km")) %>% 
-  mutate(mesh_80km = as_mesh(mesh_10km,
-                             size = "80km"))
+tibble(mesh_10km = as_mesh(x, size = "10km")) %>%
+   mutate(mesh_80km = as_mesh(mesh_10km, size = "80km"))
 #> # A tibble: 7 x 2
 #>   mesh_10km mesh_80km
 #>    <msh10k>  <msh80k>
@@ -75,10 +73,8 @@ tibble(mesh_10km = as_mesh(x,
 #> 6        NA        NA
 #> 7        NA        NA
 
-tibble(mesh_100m = as_mesh(x,
-                           size = "100m")) %>% 
-  mutate(mesh_500m = as_mesh(mesh_100m,
-                             size = "500m"))
+tibble(mesh_100m = as_mesh(x, size = "100m")) %>%
+  mutate(mesh_500m = as_mesh(mesh_100m, size = "500m"))
 #> # A tibble: 7 x 2
 #>    mesh_100m mesh_500m
 #>     <msh100>  <msh500>
@@ -97,16 +93,14 @@ tibble(mesh_100m = as_mesh(x,
 
 ``` r
 tibble(X = c(139.7008, 135.4375), # 経度
-       Y = c(35.68906, 34.70833)) %>%  # 緯度
-  mutate(mesh_100m = XY_to_mesh(X, Y,
-                                size = "100m"),
-         mesh_125m = XY_to_mesh(X, Y,
-                                size = "125m"))
+       Y = c(35.68906, 34.70833)) %>% # 緯度
+  mutate(mesh_100m = XY_to_mesh(X, Y, size = "100m"),
+         mesh_125m = XY_to_mesh(X, Y, size = "125m"))
 #> # A tibble: 2 x 4
 #>       X     Y  mesh_100m   mesh_125m
 #>   <dbl> <dbl>   <msh100>    <msh125>
 #> 1  140.  35.7 5339452660 53394526313
-#> 2  135.  34.7 5235034590 52350345333
+#> 2  135.  34.7 5235034499 52350344444
 ```
 
 ### 地域メッシュから経度・緯度への変換
@@ -115,13 +109,14 @@ tibble(X = c(139.7008, 135.4375), # 経度
 
 ``` r
 tibble(mesh = c("5339452660", "5235034590")) %>% 
-  mutate(mesh_to_XY(mesh,
-                    size = "100m"))
+  mutate(mesh %>% 
+           as_mesh(size = "100m") %>% 
+           mesh_to_XY())
 #> # A tibble: 2 x 3
-#>   mesh       X_center Y_center
-#>   <chr>         <dbl>    <dbl>
-#> 1 5339452660     140.     35.7
-#> 2 5235034590     135.     34.7
+#>   mesh           X     Y
+#>   <chr>      <dbl> <dbl>
+#> 1 5339452660  140.  35.7
+#> 2 5235034590  135.  34.7
 ```
 
 ### その他
@@ -162,13 +157,12 @@ head(df_jpmesh)
 #> 5  140.  39.8   59395618
 #> 6  140.  39.4   59390561
 tictoc::toc()
-#> 6.89 sec elapsed
+#> 7.93 sec elapsed
 
 # japanmesh
 tictoc::tic()
 df_japanmesh <- df %>% 
-  mutate(mesh = XY_to_mesh(X, Y,
-                           size = "1km"))
+  mutate(mesh = XY_to_mesh(X, Y, size = "1km"))
 head(df_japanmesh)
 #> # A tibble: 6 x 3
 #>       X     Y     mesh
@@ -186,35 +180,37 @@ tictoc::toc()
 # jpmesh
 tictoc::tic()
 df_jpmesh <- df_jpmesh %>% 
+  select(mesh) %>% 
   mutate(jpmesh::mesh_to_coords(mesh),
          .keep = "unused")
 head(df_jpmesh)
-#> # A tibble: 6 x 7
-#>       X     Y   meshcode lng_center lat_center lng_error lat_error
-#>   <dbl> <dbl> <meshcode>      <dbl>      <dbl>     <dbl>     <dbl>
-#> 1  139.  39.8   59396009       139.       39.8   0.00625   0.00417
-#> 2  140.  39.5   59391489       140.       39.5   0.00625   0.00417
-#> 3  140.  39.1   58395438       140.       39.1   0.00625   0.00417
-#> 4  140.  39.4   59390429       140.       39.4   0.00625   0.00417
-#> 5  140.  39.8   59395618       140.       39.8   0.00625   0.00417
-#> 6  140.  39.4   59390561       140.       39.4   0.00625   0.00417
+#> # A tibble: 6 x 5
+#>     meshcode lng_center lat_center lng_error lat_error
+#>   <meshcode>      <dbl>      <dbl>     <dbl>     <dbl>
+#> 1   59396009       139.       39.8   0.00625   0.00417
+#> 2   59391489       140.       39.5   0.00625   0.00417
+#> 3   58395438       140.       39.1   0.00625   0.00417
+#> 4   59390429       140.       39.4   0.00625   0.00417
+#> 5   59395618       140.       39.8   0.00625   0.00417
+#> 6   59390561       140.       39.4   0.00625   0.00417
 tictoc::toc()
-#> 7.09 sec elapsed
+#> 8.41 sec elapsed
 
 # japanmesh
 tictoc::tic()
 df_japanmesh <- df_japanmesh %>% 
+  select(mesh) %>% 
   mutate(mesh_to_XY(mesh))
 head(df_japanmesh)
-#> # A tibble: 6 x 5
-#>       X     Y     mesh X_center Y_center
-#>   <dbl> <dbl>  <msh1k>    <dbl>    <dbl>
-#> 1  139.  39.8 59396009     139.     39.8
-#> 2  140.  39.5 59391489     140.     39.5
-#> 3  140.  39.1 58395438     140.     39.1
-#> 4  140.  39.4 59390429     140.     39.4
-#> 5  140.  39.8 59395618     140.     39.8
-#> 6  140.  39.4 59390561     140.     39.4
+#> # A tibble: 6 x 3
+#>       mesh     X     Y
+#>    <msh1k> <dbl> <dbl>
+#> 1 59396009  139.  39.8
+#> 2 59391489  140.  39.5
+#> 3 58395438  140.  39.1
+#> 4 59390429  140.  39.4
+#> 5 59395618  140.  39.8
+#> 6 59390561  140.  39.4
 tictoc::toc()
-#> 0.04 sec elapsed
+#> 0.01 sec elapsed
 ```
