@@ -1,20 +1,34 @@
-na_if_na <- function(x, y) {
-  dplyr::if_else(are_na(y),
-                 vec_cast(NA, x),
-                 x)
-}
-
 size_match <- function(size) {
   if (inherits(size, "units")) {
-    if (size >= units::set_units(1, km)) {
-      size <- units::set_units(size, km)
-    } else {
-      size <- units::set_units(size, m)
-    }
-    size <- stringr::str_c(units::drop_units(size), units::deparse_unit(size))
+    size <- size %>%
+      units::set_units(m) %>%
+      units::drop_units()
+  } else if (is.character(size)) {
+    size <- switch(size,
+                   `80km` = 80000,
+                   `10km` = 10000,
+                   `1km` = 1000,
+                   `500m` = 500,
+                   `250m` = 250,
+                   `125m` = 125,
+                   `100m` = 100)
   }
-  arg_match(size, c("80km", "10km", "1km", "500m", "250m", "125m", "100m"))
+
+  stopifnot(size %in% c(80000, 10000, 1000, 500, 250, 125, 100))
   size
+}
+
+code_to_number <- function(code, code_min, code_max) {
+  code <- as.integer(code)
+  stopifnot(are_na(code) | code_min <= code & code <= code_max)
+  code
+}
+
+code_100m_to_500m <- function(code_X, code_Y) {
+  dplyr::case_when(code_Y %in% 0:4 & code_X %in% 0:4 ~ 1L,
+                   code_Y %in% 0:4 & code_X %in% 5:9 ~ 2L,
+                   code_Y %in% 5:9 & code_X %in% 0:4 ~ 3L,
+                   code_Y %in% 5:9 & code_X %in% 5:9 ~ 4L)
 }
 
 code_XY_to_2x2 <- function(code_X, code_Y) {
