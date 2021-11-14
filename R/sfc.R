@@ -1,3 +1,16 @@
+#' @export
+point_to_mesh <- function(point, size) {
+  stopifnot(inherits(point, "sfc_POINT"))
+
+  point <- point %>%
+    sf::st_coordinates() %>%
+    tibble::as_tibble()
+
+  XY_to_mesh(X = point$X,
+             Y = point$Y,
+             size = size)
+}
+
 # FIXME?
 mesh_to_sfc <- function(mesh,
                         type = "POLYGON",
