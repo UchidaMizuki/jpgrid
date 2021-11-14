@@ -9,12 +9,19 @@ mesh_move <- function(mesh, n_X, n_Y, ...) {
 
 # FIXME?
 #' @export
-mesh_neighbor <- function(mesh, moore = T, simplify = T, ...) {
-  n_XY <- tidyr::expand_grid(n_X = -1:1,
-                             n_Y = -1:1) %>%
-    dplyr::filter(n_X != 0 | n_Y != 0,
-                  # Moore neighborhood or Von Neumann neighborhood
-                  moore | n_X * n_Y == 0)
+mesh_neighbor <- function(mesh,
+                          n = 1L,
+                          include_self = F,
+                          moore = T,
+                          simplify = T,
+                          ...) {
+  stopifnot(n > 0,
+            n %% 1 == 0)
+
+  n_XY <- tidyr::expand_grid(n_X = -n:n,
+                             n_Y = -n:n) %>%
+    dplyr::filter(include_self | n_X != 0 | n_Y != 0,
+                  moore | abs(n_X) + abs(n_Y) <= n) # Moore neighborhood or Von Neumann neighborhood
 
   neighbor <- tibble::tibble(mesh = vec_unique(mesh)) %>%
     tidyr::expand_grid(n_XY) %>%
