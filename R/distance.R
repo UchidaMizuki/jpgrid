@@ -9,26 +9,44 @@ mesh_distance <- function(mesh, mesh_to,
     size <- mesh_size(mesh)
     stopifnot(size == mesh_size(mesh_to))
 
-    mesh <- tibble::tibble(mesh = mesh,
-                           mesh_to = mesh_to)
+    mesh <- tibble::tibble(diff_n_X = field(mesh_to, "n_X") - field(mesh, "n_X"),
+                           n_Y = field(mesh, "n_Y"),
+                           n_Y_to = field(mesh_to, "n_Y"))
+
+    # FIXME?
+    length_X <- size / 80000
+    length_Y <- length_X / 1.5
 
     distance <- mesh %>%
-      vec_unique() %>%
-      dplyr::filter(!is.na(mesh),
-                    !is.na(mesh_to)) %>%
-      dplyr::mutate(mesh_to_XY(mesh),
-                    mesh_to_XY(mesh_to) %>%
-                      dplyr::rename(X_to = X,
-                                    Y_to = Y)) %>%
-
-      dplyr::mutate(distance = geosphere::distGeo(p1 = cbind(X, Y),
-                                                  p2 = cbind(X_to, Y_to)) %>%
+      dplyr::distinct(diff_n_X, n_Y, n_Y_to) %>%
+      dplyr::filter(!is.na(diff_n_X),
+                    !is.na(n_Y),
+                    !is.na(n_Y_to)) %>%
+      dplyr::mutate(diff_X = length_X * diff_n_X,
+                    Y = length_Y * (n_Y + .5),
+                    Y_to = length_Y * (n_Y_to + .5)) %>%
+      dplyr::mutate(distance = geosphere::distGeo(p1 = cbind(0, Y),
+                                                  p2 = cbind(diff_X, Y_to)) %>%
                       units::set_units(m)) %>%
-      dplyr::select(mesh, mesh_to, distance)
+      dplyr::select(diff_n_X, n_Y, n_Y_to, distance)
+
+    # distance <- mesh %>%
+    #   vec_unique() %>%
+    #   dplyr::filter(!is.na(mesh),
+    #                 !is.na(mesh_to)) %>%
+    #   dplyr::mutate(mesh_to_XY(mesh),
+    #                 mesh_to_XY(mesh_to) %>%
+    #                   dplyr::rename(X_to = X,
+    #                                 Y_to = Y)) %>%
+    #
+    #   dplyr::mutate(distance = geosphere::distGeo(p1 = cbind(X, Y),
+    #                                               p2 = cbind(X_to, Y_to)) %>%
+    #                   units::set_units(m)) %>%
+    #   dplyr::select(mesh, mesh_to, distance)
 
     mesh %>%
       dplyr::left_join(distance,
-                       by = c("mesh", "mesh_to")) %>%
+                       by = c("diff_n_X", "n_Y", "n_Y_to")) %>%
       purrr::chuck("distance")
   } else {
     stopifnot(is_list(mesh),

@@ -274,7 +274,7 @@ head(df_jpmesh)
 #> 5  140.  39.8   59395618
 #> 6  140.  39.4   59390561
 tictoc::toc()
-#> 7.04 sec elapsed
+#> 7.41 sec elapsed
 
 # japanmesh
 tictoc::tic()
@@ -291,7 +291,7 @@ head(df_japanmesh)
 #> 5  140.  39.8 59395618
 #> 6  140.  39.4 59390561
 tictoc::toc()
-#> 0.02 sec elapsed
+#> 0.01 sec elapsed
 
 # mesh to XY
 # jpmesh
@@ -311,7 +311,7 @@ head(df_jpmesh)
 #> 5   59395618       140.       39.8   0.00625   0.00417
 #> 6   59390561       140.       39.4   0.00625   0.00417
 tictoc::toc()
-#> 9.07 sec elapsed
+#> 9.11 sec elapsed
 
 # japanmesh
 tictoc::tic()
@@ -329,5 +329,5 @@ head(df_japanmesh)
 #> 5 59395618  140.  39.8
 #> 6 59390561  140.  39.4
 tictoc::toc()
-#> 0.03 sec elapsed
+#> 0.02 sec elapsed
 ```
