@@ -106,13 +106,13 @@ tibble(mesh = c("5339452660", "5235034590")) %>%
 
 ```{r}
 neighbor <- as_mesh("644142") %>% 
-  mesh_neighbor(n = 2)
+  mesh_neighbor(n = c(2, 5))
 
 print(neighbor)
 plot(neighbor[[1]])
 
 neighbor_neumann <- as_mesh("644142") %>% 
-  mesh_neighbor(n = 2,
+  mesh_neighbor(n = c(2, 5),
                 moore = F)
 
 print(neighbor_neumann)
