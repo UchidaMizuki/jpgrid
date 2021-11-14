@@ -30,20 +30,6 @@ mesh_distance <- function(mesh, mesh_to,
                       units::set_units(m)) %>%
       dplyr::select(diff_n_X, n_Y, n_Y_to, distance)
 
-    # distance <- mesh %>%
-    #   vec_unique() %>%
-    #   dplyr::filter(!is.na(mesh),
-    #                 !is.na(mesh_to)) %>%
-    #   dplyr::mutate(mesh_to_XY(mesh),
-    #                 mesh_to_XY(mesh_to) %>%
-    #                   dplyr::rename(X_to = X,
-    #                                 Y_to = Y)) %>%
-    #
-    #   dplyr::mutate(distance = geosphere::distGeo(p1 = cbind(X, Y),
-    #                                               p2 = cbind(X_to, Y_to)) %>%
-    #                   units::set_units(m)) %>%
-    #   dplyr::select(mesh, mesh_to, distance)
-
     mesh %>%
       dplyr::left_join(distance,
                        by = c("diff_n_X", "n_Y", "n_Y_to")) %>%
