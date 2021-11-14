@@ -24,13 +24,13 @@ code_to_number <- function(code, number_min, number_max) {
   number
 }
 
-number_to_code <- function(number, number_min, number_max) {
+number_to_code_80km <- function(number) {
   code <- number %>%
-    stringr::str_pad(stringr::str_length(number_max),
+    stringr::str_pad(2,
                      side = "left",
                      pad = "0")
 
-  dplyr::if_else(number_min <= number & number <= number_max,
+  dplyr::if_else(0 <= number & number <= 99,
                  code,
                  stringr::str_c("<", code, ">"))
 }
