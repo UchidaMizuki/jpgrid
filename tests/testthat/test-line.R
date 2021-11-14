@@ -5,7 +5,8 @@ test_that("line", {
 
   mesh_line(x, y)
 
-  mesh_line(list(x, x)) %>%
+  mesh_line(list(x, x),
+            close = T) %>%
     dplyr::first() %>%
     plot()
 })

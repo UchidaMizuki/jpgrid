@@ -2,9 +2,9 @@
 mesh_move <- function(mesh, n_X, n_Y, ...) {
   stopifnot(is_mesh(mesh))
 
-  mesh(n_X = field(mesh, "n_X") + n_X,
-       n_Y = field(mesh, "n_Y") + n_Y,
-       size = mesh_size(mesh))
+  new_mesh(n_X = field(mesh, "n_X") + n_X,
+           n_Y = field(mesh, "n_Y") + n_Y,
+           size = mesh_size(mesh))
 }
 
 # FIXME?
@@ -23,7 +23,8 @@ mesh_neighbor <- function(mesh,
     dplyr::filter(include_self | n_X != 0 | n_Y != 0,
                   moore | abs(n_X) + abs(n_Y) <= n) # Moore neighborhood or Von Neumann neighborhood
 
-  neighbor <- tibble::tibble(mesh = vec_unique(mesh)) %>%
+  neighbor <- tibble::tibble(mesh = mesh) %>%
+    vec_unique() %>%
     tidyr::expand_grid(n_XY) %>%
     dplyr::mutate(mesh_neighbor = mesh %>%
                     mesh_move(n_X, n_Y)) %>%
@@ -32,11 +33,11 @@ mesh_neighbor <- function(mesh,
 
   if (simplify) {
     neighbor <- neighbor %>%
-      dplyr::rowwise() %>%
       dplyr::mutate(neighbor = neighbor %>%
-                      purrr::chuck("mesh_neighbor") %>%
-                      list()) %>%
-      dplyr::ungroup()
+                      purrr::map(function(neighbor) {
+                        neighbor %>%
+                          purrr::chuck("mesh_neighbor")
+                      }))
   }
 
   tibble::tibble(mesh = mesh) %>%

@@ -1,4 +1,6 @@
-mesh <- function(n_X, n_Y, size) {
+new_mesh <- function(n_X = integer(),
+                     n_Y = integer(),
+                     size) {
   list_of(n_X = n_X,
           n_Y = n_Y,
           .ptype = integer()) %>%
@@ -108,9 +110,9 @@ code_to_mesh <- function(code_X_80km = integer(),
     }
   }
 
-  mesh(n_X = n_X,
-       n_Y = n_Y,
-       size = size)
+  new_mesh(n_X = n_X,
+           n_Y = n_Y,
+           size = size)
 }
 
 mesh_size <- function(mesh) {
@@ -354,8 +356,8 @@ as_mesh.mesh <- function(x,
 
     stopifnot(ratio %% 1 == 0)
 
-    mesh(n_X = field(x, "n_X") %/% ratio,
-         n_Y = field(x, "n_Y") %/% ratio,
-         size = size)
+    new_mesh(n_X = field(x, "n_X") %/% ratio,
+             n_Y = field(x, "n_Y") %/% ratio,
+             size = size)
   }
 }

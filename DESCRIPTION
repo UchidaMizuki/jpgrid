@@ -11,6 +11,7 @@ LazyData: true
 Imports: 
     dplyr,
     ellipsis,
+    geosphere,
     magrittr,
     purrr,
     rlang,
