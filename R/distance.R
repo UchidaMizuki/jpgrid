@@ -1,8 +1,8 @@
 # FIXME?
 #' @export
 mesh_distance <- function(mesh, mesh_to,
-                          type = "keep_na",
-                          close = F) {
+                          close = F,
+                          type = "keep_na") {
   if (is_mesh(mesh)) {
     stopifnot(is_mesh(mesh_to))
 
@@ -23,8 +23,8 @@ mesh_distance <- function(mesh, mesh_to,
 
       dplyr::mutate(distance = geosphere::distGeo(p1 = cbind(X, Y),
                                                   p2 = cbind(X_to, Y_to)) %>%
-                      units::set_units(m),
-                    .keep = "unused")
+                      units::set_units(m)) %>%
+      dplyr::select(mesh, mesh_to, distance)
 
     mesh %>%
       dplyr::left_join(distance,

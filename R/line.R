@@ -1,8 +1,8 @@
 # FIXME?
 #' @export
 mesh_line <- function(mesh, mesh_to,
-                      skip_na = F,
-                      close = F) {
+                      close = F,
+                      skip_na = F) {
   if (is_mesh(mesh)) {
     stopifnot(is_mesh(mesh_to))
 
@@ -62,8 +62,8 @@ mesh_line <- function(mesh, mesh_to,
                                    size = size)
                         }
                       }) %>%
-                      as_list_of(.ptype = new_mesh(size = size)),
-                    .keep = "unused")
+                      as_list_of(.ptype = new_mesh(size = size))) %>%
+      dplyr::select(mesh, mesh_to, line)
 
     mesh %>%
       dplyr::left_join(line,

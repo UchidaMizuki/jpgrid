@@ -18,10 +18,21 @@ size_match <- function(size) {
   size
 }
 
-code_to_number <- function(code, code_min, code_max) {
-  code <- as.integer(code)
-  stopifnot(is.na(code) | code_min <= code & code <= code_max)
-  code
+code_to_number <- function(code, number_min, number_max) {
+  number <- as.integer(code)
+  stopifnot(is.na(number) | number_min <= number & number <= number_max)
+  number
+}
+
+number_to_code <- function(number, number_min, number_max) {
+  code <- number %>%
+    stringr::str_pad(stringr::str_length(number_max),
+                     side = "left",
+                     pad = "0")
+
+  dplyr::if_else(number_min <= number & number <= number_max,
+                 code,
+                 stringr::str_c("<", code, ">"))
 }
 
 code_100m_to_500m <- function(code_X, code_Y) {

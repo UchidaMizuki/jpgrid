@@ -133,8 +133,8 @@ mesh_to_code <- function(mesh) {
 }
 mesh_to_code_impl <- function(n_X, n_Y, size) {
   if (size == 80000) {
-    list(code_X_80km = n_X,
-         code_Y_80km = n_Y)
+    list(code_X_80km = number_to_code(n_X, 0, 99),
+         code_Y_80km = number_to_code(n_Y, 0, 99))
   } else if (size == 10000) {
     mesh_to_code_impl(n_X = n_X %/% 8,
                       n_Y = n_Y %/% 8,

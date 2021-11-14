@@ -38,8 +38,8 @@ mesh_to_sfc <- function(mesh,
                                         ymax = Y_max)) %>%
                             sf::st_as_sfc(crs = crs)
                         }
-                      }),
-                    .keep = "unused") %>%
+                      })) %>%
+      dplyr::select(mesh, geom) %>%
       tidyr::unnest(geom)
   } else {
     geom <- geom %>%
