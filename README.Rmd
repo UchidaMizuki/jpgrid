@@ -46,33 +46,32 @@ library(dplyr)
 
 #### 文字列・数値からの地域メッシュの生成
 
-文字列・数値から地域メッシュを生成するためには`as_mesh()`関数を使用します．
-
-- デフォルトでは，最もサイズが大きい地域メッシュに合わせてサイズが決定されます．
-- `size`でサイズを指定することもできます（その場合，桁が不足している地域メッシュは`NA`になります）．
+文字列・数値から地域メッシュを生成するためには`mesh_***m()`，`as_mesh()`関数を使用します．
 
 ```{r}
 library(japanmesh)
 
 x <- c("53394526313", "5339358633", "533945764", "53394611", "523503", "5339", NA)
 
-as_mesh(x)
-as_mesh(x, size = "1km")
-as_mesh(x, size = "125m")
+mesh_80km(x)
+mesh_10km(x)
+mesh_125m(x)
+
+as_mesh(x, size = "250m")
 ```
 
 #### 地域メッシュのサイズの変換
 
-`as_mesh()`により，地域メッシュをよりサイズが大きい地域メッシュに変換します．
+`mesh_***m()`，`as_mesh()`関数により，地域メッシュをよりサイズが大きい地域メッシュに変換します．
 
 - 100 mメッシュから500 mメッシュへの変換に対応．
 
 ```{r}
-tibble(mesh_10km = as_mesh(x, size = "10km")) %>%
-   mutate(mesh_80km = as_mesh(mesh_10km, size = "80km"))
+tibble(mesh10km = mesh_10km(x)) %>%
+   mutate(mesh80km = mesh_80km(mesh10km))
 
-tibble(mesh_100m = as_mesh(x, size = "100m")) %>%
-  mutate(mesh_500m = as_mesh(mesh_100m, size = "500m"))
+tibble(mesh100m = mesh_100m(x)) %>%
+  mutate(mesh500m = mesh_500m(mesh100m))
 ```
 
 #### 経度・緯度から地域メッシュへの変換
@@ -82,8 +81,8 @@ tibble(mesh_100m = as_mesh(x, size = "100m")) %>%
 ```{r}
 tibble(X = c(139.7008, 135.4375), # 経度
        Y = c(35.68906, 34.70833)) %>% # 緯度
-  mutate(mesh_100m = XY_to_mesh(X, Y, size = "100m"),
-         mesh_125m = XY_to_mesh(X, Y, size = "125m"))
+  mutate(mesh100m = XY_to_mesh(X, Y, size = "100m"),
+         mesh125m = XY_to_mesh(X, Y, size = "125m"))
 ```
 
 #### 地域メッシュから経度・緯度への変換
