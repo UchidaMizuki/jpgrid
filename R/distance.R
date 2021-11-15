@@ -18,7 +18,7 @@ mesh_distance <- function(mesh, mesh_to,
     length_Y <- length_X / 1.5
 
     distance <- mesh %>%
-      dplyr::distinct(diff_n_X, n_Y, n_Y_to) %>%
+      vec_unique() %>%
       dplyr::filter(!is.na(diff_n_X),
                     !is.na(n_Y),
                     !is.na(n_Y_to)) %>%

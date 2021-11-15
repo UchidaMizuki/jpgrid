@@ -15,6 +15,7 @@ new_mesh <- function(n_X = integer(),
                             `100` = c("mesh_100m", "mesh")))
 }
 
+#' @export
 is_mesh <- function(x) {
   inherits(x, "mesh")
 }

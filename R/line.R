@@ -61,8 +61,7 @@ mesh_line <- function(mesh, mesh_to,
                                    n_Y = ys,
                                    size = size)
                         }
-                      }) %>%
-                      as_list_of(.ptype = new_mesh(size = size))) %>%
+                      })) %>%
       dplyr::select(mesh, mesh_to, line)
 
     mesh %>%
