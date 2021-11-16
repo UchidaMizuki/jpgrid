@@ -1,3 +1,15 @@
+# mesh --------------------------------------------------------------------
+#' Meshcode vector
+#'
+#' @name mesh
+#'
+#' @param x meshcode
+#'
+#' @examples
+#' mesh_80km("53394526313")
+#' mesh_1km(c("53394526313", "5339358633", "533945764"))
+NULL
+
 new_mesh <- function(size,
                      n_X = integer(),
                      n_Y = integer()) {
@@ -30,8 +42,8 @@ code_to_mesh <- function(size,
 
                          code_X_100m = NA_integer_,
                          code_Y_100m = NA_integer_) {
-  n_X_80km <- code_to_number(code_X_80km, 0, 99)
-  n_Y_80km <- code_to_number(code_Y_80km, 0, 99)
+  n_X_80km <- code_80km_to_number(code_X_80km)
+  n_Y_80km <- code_80km_to_number(code_Y_80km)
 
   if (size == 80000) {
     n_X <- n_X_80km
@@ -80,20 +92,16 @@ code_to_mesh <- function(size,
     }
   }
 
+  not_n_na <- !is.na(n_X) & !is.na(n_Y)
+  n_X <- dplyr::if_else(not_n_na,
+                        n_X,
+                        NA_integer_)
+  n_Y <- dplyr::if_else(not_n_na,
+                        n_Y,
+                        NA_integer_)
   new_mesh(size = size,
            n_X = n_X,
            n_Y = n_Y)
-}
-
-mesh_size <- function(mesh) {
-  switch(class(mesh)[1],
-         mesh_80km = 80000,
-         mesh_10km = 10000,
-         mesh_1km = 1000,
-         mesh_500m = 500,
-         mesh_250m = 250,
-         mesh_125m = 125,
-         mesh_100m = 100)
 }
 
 mesh_to_code <- function(mesh) {
@@ -145,142 +153,169 @@ mesh_to_code_impl <- function(size, n_X, n_Y) {
   }
 }
 
-# as_mesh -----------------------------------------------------------------
-#' Meshcode vector
-#'
-#' @param x meshcode
-#' @param size meshcode size
-#'
-#' @examples
-#' mesh_80km("53394526313")
-#' mesh_1km(c("53394526313", "5339358633", "533945764"))
-#'
-#' @name mesh
-NULL
-
 #' @export
 #' @rdname mesh
-as_mesh <- function(x, size, ...) {
-  UseMethod("as_mesh")
+mesh_80km <- function(x,
+                      strict = T) {
+  mesh_impl(x,
+            strict = strict,
+            size = 80000)
 }
 
 #' @export
 #' @rdname mesh
-as_mesh.default <- function(x, size, ...) {
-  size <- size_match(size)
+mesh_10km <- function(x,
+                      strict = T) {
+  mesh_impl(x,
+            strict = strict,
+            size = 10000)
+}
 
-  if (size == 100) {
-    x <- x %>%
-      stringr::str_match("^(\\d{2})(\\d{2})(\\d)(\\d)(\\d)(\\d)(\\d)(\\d)$") %>%
-      tibble::as_tibble(.name_repair = ~ c("code",
-                                           "code_Y_80km", "code_X_80km",
-                                           "code_Y_10km", "code_X_10km",
-                                           "code_Y_1km", "code_X_1km",
-                                           "code_Y_100m", "code_X_100m"))
-    code_to_mesh(size = size,
+#' @export
+#' @rdname mesh
+mesh_1km <- function(x,
+                     strict = T) {
+  mesh_impl(x,
+            strict = strict,
+            size = 1000)
+}
 
-                 code_X_80km = x$code_X_80km,
-                 code_Y_80km = x$code_Y_80km,
+#' @export
+#' @rdname mesh
+mesh_500m <- function(x,
+                      strict = T) {
+  mesh_impl(x,
+            strict = strict,
+            size = 500)
+}
 
-                 code_X_10km = x$code_X_10km,
-                 code_Y_10km = x$code_Y_10km,
+#' @export
+#' @rdname mesh
+mesh_250m <- function(x,
+                      strict = T) {
+  mesh_impl(x,
+            strict = strict,
+            size = 250)
+}
 
-                 code_X_1km = x$code_X_1km,
-                 code_Y_1km = x$code_Y_1km,
+#' @export
+#' @rdname mesh
+mesh_125m <- function(x,
+                      strict = T) {
+  mesh_impl(x,
+            strict = strict,
+            size = 125)
+}
 
-                 code_X_100m = x$code_X_100m,
-                 code_Y_100m = x$code_Y_100m)
-  } else {
-    x <- x %>%
-      stringr::str_match("^(\\d{2})(\\d{2})(\\d)?(\\d)?(\\d)?(\\d)?(\\d)?(\\d)?(\\d)?$") %>%
-      tibble::as_tibble(.name_repair = ~ c("code",
-                                           "code_Y_80km", "code_X_80km",
-                                           "code_Y_10km", "code_X_10km",
-                                           "code_Y_1km", "code_X_1km",
-                                           "code_500m", "code_250m", "code_125m"))
-    code_to_mesh(size = size,
+#' @export
+#' @rdname mesh
+mesh_100m <- function(x,
+                      strict = T) {
+  mesh_impl(x,
+            strict = strict,
+            size = 100)
+}
 
-                 code_X_80km = x$code_X_80km,
-                 code_Y_80km = x$code_Y_80km,
+#' @export
+#' @rdname mesh
+mesh_auto <- function(x,
+                      strict = T) {
+  pattern <- stringr::str_c("^",
+                            stringr::str_dup("(<\\-?\\d+>|\\d{2})", 2),
+                            "(\\d*)")
+  code_others <- x %>%
+    stringr::str_match(pattern) %>%
+    tibble::as_tibble(.name_repair = ~ c("code", "code_Y_80km", "code_X_80km", "code_others")) %>%
+    tidyr::drop_na(code_others) %>%
+    purrr::chuck("code_others")
 
-                 code_X_10km = x$code_X_10km,
-                 code_Y_10km = x$code_Y_10km,
+  digit <- min(stringr::str_length(code_others))
 
-                 code_X_1km = x$code_X_1km,
-                 code_Y_1km = x$code_Y_1km,
-
-                 code_500m = x$code_500m,
-                 code_250m = x$code_250m,
-                 code_125m = x$code_125m)
+  if (digit %in% 0:1) {
+    size <- 80000
+  } else if (digit %in% 2:3) {
+    size <- 10000
+  } else if (digit == 4) {
+    size <- 1000
+  } else if (digit == 5) {
+    size <- 500
+  } else if (digit == 6) {
+    is_size_250m <- code_others %>%
+      stringr::str_extract("\\d{6}") %>%
+      stringr::str_ends("[1-4]{2}")
+    if (all(is_size_250m)) {
+      size <- 250
+    } else {
+      size <- 100
+    }
+  } else if (digit >= 7) {
+    size <- 125
   }
+
+  size_name <- switch(as.character(size),
+                      "80000" = "80km",
+                      "10000" = "10km",
+                      "1000" = "1km",
+                      "500" = "500m",
+                      "250" = "250m",
+                      "125" = "125m",
+                      "100" = "100m")
+  message(stringr::str_glue("Guessing mesh size as `{size_name}`"))
+
+  mesh_impl(x,
+            strict = strict,
+            size = size)
 }
 
-#' @export
-#' @rdname mesh
-as_mesh.mesh <- function(x,
-                         size = NULL,
-                         ...) {
-  if (is.null(size)) {
-    x
-  } else {
-    size <- size_match(size)
-    ratio <- size / mesh_size(x)
+mesh_impl <- function(x, strict, size) {
+  pattern_80km <- stringr::str_c("^",
+                                 stringr::str_dup("(<\\-*\\d+>|\\d{2})", 2))
 
-    stopifnot(ratio %% 1 == 0)
+  code_80km <- c("code_Y_80km", "code_X_80km")
+  code_10km <- c("code_Y_10km", "code_X_10km")
+  code_1km <- c("code_Y_1km", "code_X_1km")
+  code_100m <- c("code_Y_100m", "code_X_100m")
 
-    new_mesh(n_X = field(x, "n_X") %/% ratio,
-             n_Y = field(x, "n_Y") %/% ratio,
-             size = size)
+  if (size == 80000) {
+    digit <- 0
+    name <- code_80km
+  } else if (size == 10000) {
+    digit <- 2
+    name <- c(code_80km, code_10km)
+  } else if (size == 1000) {
+    digit <- 4
+    name <- c(code_80km, code_10km, code_1km)
+  } else if (size == 500) {
+    digit <- 5
+    name <- c(code_80km, code_10km, code_1km, "code_500m")
+  } else if (size == 250) {
+    digit <- 6
+    name <- c(code_80km, code_10km, code_1km, "code_500m", "code_250m")
+  } else if (size == 125) {
+    digit <- 7
+    name <- c(code_80km, code_10km, code_1km, "code_500m", "code_250m", "code_125m")
+  } else if (size == 100) {
+    digit <- 6
+    name <- c(code_80km, code_10km, code_1km, code_100m)
   }
-}
 
-#' @export
-#' @rdname mesh
-mesh_80km <- function(x) {
-  as_mesh(x,
-          size = 80000)
-}
+  if (strict) {
+    strict <- "$"
+  } else {
+    strict <- ""
+  }
 
-#' @export
-#' @rdname mesh
-mesh_10km <- function(x) {
-  as_mesh(x,
-          size = 10000)
-}
+  pattern <- stringr::str_c(pattern_80km,
+                            stringr::str_dup("(\\d)", digit),
+                            strict)
+  args <- x %>%
+    stringr::str_match(pattern) %>%
+    tibble::as_tibble(.name_repair = ~ c("code", name)) %>%
+    dplyr::select(!code)
 
-#' @export
-#' @rdname mesh
-mesh_1km <- function(x) {
-  as_mesh(x,
-          size = 1000)
-}
-
-#' @export
-#' @rdname mesh
-mesh_500m <- function(x) {
-  as_mesh(x,
-          size = 500)
-}
-
-#' @export
-#' @rdname mesh
-mesh_250m <- function(x) {
-  as_mesh(x,
-          size = 250)
-}
-
-#' @export
-#' @rdname mesh
-mesh_125m <- function(x) {
-  as_mesh(x,
-          size = 125)
-}
-
-#' @export
-#' @rdname mesh
-mesh_100m <- function(x) {
-  as_mesh(x,
-          size = 100)
+  rlang::exec(code_to_mesh,
+              size = size,
+              !!!args)
 }
 
 #' @export

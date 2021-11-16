@@ -2,9 +2,6 @@
 % Please edit documentation in R/mesh.R
 \name{mesh}
 \alias{mesh}
-\alias{as_mesh}
-\alias{as_mesh.default}
-\alias{as_mesh.mesh}
 \alias{mesh_80km}
 \alias{mesh_10km}
 \alias{mesh_1km}
@@ -12,6 +9,7 @@
 \alias{mesh_250m}
 \alias{mesh_125m}
 \alias{mesh_100m}
+\alias{mesh_auto}
 \alias{is_mesh}
 \alias{format.mesh_80km}
 \alias{format.mesh_10km}
@@ -22,25 +20,21 @@
 \alias{format.mesh_100m}
 \title{Meshcode vector}
 \usage{
-as_mesh(x, size, ...)
+mesh_80km(x, strict = T)
 
-\method{as_mesh}{default}(x, size, ...)
+mesh_10km(x, strict = T)
 
-\method{as_mesh}{mesh}(x, size = NULL, ...)
+mesh_1km(x, strict = T)
 
-mesh_80km(x)
+mesh_500m(x, strict = T)
 
-mesh_10km(x)
+mesh_250m(x, strict = T)
 
-mesh_1km(x)
+mesh_125m(x, strict = T)
 
-mesh_500m(x)
+mesh_100m(x, strict = T)
 
-mesh_250m(x)
-
-mesh_125m(x)
-
-mesh_100m(x)
+mesh_auto(x, strict = T)
 
 is_mesh(x)
 
@@ -60,8 +54,6 @@ is_mesh(x)
 }
 \arguments{
 \item{x}{meshcode}
-
-\item{size}{meshcode size}
 }
 \description{
 Meshcode vector
@@ -69,5 +61,4 @@ Meshcode vector
 \examples{
 mesh_80km("53394526313")
 mesh_1km(c("53394526313", "5339358633", "533945764"))
-
 }

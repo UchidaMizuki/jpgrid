@@ -18,10 +18,28 @@ size_match <- function(size) {
   size
 }
 
+mesh_size <- function(mesh) {
+  switch(class(mesh)[1],
+         mesh_80km = 80000,
+         mesh_10km = 10000,
+         mesh_1km = 1000,
+         mesh_500m = 500,
+         mesh_250m = 250,
+         mesh_125m = 125,
+         mesh_100m = 100)
+}
+
+code_80km_to_number <- function(code) {
+  code %>%
+    stringr::str_extract("(?<=^<?)\\-?\\d+(?=>?$)") %>%
+    as.integer()
+}
+
 code_to_number <- function(code, number_min, number_max) {
   number <- as.integer(code)
-  stopifnot(is.na(number) | number_min <= number & number <= number_max)
-  number
+  dplyr::if_else(is.na(number) | number_min <= number & number <= number_max,
+                 number,
+                 NA_integer_)
 }
 
 number_to_code_80km <- function(number) {
@@ -30,16 +48,9 @@ number_to_code_80km <- function(number) {
                      side = "left",
                      pad = "0")
 
-  dplyr::if_else(0 <= number & number <= 99,
+  dplyr::if_else(10 <= number & number < 100,
                  code,
-                 stringr::str_c("<", code, ">"))
-}
-
-code_100m_to_500m <- function(code_X, code_Y) {
-  dplyr::case_when(code_Y %in% 0:4 & code_X %in% 0:4 ~ 1L,
-                   code_Y %in% 0:4 & code_X %in% 5:9 ~ 2L,
-                   code_Y %in% 5:9 & code_X %in% 0:4 ~ 3L,
-                   code_Y %in% 5:9 & code_X %in% 5:9 ~ 4L)
+                 stringr::str_c("<", number, ">"))
 }
 
 code_XY_to_2x2 <- function(code_X, code_Y) {
