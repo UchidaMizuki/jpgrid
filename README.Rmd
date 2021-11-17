@@ -25,12 +25,6 @@ README is currently only available in Japanese.
 install.packages("japanmesh")
 ```
 
-<!-- And the development version from [GitHub](https://github.com/) with: -->
-
-``` r
-install.packages("japanmesh")
-```
-
 開発版はGitHubからインストールしてください．
 
 ``` r

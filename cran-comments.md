@@ -3,7 +3,7 @@
 * macOS Big Sur 11.5, R 4.1.0
 
 ## R CMD check results
-Duration: 1m 26.9s
+Duration: 1m 44.2s
 
 0 errors v | 0 warnings v | 0 notes v
 
