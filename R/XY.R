@@ -43,9 +43,10 @@ mesh_to_XY <- function(mesh, center = TRUE) {
     tibble::tibble(X = 100 + length_X * (n_X + .5),
                    Y = length_Y * (n_Y + .5))
   } else {
-    tibble::tibble(X_min = 100 + length_X * n_X,
-                   Y_min = length_Y * n_Y,
-                   X_max = X_min + length_X,
-                   Y_max = Y_min + length_Y)
+    XY <- tibble::tibble(X_min = 100 + length_X * n_X,
+                         Y_min = length_Y * n_Y)
+    XY$X_max <- XY$X_min + length_X
+    XY$Y_max <- XY$Y_min + length_Y
+    XY
   }
 }

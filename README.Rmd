@@ -15,21 +15,21 @@ knitr::opts_chunk$set(
 
 ## japanmesh
 
-<!-- badges: start -->
-[![Travis build status](https://travis-ci.com/UchidaMizuki/japanmesh.svg?branch=main)](https://travis-ci.com/UchidaMizuki/japanmesh)
-<!-- badges: end -->
+README is currently only available in Japanese.
 
 地域メッシュと経度・緯度との変換や異なるサイズの地域メッシュ間の変換などを行うためのRパッケージです．
 
 ### インストール方法
-
-<!-- You can install the released version of japanmesh from [CRAN](https://CRAN.R-project.org) with: -->
 
 ``` r
 install.packages("japanmesh")
 ```
 
 <!-- And the development version from [GitHub](https://github.com/) with: -->
+
+``` r
+install.packages("japanmesh")
+```
 
 開発版はGitHubからインストールしてください．
 

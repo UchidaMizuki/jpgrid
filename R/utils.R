@@ -1,7 +1,7 @@
 size_match <- function(size) {
   if (inherits(size, "units")) {
     size <- size %>%
-      units::set_units(m) %>%
+      units::set_units("m") %>%
       units::drop_units()
   } else if (is.character(size)) {
     size <- switch(size,

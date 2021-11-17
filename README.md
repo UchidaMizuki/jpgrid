@@ -3,20 +3,17 @@
 
 ## japanmesh
 
-<!-- badges: start -->
-<!-- badges: end -->
+README is currently only available in Japanese.
 
 地域メッシュと経度・緯度との変換や異なるサイズの地域メッシュ間の変換などを行うためのRパッケージです．
 
 ### インストール方法
 
-<!-- You can install the released version of japanmesh from [CRAN](https://CRAN.R-project.org) with: -->
-<!-- ``` r -->
-<!-- install.packages("japanmesh") -->
-<!-- ``` -->
-<!-- And the development version from [GitHub](https://github.com/) with: -->
+``` r
+install.packages("japanmesh")
+```
 
-CRANには登録されていないためGitHubからインストールしてください．
+開発版はGitHubからインストールしてください．
 
 ``` r
 # install.packages("devtools")
@@ -308,7 +305,7 @@ head(df_jpmesh)
 #> 5  140.  39.8   59395618
 #> 6  140.  39.4   59390561
 tictoc::toc()
-#> 9.61 sec elapsed
+#> 6.32 sec elapsed
 
 # japanmesh
 tictoc::tic()
@@ -346,7 +343,7 @@ head(df_jpmesh)
 #> 5   59395618       140.       39.8   0.00625   0.00417
 #> 6   59390561       140.       39.4   0.00625   0.00417
 tictoc::toc()
-#> 8.67 sec elapsed
+#> 9.41 sec elapsed
 
 # japanmesh
 tictoc::tic()
@@ -364,5 +361,5 @@ head(df_japanmesh)
 #> 5 59395618  140.  39.8
 #> 6 59390561  140.  39.4
 tictoc::toc()
-#> 0.03 sec elapsed
+#> 0.01 sec elapsed
 ```

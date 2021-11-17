@@ -19,57 +19,53 @@ mesh_line <- function(mesh, mesh_to,
     mesh <- tibble::tibble(mesh = mesh,
                            mesh_to = mesh_to)
 
-    line <- mesh %>%
-      vec_unique() %>%
-      dplyr::filter(!is.na(mesh),
-                    !is.na(mesh_to)) %>%
+    line <- vec_unique(mesh)
+    line <- vec_slice(line,
+                      !is.na(line$mesh) &
+                        !is.na(line$mesh_to))
 
-      # Bresenham's line algorithm
-      dplyr::mutate(x = field(mesh, "n_X"),
-                    y = field(mesh, "n_Y"),
+    # Bresenham's line algorithm
+    x <- field(line$mesh, "n_X")
+    y <- field(line$mesh, "n_Y")
 
-                    x_to = field(mesh_to, "n_X"),
-                    y_to = field(mesh_to, "n_Y"),
+    x_to <- field(line$mesh_to, "n_X")
+    y_to <- field(line$mesh_to, "n_Y")
 
-                    dx = abs(x_to - x),
-                    dy = abs(y_to - y),
-                    err = dx - dy,
+    dx <- abs(x_to - x)
+    dy <- abs(y_to - y)
+    err <- dx - dy
 
-                    sx = dplyr::if_else(x < x_to,
-                                        1,
-                                        -1),
-                    sy = dplyr::if_else(y < y_to,
-                                        1,
-                                        -1)) %>%
-      dplyr::mutate(line = list(x, y, x_to, y_to, dx, dy, err, sx, sy) %>%
-                      purrr::pmap(function(x, y, x_to, y_to, dx, dy, err, sx, sy) {
-                        if (is.na(x) || is.na(y) || is.na(x_to) || is.na(y_to)) {
-                          new_mesh(n_X = NA_integer_,
-                                   n_Y = NA_integer_,
-                                   size = size)
-                        } else {
-                          xs <- x
-                          ys <- y
+    sx <- dplyr::if_else(x < x_to, 1, -1)
+    sy <- dplyr::if_else(y < y_to, 1, -1)
 
-                          while (x != x_to || y != y_to) {
-                            err_2 <- err * 2
-                            if (err_2 >= -dy) {
-                              err <- err - dy
-                              x <- x + sx
-                            }
-                            if (err_2 <= dx) {
-                              err <- err + dx
-                              y <- y + sy
-                            }
-                            xs <- c(xs, x)
-                            ys <- c(ys, y)
-                          }
-                          new_mesh(n_X = xs,
-                                   n_Y = ys,
-                                   size = size)
-                        }
-                      })) %>%
-      dplyr::select(mesh, mesh_to, line)
+    line$line <- list(x, y, x_to, y_to, dx, dy, err, sx, sy) %>%
+      purrr::pmap(function(x, y, x_to, y_to, dx, dy, err, sx, sy) {
+        if (is.na(x) || is.na(y) || is.na(x_to) || is.na(y_to)) {
+          new_mesh(size = size,
+                   n_X = NA_integer_,
+                   n_Y = NA_integer_)
+        } else {
+          xs <- x
+          ys <- y
+
+          while (x != x_to || y != y_to) {
+            err_2 <- err * 2
+            if (err_2 >= -dy) {
+              err <- err - dy
+              x <- x + sx
+            }
+            if (err_2 <= dx) {
+              err <- err + dx
+              y <- y + sy
+            }
+            xs <- c(xs, x)
+            ys <- c(ys, y)
+          }
+          new_mesh(size = size,
+                   n_X = xs,
+                   n_Y = ys)
+        }
+      })
 
     mesh %>%
       dplyr::left_join(line,
