@@ -4,7 +4,7 @@
 \alias{mesh_neighbor}
 \title{Neighbor mesh}
 \usage{
-mesh_neighbor(mesh, n = 1L, moore = T, simplify = T)
+mesh_neighbor(mesh, n = 1L, moore = TRUE, simplify = TRUE)
 }
 \arguments{
 \item{mesh}{A \code{mesh} vector.}

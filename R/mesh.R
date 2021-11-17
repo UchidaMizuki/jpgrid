@@ -13,10 +13,10 @@
 #'
 #' @examples
 #' mesh_80km("53394526313")
-#' mesh_80km("53394526313", strict = F)
+#' mesh_80km("53394526313", strict = FALSE)
 #'
 #' mesh_auto(c("53394526313", "5339358633", "533945764"))
-#' mesh_auto(c("53394526313", "5339358633", "533945764"), strict = F)
+#' mesh_auto(c("53394526313", "5339358633", "533945764"), strict = FALSE)
 NULL
 
 new_mesh <- function(size,
@@ -166,7 +166,7 @@ mesh_to_code_impl <- function(size, n_X, n_Y) {
 #' @export
 #' @rdname mesh_class
 mesh_80km <- function(x,
-                      strict = T) {
+                      strict = TRUE) {
   mesh_impl(x,
             strict = strict,
             size = 80000L)
@@ -175,7 +175,7 @@ mesh_80km <- function(x,
 #' @export
 #' @rdname mesh_class
 mesh_10km <- function(x,
-                      strict = T) {
+                      strict = TRUE) {
   mesh_impl(x,
             strict = strict,
             size = 10000L)
@@ -184,7 +184,7 @@ mesh_10km <- function(x,
 #' @export
 #' @rdname mesh_class
 mesh_1km <- function(x,
-                     strict = T) {
+                     strict = TRUE) {
   mesh_impl(x,
             strict = strict,
             size = 1000L)
@@ -193,7 +193,7 @@ mesh_1km <- function(x,
 #' @export
 #' @rdname mesh_class
 mesh_500m <- function(x,
-                      strict = T) {
+                      strict = TRUE) {
   mesh_impl(x,
             strict = strict,
             size = 500L)
@@ -202,7 +202,7 @@ mesh_500m <- function(x,
 #' @export
 #' @rdname mesh_class
 mesh_250m <- function(x,
-                      strict = T) {
+                      strict = TRUE) {
   mesh_impl(x,
             strict = strict,
             size = 250L)
@@ -211,7 +211,7 @@ mesh_250m <- function(x,
 #' @export
 #' @rdname mesh_class
 mesh_125m <- function(x,
-                      strict = T) {
+                      strict = TRUE) {
   mesh_impl(x,
             strict = strict,
             size = 125L)
@@ -220,7 +220,7 @@ mesh_125m <- function(x,
 #' @export
 #' @rdname mesh_class
 mesh_100m <- function(x,
-                      strict = T) {
+                      strict = TRUE) {
   mesh_impl(x,
             strict = strict,
             size = 100L)
@@ -229,7 +229,7 @@ mesh_100m <- function(x,
 #' @export
 #' @rdname mesh_class
 mesh_auto <- function(x,
-                      strict = T) {
+                      strict = TRUE) {
   pattern <- stringr::str_c("^",
                             stringr::str_dup("(<\\-?\\d+>|\\d{2})", 2),
                             "(\\d*)")

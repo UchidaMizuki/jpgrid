@@ -5,11 +5,11 @@
 #'
 #' @inheritParams mesh_to
 #' @param type How is the NA mesh treated when \code{mesh} is a list? \code{"skip_na"} skips the \code{NA} mesh and connects the paths.
-#' "keep_na" by default.
+#' \code{"keep_na"} by default.
 #'
 #' @export
 mesh_distance <- function(mesh, mesh_to,
-                          close = F,
+                          close = FALSE,
                           type = "keep_na") {
   if (is_mesh(mesh)) {
     stopifnot(is_mesh(mesh_to))
@@ -54,10 +54,10 @@ mesh_distance <- function(mesh, mesh_to,
         }
 
         if (close) {
-          mesh_to <- c(tail(mesh, -1), mesh[1])
+          mesh_to <- c(utils::tail(mesh, -1), mesh[1])
         } else {
-          mesh_to <- tail(mesh, -1)
-          mesh <- head(mesh, -1)
+          mesh_to <- utils::tail(mesh, -1)
+          mesh <- utils::head(mesh, -1)
         }
 
         mesh_distance(mesh, mesh_to) %>%

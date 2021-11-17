@@ -4,7 +4,7 @@
 \alias{mesh_distance}
 \title{Distance between meshes}
 \usage{
-mesh_distance(mesh, mesh_to, close = F, type = "keep_na")
+mesh_distance(mesh, mesh_to, close = FALSE, type = "keep_na")
 }
 \arguments{
 \item{mesh}{A \code{mesh} vector or a list of \code{mesh} vector.}
@@ -14,7 +14,7 @@ mesh_distance(mesh, mesh_to, close = F, type = "keep_na")
 \item{close}{Should the path of each element be closed when \code{mesh} is a list?}
 
 \item{type}{How is the NA mesh treated when \code{mesh} is a list? \code{"skip_na"} skips the \code{NA} mesh and connects the paths.
-"keep_na" by default.}
+\code{"keep_na"} by default.}
 }
 \description{
 If \code{mesh} and \code{mesh_to} are both vectors, the distance between \code{mesh} and \code{mesh_to} is calculated.

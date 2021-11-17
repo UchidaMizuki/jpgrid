@@ -23,8 +23,8 @@ mesh_move <- function(mesh, n_X, n_Y) {
 #' @export
 mesh_neighbor <- function(mesh,
                           n = 1L,
-                          moore = T,
-                          simplify = T) {
+                          moore = TRUE,
+                          simplify = TRUE) {
   stopifnot(n >= 0,
             n %% 1 == 0)
 

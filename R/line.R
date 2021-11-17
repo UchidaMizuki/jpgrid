@@ -4,12 +4,12 @@
 #' If \code{mesh} is a list, The path lines for each element in the mesh will be drawn.
 #'
 #' @inheritParams mesh_to
-#' @param skip_na Should skip the \code{NA} mesh and connects the paths? FALSE by default.
+#' @param skip_na Should skip the \code{NA} mesh and connects the paths? \code{FALSE} by default.
 #'
 #' @export
 mesh_line <- function(mesh, mesh_to,
-                      close = F,
-                      skip_na = F) {
+                      close = FALSE,
+                      skip_na = FALSE) {
   if (is_mesh(mesh)) {
     stopifnot(is_mesh(mesh_to))
 
@@ -87,10 +87,10 @@ mesh_line <- function(mesh, mesh_to,
         }
 
         if (close) {
-          mesh_to <- c(tail(mesh, -1), mesh[1])
+          mesh_to <- c(utils::tail(mesh, -1), mesh[1])
         } else {
-          mesh_to <- tail(mesh, -1)
-          mesh <- head(mesh, -1)
+          mesh_to <- utils::tail(mesh, -1)
+          mesh <- utils::head(mesh, -1)
         }
 
         mesh_line(mesh, mesh_to) %>%

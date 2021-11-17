@@ -8,7 +8,7 @@
 \usage{
 XY_to_mesh(X, Y, size)
 
-mesh_to_XY(mesh, center = T, ...)
+mesh_to_XY(mesh, center = TRUE)
 }
 \arguments{
 \item{X}{A numeric vector of longitude.}
@@ -19,7 +19,7 @@ mesh_to_XY(mesh, center = T, ...)
 
 \item{mesh}{A \code{mesh} class vector.}
 
-\item{center}{Should the center point of the mesh be returned? Otherwise the end points will be returned.}
+\item{center}{Should the center point of the mesh be returned? Otherwise the end points will be returned. \code{TRUE} by default.}
 }
 \value{
 \code{XY_to_mesh} returns a \code{mesh} class vector.

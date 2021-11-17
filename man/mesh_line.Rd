@@ -4,7 +4,7 @@
 \alias{mesh_line}
 \title{Draw line segments between meshes}
 \usage{
-mesh_line(mesh, mesh_to, close = F, skip_na = F)
+mesh_line(mesh, mesh_to, close = FALSE, skip_na = FALSE)
 }
 \arguments{
 \item{mesh}{A \code{mesh} vector or a list of \code{mesh} vector.}
@@ -13,7 +13,7 @@ mesh_line(mesh, mesh_to, close = F, skip_na = F)
 
 \item{close}{Should the path of each element be closed when \code{mesh} is a list?}
 
-\item{skip_na}{Should skip the \code{NA} mesh and connects the paths? FALSE by default.}
+\item{skip_na}{Should skip the \code{NA} mesh and connects the paths? \code{FALSE} by default.}
 }
 \description{
 If \code{mesh} and \code{mesh_to} are both vectors, the line between \code{mesh} and \code{mesh_to} is drawn (using Bresenham's line algorithm).

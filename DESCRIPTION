@@ -2,7 +2,7 @@ Package: japanmesh
 Type: Package
 Title: Functions for mesh codes in Japan
 Version: 0.1.0
-Authors@R: person("Mizuki", "Uchida", role = c("aut", "cre"))
+Authors@R: person("Mizuki", "Uchida", email = "uchidamizuki@vivaldi.net", role = c("aut", "cre"))
 Description: Functions for mesh codes in Japan. 
     Conversion between mesh and longitude/latitude, and between meshe codes of different scales.
 License: MIT + file LICENSE
@@ -16,8 +16,10 @@ Imports:
     rlang,
     sf,
     stringr,
+    tibble,
     tidyr,
     units,
+    utils,
     vctrs
 RoxygenNote: 7.1.2
 Suggests: 

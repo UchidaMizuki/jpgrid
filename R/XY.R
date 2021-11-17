@@ -27,10 +27,10 @@ XY_to_mesh <- function(X, Y, size) {
 #' @rdname XY
 #'
 #' @param mesh A \code{mesh} class vector.
-#' @param center Should the center point of the mesh be returned? Otherwise the end points will be returned.
+#' @param center Should the center point of the mesh be returned? Otherwise the end points will be returned. \code{TRUE} by default.
 #'
 #' @return \code{mesh_to_XY} returns a tbl.
-mesh_to_XY <- function(mesh, center = T, ...) {
+mesh_to_XY <- function(mesh, center = TRUE) {
   stopifnot(is_mesh(mesh))
 
   length_X <- mesh_size(mesh) / 80000

@@ -13,28 +13,28 @@
 \alias{is_mesh}
 \title{Meshcode vector}
 \usage{
-mesh_80km(x, strict = T)
+mesh_80km(x, strict = TRUE)
 
-mesh_10km(x, strict = T)
+mesh_10km(x, strict = TRUE)
 
-mesh_1km(x, strict = T)
+mesh_1km(x, strict = TRUE)
 
-mesh_500m(x, strict = T)
+mesh_500m(x, strict = TRUE)
 
-mesh_250m(x, strict = T)
+mesh_250m(x, strict = TRUE)
 
-mesh_125m(x, strict = T)
+mesh_125m(x, strict = TRUE)
 
-mesh_100m(x, strict = T)
+mesh_100m(x, strict = TRUE)
 
-mesh_auto(x, strict = T)
+mesh_auto(x, strict = TRUE)
 
 is_mesh(x)
 }
 \arguments{
 \item{x}{A list or vector.}
 
-\item{strict}{A logical scalar. Should the number of digits in the meshcode be kept constant?}
+\item{strict}{A logical scalar. Should the number of digits in the mesh code match a given number of digits?}
 }
 \value{
 A \code{mesh} class vector.
@@ -45,8 +45,8 @@ A series of functions return \code{mesh} class for each mesh size.
 }
 \examples{
 mesh_80km("53394526313")
-mesh_80km("53394526313", strict = F)
+mesh_80km("53394526313", strict = FALSE)
 
 mesh_auto(c("53394526313", "5339358633", "533945764"))
-mesh_auto(c("53394526313", "5339358633", "533945764"), strict = F)
+mesh_auto(c("53394526313", "5339358633", "533945764"), strict = FALSE)
 }
