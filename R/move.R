@@ -30,27 +30,29 @@ mesh_neighbor <- function(mesh,
 
   n_XY <- n %>%
     purrr::map_dfr(function(n) {
-      tidyr::expand_grid(n_X = -n:n,
-                         n_Y = -n:n) %>%
-        dplyr::filter(!moore | abs(n_X) == n | abs(n_Y) == n,
-                      moore | (abs(n_X) + abs(n_Y)) == n)
+      n_XY <- tidyr::expand_grid(n_X = -n:n,
+                                 n_Y = -n:n)
+      vec_slice(n_XY,
+                (!moore | abs(n_XY$n_X) == n | abs(n_XY$n_Y) == n) &
+                  (moore | (abs(n_XY$n_X) + abs(n_XY$n_Y)) == n))
     })
 
   neighbor <- tibble::tibble(mesh = mesh) %>%
     vec_unique() %>%
-    tidyr::expand_grid(n_XY) %>%
-    dplyr::mutate(mesh_neighbor = mesh %>%
-                    mesh_move(n_X, n_Y)) %>%
+    tidyr::expand_grid(n_XY)
+  neighbor$mesh_neighbor <- neighbor$mesh %>%
+    mesh_move(n_X = neighbor$n_X,
+              n_Y = neighbor$n_Y)
+  neighbor <- neighbor %>%
     dplyr::group_nest(mesh,
                       .key = "neighbor")
 
   if (simplify) {
-    neighbor <- neighbor %>%
-      dplyr::mutate(neighbor = neighbor %>%
-                      purrr::map(function(neighbor) {
-                        neighbor %>%
-                          purrr::chuck("mesh_neighbor")
-                      }))
+    neighbor$neighbor <- neighbor$neighbor %>%
+      purrr::map(function(neighbor) {
+        neighbor %>%
+          purrr::chuck("mesh_neighbor")
+      })
   }
 
   tibble::tibble(mesh = mesh) %>%

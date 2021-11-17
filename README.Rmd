@@ -15,13 +15,18 @@ knitr::opts_chunk$set(
 
 ## japanmesh
 
+<<<<<<< Updated upstream
 <!-- badges: start -->
 <!-- badges: end -->
+=======
+README is currently only available in Japanese.
+>>>>>>> Stashed changes
 
 地域メッシュと経度・緯度との変換や異なるサイズの地域メッシュ間の変換などを行うためのRパッケージです．
 
 ### インストール方法
 
+<<<<<<< Updated upstream
 <!-- You can install the released version of japanmesh from [CRAN](https://CRAN.R-project.org) with: -->
 
 <!-- ``` r -->
@@ -31,6 +36,13 @@ knitr::opts_chunk$set(
 <!-- And the development version from [GitHub](https://github.com/) with: -->
 
 CRANには登録されていないためGitHubからインストールしてください．
+=======
+``` r
+install.packages("japanmesh")
+```
+
+開発版はGitHubからインストールしてください．
+>>>>>>> Stashed changes
 
 ``` r
 # install.packages("devtools")

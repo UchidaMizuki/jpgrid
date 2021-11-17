@@ -24,18 +24,19 @@ mesh_distance <- function(mesh, mesh_to,
     length_X <- size / 80000
     length_Y <- length_X / 1.5
 
-    distance <- mesh %>%
-      vec_unique() %>%
-      dplyr::filter(!is.na(diff_n_X),
-                    !is.na(n_Y),
-                    !is.na(n_Y_to)) %>%
-      dplyr::mutate(diff_X = length_X * diff_n_X,
-                    Y = length_Y * (n_Y + .5),
-                    Y_to = length_Y * (n_Y_to + .5)) %>%
-      dplyr::mutate(distance = geosphere::distGeo(p1 = cbind(0, Y),
-                                                  p2 = cbind(diff_X, Y_to)) %>%
-                      units::set_units(m)) %>%
-      dplyr::select(diff_n_X, n_Y, n_Y_to, distance)
+    distance <- vec_unique(mesh)
+    distance <- vec_slice(distance,
+                          !is.na(distance$diff_n_X) &
+                            !is.na(distance$n_Y) &
+                            !is.na(distance$n_Y_to))
+
+    diff_X <- length_X * distance$diff_n_X
+    Y <- length_Y * (distance$n_Y + .5)
+    Y_to <- length_Y * (distance$n_Y_to + .5)
+
+    distance$distance <- geosphere::distGeo(p1 = cbind(0, Y),
+                                            p2 = cbind(diff_X, Y_to)) %>%
+      units::set_units("m")
 
     mesh %>%
       dplyr::left_join(distance,

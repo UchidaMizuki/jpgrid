@@ -320,8 +320,8 @@ mesh_impl <- function(x, strict, size) {
                             strict)
   args <- x %>%
     stringr::str_match(pattern) %>%
-    tibble::as_tibble(.name_repair = ~ c("code", name)) %>%
-    dplyr::select(!code)
+    tibble::as_tibble(.name_repair = ~ c("code", name))
+  args <- args[-1]
 
   exec(code_to_mesh,
        size = size,

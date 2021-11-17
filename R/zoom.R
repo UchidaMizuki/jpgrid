@@ -28,12 +28,11 @@ mesh_zoomin <- function(mesh, size) {
                   n_Y_min <- n_Y * ratio
                   n_Y_max <- (n_Y + 1) * ratio - 1
 
-                  tidyr::expand_grid(n_X = n_X_min:n_X_max,
-                                     n_Y = n_Y_min:n_Y_max) %>%
-                    dplyr::mutate(mesh = new_mesh(size = size,
-                                                  n_X = n_X,
-                                                  n_Y = n_Y)) %>%
-                    purrr::chuck("mesh")
+                  n_XY <- tidyr::expand_grid(n_X = n_X_min:n_X_max,
+                                     n_Y = n_Y_min:n_Y_max)
+                  new_mesh(size = size,
+                           n_X = n_XY$n_X,
+                           n_Y = n_XY$n_Y)
                 } else {
                   new_mesh(size = size)
                 }

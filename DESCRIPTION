@@ -1,14 +1,21 @@
 Package: japanmesh
 Type: Package
+<<<<<<< Updated upstream
 Title: Functions for mesh codes in Japan
 Version: 0.0.0.9000
 Authors@R: person("Mizuki", "Uchida", role = c("aut", "cre"))
+=======
+Title: Functions for Mesh Codes in Japan
+Version: 0.1.0
+Authors@R: person("Mizuki", "Uchida", email = "uchidamizuki@vivaldi.net", role = c("aut", "cre"))
+>>>>>>> Stashed changes
 Description: Functions for mesh codes in Japan. 
-    Conversion between mesh and longitude/latitude, and between meshe codes of different scales.
+    Conversion between mesh and longitude/latitude, and between mesh codes of different scales.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports: 
+<<<<<<< Updated upstream
     dplyr,
     geosphere,
     magrittr,
@@ -19,6 +26,20 @@ Imports:
     tidyr,
     units,
     vctrs
+=======
+    dplyr (>= 1.0.7),
+    geosphere (>= 1.5.14),
+    magrittr (>= 2.0.1),
+    purrr (>= 0.3.4),
+    rlang (>= 0.4.12),
+    sf (>= 1.0.3),
+    stringr (>= 1.4.0),
+    tibble (>= 3.1.6),
+    tidyr (>= 1.1.4),
+    units (>= 0.7.2),
+    utils (>= 4.2.0),
+    vctrs (>= 0.3.8)
+>>>>>>> Stashed changes
 RoxygenNote: 7.1.2
 Suggests: 
     testthat (>= 3.0.0)
