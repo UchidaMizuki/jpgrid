@@ -1,4 +1,16 @@
+#' Conversion between mesh and coordinates (longitude and latitude)
+#'
+#' @name XY
+
 #' @export
+#'
+#' @rdname XY
+#'
+#' @param X A numeric vector of longitude.
+#' @param Y A numeric vector of latitude.
+#' @param size A mesh size.
+#'
+#' @return \code{XY_to_mesh} returns a \code{mesh} class vector.
 XY_to_mesh <- function(X, Y, size) {
   size <- size_match(size)
 
@@ -11,6 +23,13 @@ XY_to_mesh <- function(X, Y, size) {
 }
 
 #' @export
+#'
+#' @rdname XY
+#'
+#' @param mesh A \code{mesh} class vector.
+#' @param center Should the center point of the mesh be returned? Otherwise the end points will be returned.
+#'
+#' @return \code{mesh_to_XY} returns a tbl.
 mesh_to_XY <- function(mesh, center = T, ...) {
   stopifnot(is_mesh(mesh))
 

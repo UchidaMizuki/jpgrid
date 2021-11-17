@@ -1,4 +1,11 @@
-# FIXME?
+#' Draw line segments between meshes
+#'
+#' If \code{mesh} and \code{mesh_to} are both vectors, the line between \code{mesh} and \code{mesh_to} is drawn (using Bresenham's line algorithm).
+#' If \code{mesh} is a list, The path lines for each element in the mesh will be drawn.
+#'
+#' @inheritParams mesh_to
+#' @param skip_na Should skip the \code{NA} mesh and connects the paths? FALSE by default.
+#'
 #' @export
 mesh_line <- function(mesh, mesh_to,
                       close = F,

@@ -1,4 +1,12 @@
-# FIXME?
+#' Distance between meshes
+#'
+#' If \code{mesh} and \code{mesh_to} are both vectors, the distance between \code{mesh} and \code{mesh_to} is calculated.
+#' If \code{mesh} is a list, The path distance of each element is calculated.
+#'
+#' @inheritParams mesh_to
+#' @param type How is the NA mesh treated when \code{mesh} is a list? \code{"skip_na"} skips the \code{NA} mesh and connects the paths.
+#' "keep_na" by default.
+#'
 #' @export
 mesh_distance <- function(mesh, mesh_to,
                           close = F,
@@ -13,7 +21,6 @@ mesh_distance <- function(mesh, mesh_to,
                            n_Y = field(mesh, "n_Y"),
                            n_Y_to = field(mesh_to, "n_Y"))
 
-    # FIXME?
     length_X <- size / 80000
     length_Y <- length_X / 1.5
 

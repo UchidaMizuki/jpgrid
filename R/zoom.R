@@ -1,16 +1,13 @@
-#' Zoom meshcode
+#' Zoom-in mesh
 #'
-#' @name zoom
+#' \code{mesh_zoomin} makes the mesh finer.
 #'
-#' @param mesh meshcode
-#' @param size meshcode size
-NULL
-
 #' @export
 #'
-#' @rdname zoom
+#' @inheritParams mesh
+#' @inheritParams size
 #'
-#' @return list of meshcode
+#' @return \code{mesh_zoomin} returns a list of \code{mesh} class vector.
 mesh_zoomin <- function(mesh, size) {
   stopifnot(is_mesh(mesh))
 
@@ -43,20 +40,25 @@ mesh_zoomin <- function(mesh, size) {
               })
 }
 
+#' Zoom-out mesh
+#'
+#' \code{mesh_zoomout} makes the mesh coarser.
+#'
 #' @export
 #'
-#' @rdname zoom
+#' @inheritParams mesh
+#' @inheritParams size
 #'
-#' @return meshcode
+#' @return \code{mesh_zoomout} returns a \code{mesh} class vector.
 mesh_zoomout <- function(mesh, size) {
   stopifnot(is_mesh(mesh))
 
   size <- size_match(size)
-  ratio <- size / mesh_size(x)
+  ratio <- size / mesh_size(mesh)
 
   stopifnot(ratio %% 1 == 0)
 
   new_mesh(size = size,
-           n_X = field(x, "n_X") %/% ratio,
-           n_Y = field(x, "n_Y") %/% ratio)
+           n_X = field(mesh, "n_X") %/% ratio,
+           n_Y = field(mesh, "n_Y") %/% ratio)
 }

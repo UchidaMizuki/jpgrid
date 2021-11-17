@@ -1,16 +1,15 @@
 Package: japanmesh
 Type: Package
-Title: Tools for mesh codes in Japan
+Title: Functions for mesh codes in Japan
 Version: 0.0.0.9000
-Authors@R: person("Mizuki", "Uchida", email = "uchidamizuki@vivaldi.net", role = c("aut", "cre"))
-Description: Tools for mesh codes in Japan. 
+Authors@R: person("Mizuki", "Uchida", role = c("aut", "cre"))
+Description: Functions for mesh codes in Japan. 
     Conversion between mesh and longitude/latitude, and between meshe codes of different scales.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports: 
     dplyr,
-    ellipsis,
     geosphere,
     magrittr,
     purrr,

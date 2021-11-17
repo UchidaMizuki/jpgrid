@@ -46,7 +46,10 @@ library(dplyr)
 
 #### 文字列・数値からの地域メッシュの生成
 
-文字列・数値から地域メッシュを生成するためには`mesh_***m()`，`as_mesh()`関数を使用します．
+文字列・数値から地域メッシュを生成するためには`mesh_***m()`，`mesh_auto()`関数を使用します．
+
+- `mesh_auto()`関数はメッシュサイズを自動的に決定します．
+- デフォルト（`strict = T`）では，メッシュコードの桁数が所定の桁数であることを要求します．
 
 ```{r}
 library(japanmesh)
@@ -54,24 +57,32 @@ library(japanmesh)
 x <- c("53394526313", "5339358633", "533945764", "53394611", "523503", "5339", NA)
 
 mesh_80km(x)
-mesh_10km(x)
 mesh_125m(x)
+mesh_auto(x)
 
-as_mesh(x, size = "250m")
+mesh_80km(x, strict = F)
+mesh_125m(x, strict = F)
+mesh_auto(x, strict = F)
 ```
 
 #### 地域メッシュのサイズの変換
 
-`mesh_***m()`，`as_mesh()`関数により，地域メッシュをよりサイズが大きい地域メッシュに変換します．
+`mesh_zoomin()`，`mesh_zoomout()`関数により，地域メッシュのサイズ変換・細分化を行います．
 
+- `mesh_zoomin()`は元のメッシュに含まれるメッシュを要素にもつリストを出力します．
 - 100 mメッシュから500 mメッシュへの変換に対応．
 
 ```{r}
-tibble(mesh10km = mesh_10km(x)) %>%
-   mutate(mesh80km = mesh_80km(mesh10km))
+mesh10km <- mesh_10km(x[1:2],
+                      strict = F)
 
-tibble(mesh100m = mesh_100m(x)) %>%
-  mutate(mesh500m = mesh_500m(mesh100m))
+mesh_zoomout(mesh10km, 
+             size = "80km")
+
+zoomin <- mesh_zoomin(mesh10km,
+                      size = "1km")
+print(zoomin)
+plot(zoomin[[1]])
 ```
 
 #### 経度・緯度から地域メッシュへの変換
@@ -92,7 +103,7 @@ tibble(X = c(139.7008, 135.4375), # 経度
 ```{r}
 tibble(mesh = c("5339452660", "5235034590")) %>% 
   mutate(mesh %>% 
-           as_mesh(size = "100m") %>% 
+           mesh_100m() %>% 
            mesh_to_XY())
 ```
 
@@ -104,13 +115,13 @@ tibble(mesh = c("5339452660", "5235034590")) %>%
 - `moore = F`でノイマン近傍での算出が可能
 
 ```{r}
-neighbor <- as_mesh("644142") %>% 
+neighbor <- mesh_10km("644142") %>% 
   mesh_neighbor(n = c(2, 5))
 
 print(neighbor)
 plot(neighbor[[1]])
 
-neighbor_neumann <- as_mesh("644142") %>% 
+neighbor_neumann <- mesh_10km("644142") %>% 
   mesh_neighbor(n = c(2, 5),
                 moore = F)
 
@@ -123,8 +134,8 @@ plot(neighbor_neumann[[1]])
 `mesh_line()`関数により，メッシュ間の線分上に存在するメッシュを抽出します．
 
 ```{r}
-mesh_from <- as_mesh(c("6441", "5339"))
-mesh_to <- as_mesh(c("5237", "5235"))
+mesh_from <- mesh_80km(c("6441", "5339"))
+mesh_to <- mesh_80km(c("5237", "5235"))
 
 line <- mesh_line(mesh_from, mesh_to)
 
@@ -138,8 +149,8 @@ plot(line[[1]])
 - `skip_na = T`で`NA`をスキップします．
 
 ```{r}
-mesh_1 <- as_mesh(c("6441", "5339", NA, "5250"))
-mesh_2 <- as_mesh(c("6439", "5211", "4013", "6635"))
+mesh_1 <- mesh_80km(c("6441", "5339", NA, "5250"))
+mesh_2 <- mesh_80km(c("6439", "5211", "4013", "6635"))
 
 line <- mesh_line(list(mesh_1, mesh_2), 
                   close = T,
@@ -156,8 +167,8 @@ plot(line[[1]])
 - `mesh_line()`と同様にメッシュの`list`で経路距離を算出可能です．
 
 ```{r}
-mesh_from <- as_mesh(c("6441", "5339"))
-mesh_to <- as_mesh(c("5237", "5235"))
+mesh_from <- mesh_80km(c("6441", "5339"))
+mesh_to <- mesh_80km(c("5237", "5235"))
 
 distance <- mesh_distance(mesh_from, mesh_to)
 
@@ -190,14 +201,16 @@ df <- tibble(X = runif(1e3, 139, 140),
 # jpmesh
 tictoc::tic()
 df_jpmesh <- df %>% 
-  mutate(mesh = jpmesh::coords_to_mesh(X, Y))
+  mutate(mesh = jpmesh::coords_to_mesh(X, Y,
+                                       mesh_size = 1))
 head(df_jpmesh)
 tictoc::toc()
 
 # japanmesh
 tictoc::tic()
 df_japanmesh <- df %>% 
-  mutate(mesh = XY_to_mesh(X, Y, size = "1km"))
+  mutate(mesh = XY_to_mesh(X, Y, 
+                           size = "1km"))
 head(df_japanmesh)
 tictoc::toc()
 

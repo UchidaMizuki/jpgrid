@@ -1,3 +1,8 @@
+#' Converting sfc points to meshes
+#'
+#' @param point A \code{sfc_POINT} vector.
+#' @inheritParams size
+#'
 #' @export
 point_to_mesh <- function(point, size) {
   stopifnot(inherits(point, "sfc_POINT"))
@@ -11,7 +16,14 @@ point_to_mesh <- function(point, size) {
              size = size)
 }
 
-# FIXME?
+#' Converting meshes to sfc geometries
+#'
+#' @name sfc
+#'
+#' @inheritParams mesh
+#' @param crs Coordinate reference system.
+NULL
+
 mesh_to_sfc <- function(mesh,
                         type = "POLYGON",
                         crs = sf::NA_crs_) {
@@ -56,6 +68,8 @@ mesh_to_sfc <- function(mesh,
 }
 
 #' @export
+#'
+#' @rdname sfc
 mesh_to_polygon <- function(mesh,
                             crs = sf::NA_crs_) {
   mesh %>%
@@ -64,6 +78,8 @@ mesh_to_polygon <- function(mesh,
 }
 
 #' @export
+#'
+#' @rdname sfc
 mesh_to_point <- function(mesh,
                           crs = sf::NA_crs_) {
   mesh %>%

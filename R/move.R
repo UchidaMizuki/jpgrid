@@ -1,19 +1,30 @@
+#' Moving on the mesh
+#'
+#' @inheritParams mesh
+#' @param n_X Number of moving cells in the longitude direction.
+#' @param n_Y Number of moving cells in the latitude direction.
+#'
 #' @export
-mesh_move <- function(mesh, n_X, n_Y, ...) {
+mesh_move <- function(mesh, n_X, n_Y) {
   stopifnot(is_mesh(mesh))
 
-  new_mesh(n_X = field(mesh, "n_X") + n_X,
-           n_Y = field(mesh, "n_Y") + n_Y,
-           size = mesh_size(mesh))
+  new_mesh(size = mesh_size(mesh),
+           n_X = field(mesh, "n_X") + n_X,
+           n_Y = field(mesh, "n_Y") + n_Y)
 }
 
-# FIXME?
+#' Neighbor mesh
+#'
+#' @inheritParams mesh
+#' @param n A numeric vector of degrees.
+#' @param moore Moore neighborhood (\code{TRUE}) or Von Neumann neighborhood (\code{FALSE}).
+#' @param simplify Should simplify the format of the return?
+#'
 #' @export
 mesh_neighbor <- function(mesh,
                           n = 1L,
                           moore = T,
-                          simplify = T,
-                          ...) {
+                          simplify = T) {
   stopifnot(n >= 0,
             n %% 1 == 0)
 

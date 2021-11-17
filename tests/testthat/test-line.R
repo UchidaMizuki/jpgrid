@@ -1,12 +1,7 @@
 test_that("line", {
-  x <- c("644142", "533946", "523667", "523503", "503033") %>%
-    as_mesh()
+  x <- mesh_10km(c("644142", "533946", "523667", "523503", "503033"))
   y <- c(tail(x, -1), x[1])
 
-  mesh_line(x, y)
-
-  mesh_line(list(x, x),
-            close = T) %>%
-    dplyr::first() %>%
-    plot()
+  expect_true(is.list(mesh_line(x, y)))
+  expect_true(is.list(mesh_line(list(x, y))))
 })
