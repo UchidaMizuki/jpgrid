@@ -15,6 +15,9 @@ mesh_line(mesh, mesh_to, close = FALSE, skip_na = FALSE)
 
 \item{skip_na}{Should skip the \code{NA} mesh and connects the paths? \code{FALSE} by default.}
 }
+\value{
+A list of \code{mesh} class vectors.
+}
 \description{
 If \code{mesh} and \code{mesh_to} are both vectors, the line between \code{mesh} and \code{mesh_to} is drawn (using Bresenham's line algorithm).
 If \code{mesh} is a list, The path lines for each element in the mesh will be drawn.

@@ -15,6 +15,9 @@ mesh_neighbor(mesh, n = 1L, moore = TRUE, simplify = TRUE)
 
 \item{simplify}{Should simplify the format of the return?}
 }
+\value{
+A list of \code{mesh} class vectors.
+}
 \description{
 Neighbor mesh
 }

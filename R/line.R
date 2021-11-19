@@ -6,6 +6,8 @@
 #' @inheritParams mesh_to
 #' @param skip_na Should skip the \code{NA} mesh and connects the paths? \code{FALSE} by default.
 #'
+#' @return A list of \code{mesh} class vectors.
+#'
 #' @export
 mesh_line <- function(mesh, mesh_to,
                       close = FALSE,

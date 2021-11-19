@@ -15,6 +15,10 @@ mesh_to_point(mesh, crs = sf::NA_crs_)
 
 \item{crs}{Coordinate reference system.}
 }
+\value{
+\code{mesh_to_polygon} returns a \code{sfc_POLYGON} vector.
+\code{mesh_to_point} returns a \code{sfc_POINT} vector.
+}
 \description{
 Converting meshes to sfc geometries
 }

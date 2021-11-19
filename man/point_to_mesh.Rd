@@ -11,6 +11,9 @@ point_to_mesh(point, size)
 
 \item{size}{A mesh size.}
 }
+\value{
+A \code{mesh} class vector.
+}
 \description{
 Converting sfc points to meshes
 }

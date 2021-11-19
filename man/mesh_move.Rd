@@ -13,6 +13,9 @@ mesh_move(mesh, n_X, n_Y)
 
 \item{n_Y}{Number of moving cells in the latitude direction.}
 }
+\value{
+A \code{mesh} class vector.
+}
 \description{
 Moving on the mesh
 }

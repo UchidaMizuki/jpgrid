@@ -24,7 +24,7 @@ mesh_to_XY(mesh, center = TRUE)
 \value{
 \code{XY_to_mesh} returns a \code{mesh} class vector.
 
-\code{mesh_to_XY} returns a tbl.
+\code{mesh_to_XY} returns a \code{tbl_df}.
 }
 \description{
 Conversion between mesh and coordinates (longitude and latitude)

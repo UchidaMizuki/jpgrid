@@ -16,6 +16,9 @@ mesh_distance(mesh, mesh_to, close = FALSE, type = "keep_na")
 \item{type}{How is the NA mesh treated when \code{mesh} is a list? \code{"skip_na"} skips the \code{NA} mesh and connects the paths.
 \code{"keep_na"} by default.}
 }
+\value{
+A double vector.
+}
 \description{
 If \code{mesh} and \code{mesh_to} are both vectors, the distance between \code{mesh} and \code{mesh_to} is calculated.
 If \code{mesh} is a list, The path distance of each element is calculated.

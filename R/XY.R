@@ -29,7 +29,7 @@ XY_to_mesh <- function(X, Y, size) {
 #' @param mesh A \code{mesh} class vector.
 #' @param center Should the center point of the mesh be returned? Otherwise the end points will be returned. \code{TRUE} by default.
 #'
-#' @return \code{mesh_to_XY} returns a tbl.
+#' @return \code{mesh_to_XY} returns a \code{tbl_df}.
 mesh_to_XY <- function(mesh, center = TRUE) {
   stopifnot(is_mesh(mesh))
 

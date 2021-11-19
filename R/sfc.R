@@ -3,6 +3,8 @@
 #' @param point A \code{sfc_POINT} vector.
 #' @inheritParams size
 #'
+#' @return A \code{mesh} class vector.
+#'
 #' @export
 point_to_mesh <- function(point, size) {
   stopifnot(inherits(point, "sfc_POINT"))
@@ -22,6 +24,9 @@ point_to_mesh <- function(point, size) {
 #'
 #' @inheritParams mesh
 #' @param crs Coordinate reference system.
+#'
+#' @return \code{mesh_to_polygon} returns a \code{sfc_POLYGON} vector.
+#' \code{mesh_to_point} returns a \code{sfc_POINT} vector.
 NULL
 
 mesh_to_sfc <- function(mesh,

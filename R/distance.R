@@ -7,6 +7,8 @@
 #' @param type How is the NA mesh treated when \code{mesh} is a list? \code{"skip_na"} skips the \code{NA} mesh and connects the paths.
 #' \code{"keep_na"} by default.
 #'
+#' @return A double vector.
+#'
 #' @export
 mesh_distance <- function(mesh, mesh_to,
                           close = FALSE,

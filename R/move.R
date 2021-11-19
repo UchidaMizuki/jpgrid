@@ -4,6 +4,8 @@
 #' @param n_X Number of moving cells in the longitude direction.
 #' @param n_Y Number of moving cells in the latitude direction.
 #'
+#' @return A \code{mesh} class vector.
+#'
 #' @export
 mesh_move <- function(mesh, n_X, n_Y) {
   stopifnot(is_mesh(mesh))
@@ -19,6 +21,8 @@ mesh_move <- function(mesh, n_X, n_Y) {
 #' @param n A numeric vector of degrees.
 #' @param moore Moore neighborhood (\code{TRUE}) or Von Neumann neighborhood (\code{FALSE}).
 #' @param simplify Should simplify the format of the return?
+#'
+#' @return A list of \code{mesh} class vectors.
 #'
 #' @export
 mesh_neighbor <- function(mesh,
