@@ -6,6 +6,8 @@ Title: Functions for Mesh Codes in Japan
 Description: Functions for mesh codes in Japan. 
     Conversion between mesh and longitude/latitude, and between mesh codes of different scales.
 License: MIT + file LICENSE
+URL: https://github.com/UchidaMizuki/japanmesh
+BugReports: https://github.com/UchidaMizuki/japanmesh/issues
 Encoding: UTF-8
 LazyData: true
 Imports: 
