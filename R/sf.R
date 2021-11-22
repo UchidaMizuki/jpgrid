@@ -18,6 +18,37 @@ point_to_mesh <- function(point, size) {
              size = size)
 }
 
+#' Converting sfc polygons to regional meshes
+#'
+#' @param sfc A \code{sfc} vector.
+#' @inheritParams size
+#' @param .predicate A \code{.predicate} parameter for \code{sf::st_filter} function.
+#'
+#' @return A list of \code{mesh} class vectors.
+#'
+#' @export
+sfc_to_mesh <- function(sfc, size,
+                        .predicate = sf::st_intersects) {
+  stopifnot(inherits(sfc, "sfc"))
+
+  mesh <- sfc %>%
+    purrr::map(sf::st_bbox) %>%
+    bbox_to_mesh(size = size) %>%
+    purrr::modify(function(mesh) {
+      tibble::tibble(mesh = mesh,
+                     polygon_mesh = mesh_to_polygon(mesh)) %>%
+        sf::st_as_sf()
+    })
+
+  purrr::map2(mesh, sfc,
+              function(mesh, sfc) {
+                mesh %>%
+                  sf::st_filter(sfc,
+                                .predicate = .predicate) %>%
+                  purrr::pluck("mesh")
+              })
+}
+
 #' Converting bbox to regional meshes
 #'
 #' @param bbox A \code{bbox} or a list of \code{bbox}.
@@ -27,8 +58,6 @@ point_to_mesh <- function(point, size) {
 #'
 #' @export
 bbox_to_mesh <- function(bbox, size) {
-  size <- size_match(size)
-
   if (inherits(bbox, "bbox")) {
     mesh_grid(X_min = bbox[["xmin"]],
               Y_min = bbox[["ymin"]],
