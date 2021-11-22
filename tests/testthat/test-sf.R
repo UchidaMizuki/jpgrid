@@ -24,7 +24,7 @@ test_that("point_to_mesh", {
   expect_s3_class(mesh[[1L]], "mesh")
 })
 
-test_that("mesh_to_sfc", {
+test_that("mesh_to_geometry", {
   mesh10km <- c("53394526313", 5339358633, "533945764", 53394611, "523503", 5339) %>%
     mesh_10km()
 

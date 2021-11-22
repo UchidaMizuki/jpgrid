@@ -13,13 +13,13 @@ knitr::opts_chunk$set(
 )
 ```
 
-## japanmesh
+# japanmesh
 
 README is currently only available in Japanese.
 
 地域メッシュと経度・緯度との変換や異なるサイズの地域メッシュ間の変換などを行うためのRパッケージです．
 
-### インストール方法
+## インストール方法
 
 ``` r
 install.packages("japanmesh")
@@ -31,7 +31,7 @@ install.packages("japanmesh")
 # install.packages("devtools")
 devtools::install_github("UchidaMizuki/japanmesh")
 ```
-### 使用方法
+## 使用方法
 
 ```{r,message=FALSE,warning=FALSE}
 library(japanmesh)
@@ -39,7 +39,7 @@ library(tibble)
 library(dplyr)
 ```
 
-#### 文字列・数値からの地域メッシュの生成
+### 文字列・数値からの地域メッシュの生成
 
 文字列・数値から地域メッシュを生成するためには`mesh_***m()`，`mesh_auto()`関数を使用します．
 
@@ -60,7 +60,7 @@ mesh_125m(x, strict = F)
 mesh_auto(x, strict = F)
 ```
 
-#### 地域メッシュのサイズの変換
+### 地域メッシュのサイズの変換
 
 `mesh_zoomin()`，`mesh_zoomout()`関数により，地域メッシュのサイズ変換・細分化を行います．
 
@@ -80,7 +80,7 @@ print(zoomin)
 plot(zoomin[[1]])
 ```
 
-#### 経度・緯度から地域メッシュへの変換
+### 経度・緯度から地域メッシュへの変換
 
 `XY_to_mesh()`関数は，経度・緯度を地域メッシュに変換します．
 
@@ -91,7 +91,7 @@ tibble(X = c(139.7008, 135.4375), # 経度
          mesh125m = XY_to_mesh(X, Y, size = "125m"))
 ```
 
-#### 地域メッシュから経度・緯度への変換
+### 地域メッシュから経度・緯度への変換
 
 `mesh_to_XY()`関数は，地域メッシュを経度・緯度に変換します．
 
@@ -102,7 +102,7 @@ tibble(mesh = c("5339452660", "5235034590")) %>%
            mesh_to_XY())
 ```
 
-#### 隣接メッシュの算出
+### 隣接メッシュの算出
 
 `mesh_neighbor()`関数は，隣接するメッシュを算出します．
 
@@ -124,7 +124,7 @@ print(neighbor_neumann)
 plot(neighbor_neumann[[1]])
 ```
 
-#### メッシュ間の線分描画
+### メッシュ間の線分描画
 
 `mesh_line()`関数により，メッシュ間の線分上に存在するメッシュを抽出します．
 
@@ -155,7 +155,7 @@ print(line)
 plot(line[[1]])
 ```
 
-#### メッシュ間距離の算出
+### メッシュ間距離の算出
 
 `mesh_distance()`関数は，メッシュ間距離（大円距離）を算出します．
 
@@ -170,12 +170,12 @@ distance <- mesh_distance(mesh_from, mesh_to)
 print(distance)
 ```
 
-#### その他
+### その他
 - `mesh_move()`関数により，東西南北方向の地域メッシュを算出可能です．
 - `mesh_to_polygon()`関数および`mesh_to_point()`関数により`sfc`ジオメトリを出力可能です．
 - 80kmメッシュの桁が負や三桁以上になる範囲外のメッシュについては，当該コードを`<-1>`，`<123>`のように表示し，既存メッシュと明確に区別できるようにしています．
 
-### 他パッケージとの比較
+## 他パッケージとの比較
 
 地域メッシュを扱うRパッケージとして，本パッケージの他に`jpmesh`パッケージがあります．
 本パッケージの`jpmesh`との優位点として，以下が挙げられます．
@@ -183,7 +183,7 @@ print(distance)
 - 処理速度が`jpmesh`パッケージより速い場合があります．
 - `jpmesh::meshcode()`と違い，`as_mesh()`に`NA`を入力してもエラーを吐きません．
 
-#### `jpmesh`パッケージとの処理速度の比較
+### `jpmesh`パッケージとの処理速度の比較
 
 以下の例では，本パッケージの計算速度は，`jpmesh`パッケージと比べて数百倍程度，高速です．
 

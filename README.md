@@ -1,13 +1,13 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-## japanmesh
+# japanmesh
 
 README is currently only available in Japanese.
 
 地域メッシュと経度・緯度との変換や異なるサイズの地域メッシュ間の変換などを行うためのRパッケージです．
 
-### インストール方法
+## インストール方法
 
 ``` r
 install.packages("japanmesh")
@@ -20,7 +20,7 @@ install.packages("japanmesh")
 devtools::install_github("UchidaMizuki/japanmesh")
 ```
 
-### 使用方法
+## 使用方法
 
 ``` r
 library(japanmesh)
@@ -28,7 +28,7 @@ library(tibble)
 library(dplyr)
 ```
 
-#### 文字列・数値からの地域メッシュの生成
+### 文字列・数値からの地域メッシュの生成
 
 文字列・数値から地域メッシュを生成するためには`mesh_***m()`，`mesh_auto()`関数を使用します．
 
@@ -65,7 +65,7 @@ mesh_auto(x, strict = F)
 #> [1] 5339 5339 5339 5339 5235 5339 <NA>
 ```
 
-#### 地域メッシュのサイズの変換
+### 地域メッシュのサイズの変換
 
 `mesh_zoomin()`，`mesh_zoomout()`関数により，地域メッシュのサイズ変換・細分化を行います．
 
@@ -120,7 +120,7 @@ plot(zoomin[[1]])
 
 <img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
 
-#### 経度・緯度から地域メッシュへの変換
+### 経度・緯度から地域メッシュへの変換
 
 `XY_to_mesh()`関数は，経度・緯度を地域メッシュに変換します．
 
@@ -136,7 +136,7 @@ tibble(X = c(139.7008, 135.4375), # 経度
 #> 2  135.  34.7 5235034499 52350344444
 ```
 
-#### 地域メッシュから経度・緯度への変換
+### 地域メッシュから経度・緯度への変換
 
 `mesh_to_XY()`関数は，地域メッシュを経度・緯度に変換します．
 
@@ -152,7 +152,7 @@ tibble(mesh = c("5339452660", "5235034590")) %>%
 #> 2 5235034590  135.  34.7
 ```
 
-#### 隣接メッシュの算出
+### 隣接メッシュの算出
 
 `mesh_neighbor()`関数は，隣接するメッシュを算出します．
 
@@ -193,7 +193,7 @@ plot(neighbor_neumann[[1]])
 
 <img src="man/figures/README-unnamed-chunk-7-2.png" width="100%" />
 
-#### メッシュ間の線分描画
+### メッシュ間の線分描画
 
 `mesh_line()`関数により，メッシュ間の線分上に存在するメッシュを抽出します．
 
@@ -248,7 +248,7 @@ plot(line[[1]])
 
 <img src="man/figures/README-unnamed-chunk-9-1.png" width="100%" />
 
-#### メッシュ間距離の算出
+### メッシュ間距離の算出
 
 `mesh_distance()`関数は，メッシュ間距離（大円距離）を算出します．
 
@@ -265,13 +265,13 @@ print(distance)
 #> [1] 953014.2 371081.9
 ```
 
-#### その他
+### その他
 
 -   `mesh_move()`関数により，東西南北方向の地域メッシュを算出可能です．
 -   `mesh_to_polygon()`関数および`mesh_to_point()`関数により`sfc`ジオメトリを出力可能です．
 -   80kmメッシュの桁が負や三桁以上になる範囲外のメッシュについては，当該コードを`<-1>`，`<123>`のように表示し，既存メッシュと明確に区別できるようにしています．
 
-### 他パッケージとの比較
+## 他パッケージとの比較
 
 地域メッシュを扱うRパッケージとして，本パッケージの他に`jpmesh`パッケージがあります．
 本パッケージの`jpmesh`との優位点として，以下が挙げられます．
@@ -279,7 +279,7 @@ print(distance)
 -   処理速度が`jpmesh`パッケージより速い場合があります．
 -   `jpmesh::meshcode()`と違い，`as_mesh()`に`NA`を入力してもエラーを吐きません．
 
-#### `jpmesh`パッケージとの処理速度の比較
+### `jpmesh`パッケージとの処理速度の比較
 
 以下の例では，本パッケージの計算速度は，`jpmesh`パッケージと比べて数百倍程度，高速です．
 
@@ -305,7 +305,7 @@ head(df_jpmesh)
 #> 5  140.  39.8   59395618
 #> 6  140.  39.4   59390561
 tictoc::toc()
-#> 6.32 sec elapsed
+#> 7.76 sec elapsed
 
 # japanmesh
 tictoc::tic()
@@ -323,7 +323,7 @@ head(df_japanmesh)
 #> 5  140.  39.8 59395618
 #> 6  140.  39.4 59390561
 tictoc::toc()
-#> 0.01 sec elapsed
+#> 0.02 sec elapsed
 
 # mesh to XY
 # jpmesh
@@ -343,7 +343,7 @@ head(df_jpmesh)
 #> 5   59395618       140.       39.8   0.00625   0.00417
 #> 6   59390561       140.       39.4   0.00625   0.00417
 tictoc::toc()
-#> 9.41 sec elapsed
+#> 9.09 sec elapsed
 
 # japanmesh
 tictoc::tic()
@@ -361,5 +361,5 @@ head(df_japanmesh)
 #> 5 59395618  140.  39.8
 #> 6 59390561  140.  39.4
 tictoc::toc()
-#> 0.01 sec elapsed
+#> 0.03 sec elapsed
 ```

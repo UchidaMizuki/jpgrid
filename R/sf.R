@@ -166,6 +166,6 @@ plot.mesh <- function(x, y,
   stopifnot(missing(y))
 
   x %>%
-    mesh_to_sfc(type = type) %>%
+    mesh_to_geometry(type = type) %>%
     plot(...)
 }
