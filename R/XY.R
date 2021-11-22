@@ -17,9 +17,9 @@ XY_to_mesh <- function(X, Y, size) {
   length_X <- size / 80000
   length_Y <- length_X / 1.5
 
-  new_mesh(n_X = (X - 100) %/% length_X,
-           n_Y = Y %/% length_Y,
-           size = size)
+  new_mesh(size = size,
+           n_X = (X - 100) %/% length_X,
+           n_Y = Y %/% length_Y)
 }
 
 #' @rdname XY
