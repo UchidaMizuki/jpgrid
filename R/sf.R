@@ -37,9 +37,8 @@ geometry_to_mesh <- function(geometry, size,
     purrr::map(sf::st_bbox) %>%
     bbox_to_mesh(size = size) %>%
     purrr::modify(function(mesh) {
-      tibble::tibble(mesh = mesh,
-                     polygon_mesh = mesh_to_polygon(mesh)) %>%
-        sf::st_as_sf()
+      tibble::tibble(mesh = mesh) %>%
+        sf::st_set_geometry(mesh_to_polygon(mesh))
     })
 
   purrr::map2(mesh, geometry,
@@ -47,7 +46,7 @@ geometry_to_mesh <- function(geometry, size,
                 mesh %>%
                   sf::st_filter(geometry,
                                 .predicate = .predicate) %>%
-                  purrr::pluck("mesh")
+                  purrr::chuck("mesh")
               })
 }
 
@@ -138,8 +137,7 @@ mesh_to_geometry <- function(mesh,
   tibble::tibble(mesh = mesh) %>%
     dplyr::left_join(geometry,
                      by = "mesh") %>%
-    sf::st_as_sf() %>%
-    sf::st_geometry()
+    purrr::chuck("geometry")
 }
 
 #' @export
