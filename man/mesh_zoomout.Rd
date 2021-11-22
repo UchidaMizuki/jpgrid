@@ -2,7 +2,7 @@
 % Please edit documentation in R/zoom.R
 \name{mesh_zoomout}
 \alias{mesh_zoomout}
-\title{Zoom-out mesh}
+\title{Zoom-out regional meshes}
 \usage{
 mesh_zoomout(mesh, size)
 }
@@ -15,5 +15,5 @@ mesh_zoomout(mesh, size)
 \code{mesh_zoomout} returns a \code{mesh} class vector.
 }
 \description{
-\code{mesh_zoomout} makes the mesh coarser.
+\code{mesh_zoomout} makes the regional meshes coarser.
 }

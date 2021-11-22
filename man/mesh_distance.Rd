@@ -2,7 +2,7 @@
 % Please edit documentation in R/distance.R
 \name{mesh_distance}
 \alias{mesh_distance}
-\title{Distance between meshes}
+\title{Distance between regional meshes}
 \usage{
 mesh_distance(mesh, mesh_to, close = FALSE, type = "keep_na")
 }

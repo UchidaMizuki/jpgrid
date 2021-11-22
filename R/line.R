@@ -1,4 +1,4 @@
-#' Draw line segments between meshes
+#' Draw line segments between regional meshes
 #'
 #' If \code{mesh} and \code{mesh_to} are both vectors, the line between \code{mesh} and \code{mesh_to} is drawn (using Bresenham's line algorithm).
 #' If \code{mesh} is a list, The path lines for each element in the mesh will be drawn.
@@ -74,7 +74,7 @@ mesh_line <- function(mesh, mesh_to,
                        by = c("mesh", "mesh_to")) %>%
       purrr::chuck("line")
   } else {
-    stopifnot(is_list(mesh),
+    stopifnot(is.list(mesh),
               missing(mesh_to))
 
     mesh %>%

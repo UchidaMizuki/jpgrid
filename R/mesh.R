@@ -1,5 +1,5 @@
 # mesh --------------------------------------------------------------------
-#' Meshcode vector
+#' Regional mesh vector
 #'
 #' A series of functions return \code{mesh} class for each mesh size.
 #' \code{mesh_auto} returns automatically determine mesh size by the largest mesh size.
@@ -102,11 +102,11 @@ code_to_mesh <- function(size,
     }
   }
 
-  not_n_na <- !is.na(n_X) & !is.na(n_Y)
-  n_X <- dplyr::if_else(not_n_na,
+  not_na_n <- !is.na(n_X) & !is.na(n_Y)
+  n_X <- dplyr::if_else(not_na_n,
                         n_X,
                         NA_integer_)
-  n_Y <- dplyr::if_else(not_n_na,
+  n_Y <- dplyr::if_else(not_na_n,
                         n_Y,
                         NA_integer_)
   new_mesh(size = size,

@@ -2,7 +2,7 @@
 % Please edit documentation in R/line.R
 \name{mesh_line}
 \alias{mesh_line}
-\title{Draw line segments between meshes}
+\title{Draw line segments between regional meshes}
 \usage{
 mesh_line(mesh, mesh_to, close = FALSE, skip_na = FALSE)
 }

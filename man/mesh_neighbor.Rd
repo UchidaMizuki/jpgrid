@@ -2,7 +2,7 @@
 % Please edit documentation in R/move.R
 \name{mesh_neighbor}
 \alias{mesh_neighbor}
-\title{Neighbor mesh}
+\title{Neighborhood regional mesh}
 \usage{
 mesh_neighbor(mesh, n = 1L, moore = TRUE, simplify = TRUE)
 }
@@ -19,5 +19,5 @@ mesh_neighbor(mesh, n = 1L, moore = TRUE, simplify = TRUE)
 A list of \code{mesh} class vectors.
 }
 \description{
-Neighbor mesh
+Neighborhood regional mesh
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/zoom.R
 \name{mesh_zoomin}
 \alias{mesh_zoomin}
-\title{Zoom-in mesh}
+\title{Zoom-in regional meshes}
 \usage{
 mesh_zoomin(mesh, size)
 }
@@ -15,5 +15,5 @@ mesh_zoomin(mesh, size)
 \code{mesh_zoomin} returns a list of \code{mesh} class vector.
 }
 \description{
-\code{mesh_zoomin} makes the mesh finer.
+\code{mesh_zoomin} makes the regional meshes finer.
 }

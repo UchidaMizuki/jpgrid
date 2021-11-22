@@ -2,7 +2,7 @@
 % Please edit documentation in R/move.R
 \name{mesh_move}
 \alias{mesh_move}
-\title{Moving on the mesh}
+\title{Moving on regional meshes}
 \usage{
 mesh_move(mesh, n_X, n_Y)
 }
@@ -17,5 +17,5 @@ mesh_move(mesh, n_X, n_Y)
 A \code{mesh} class vector.
 }
 \description{
-Moving on the mesh
+Moving on regional meshes
 }

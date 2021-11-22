@@ -11,7 +11,7 @@
 \alias{mesh_100m}
 \alias{mesh_auto}
 \alias{is_mesh}
-\title{Meshcode vector}
+\title{Regional mesh vector}
 \usage{
 mesh_80km(x, strict = TRUE)
 

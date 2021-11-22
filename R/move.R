@@ -1,4 +1,4 @@
-#' Moving on the mesh
+#' Moving on regional meshes
 #'
 #' @inheritParams mesh
 #' @param n_X Number of moving cells in the longitude direction.
@@ -15,7 +15,7 @@ mesh_move <- function(mesh, n_X, n_Y) {
            n_Y = field(mesh, "n_Y") + n_Y)
 }
 
-#' Neighbor mesh
+#' Neighborhood regional mesh
 #'
 #' @inheritParams mesh
 #' @param n A numeric vector of degrees.

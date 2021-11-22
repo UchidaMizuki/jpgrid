@@ -1,6 +1,6 @@
-#' Zoom-in mesh
+#' Zoom-in regional meshes
 #'
-#' \code{mesh_zoomin} makes the mesh finer.
+#' \code{mesh_zoomin} makes the regional meshes finer.
 #'
 #' @export
 #'
@@ -39,9 +39,9 @@ mesh_zoomin <- function(mesh, size) {
               })
 }
 
-#' Zoom-out mesh
+#' Zoom-out regional meshes
 #'
-#' \code{mesh_zoomout} makes the mesh coarser.
+#' \code{mesh_zoomout} makes the regional meshes coarser.
 #'
 #' @export
 #'
