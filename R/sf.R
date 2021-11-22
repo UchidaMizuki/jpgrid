@@ -1,4 +1,4 @@
-#' Converting sfc points to meshes
+#' Converting sfc points to regional meshes
 #'
 #' @param point A \code{sfc_POINT} vector.
 #' @inheritParams size
@@ -18,7 +18,46 @@ point_to_mesh <- function(point, size) {
              size = size)
 }
 
-#' Converting meshes to sfc geometries
+#' Converting bbox to regional meshes
+#'
+#' @param bbox A \code{bbox} or a list of \code{bbox}.
+#' @inheritParams size
+#'
+#' @return A \code{mesh} vector (when bbox is a \code{bbox}) or A list of \code{mesh} vectors (when bbox is a list of \code{bbox}).
+#'
+#' @export
+bbox_to_mesh <- function(bbox, size) {
+  size <- size_match(size)
+
+  if (inherits(bbox, "bbox")) {
+    mesh_grid(X_min = bbox[["xmin"]],
+              Y_min = bbox[["ymin"]],
+              X_max = bbox[["xmax"]],
+              Y_max = bbox[["ymax"]],
+              size = size) %>%
+      dplyr::first()
+  } else {
+    stopifnot(is.list(bbox))
+
+    bbox <- bbox %>%
+      purrr::map_dfr(function(bbox) {
+        stopifnot(inherits(bbox, "bbox"))
+
+        tibble::tibble(X_min = bbox[["xmin"]],
+                       Y_min = bbox[["ymin"]],
+                       X_max = bbox[["xmax"]],
+                       Y_max = bbox[["ymax"]])
+      })
+
+    mesh_grid(X_min = bbox$X_min,
+              Y_min = bbox$Y_min,
+              X_max = bbox$X_max,
+              Y_max = bbox$Y_max,
+              size = size)
+  }
+}
+
+#' Converting regional meshes to sfc geometries
 #'
 #' @name sfc
 #'
@@ -83,7 +122,6 @@ mesh_to_polygon <- function(mesh,
 }
 
 #' @export
-#'
 #' @rdname sfc
 mesh_to_point <- function(mesh,
                           crs = sf::NA_crs_) {
