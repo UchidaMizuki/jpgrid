@@ -15,6 +15,10 @@ knitr::opts_chunk$set(
 
 # japanmesh
 
+<!-- badges: start -->
+[![CRAN status](https://www.r-pkg.org/badges/version/japanmesh)](https://CRAN.R-project.org/package=japanmesh)
+<!-- badges: end -->
+
 README is currently only available in Japanese.
 
 地域メッシュと経度・緯度との変換や異なるサイズの地域メッシュ間の変換などを行うためのRパッケージです．
