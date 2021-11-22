@@ -1,6 +1,6 @@
 Package: japanmesh
 Type: Package
-Version: 0.1.0
+Version: 0.1.0.9000
 Authors@R: person("Mizuki", "Uchida", email = "uchidamizuki@vivaldi.net", role = c("aut", "cre"))
 Title: Functions for Regional Mesh in Japan
 Description: Functions for regional mesh in Japan. 
