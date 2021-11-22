@@ -18,20 +18,22 @@ point_to_mesh <- function(point, size) {
              size = size)
 }
 
-#' Converting sfc polygons to regional meshes
+#' Converting geometries to regional meshes
 #'
-#' @param sfc A \code{sfc} vector.
+#' @param geometry A \code{sfc} vector.
 #' @inheritParams size
 #' @param .predicate A \code{.predicate} parameter for \code{sf::st_filter} function.
 #'
 #' @return A list of \code{mesh} class vectors.
 #'
 #' @export
-sfc_to_mesh <- function(sfc, size,
-                        .predicate = sf::st_intersects) {
-  stopifnot(inherits(sfc, "sfc"))
+geometry_to_mesh <- function(geometry, size,
+                             .predicate = sf::st_intersects) {
+  if (!inherits(geometry, "sfc")) {
+    geometry <- sf::st_as_sfc(geometry)
+  }
 
-  mesh <- sfc %>%
+  mesh <- geometry %>%
     purrr::map(sf::st_bbox) %>%
     bbox_to_mesh(size = size) %>%
     purrr::modify(function(mesh) {
@@ -40,10 +42,10 @@ sfc_to_mesh <- function(sfc, size,
         sf::st_as_sf()
     })
 
-  purrr::map2(mesh, sfc,
-              function(mesh, sfc) {
+  purrr::map2(mesh, geometry,
+              function(mesh, geometry) {
                 mesh %>%
-                  sf::st_filter(sfc,
+                  sf::st_filter(geometry,
                                 .predicate = .predicate) %>%
                   purrr::pluck("mesh")
               })
@@ -58,19 +60,10 @@ sfc_to_mesh <- function(sfc, size,
 #'
 #' @export
 bbox_to_mesh <- function(bbox, size) {
-  if (inherits(bbox, "bbox")) {
-    mesh_grid(X_min = bbox[["xmin"]],
-              Y_min = bbox[["ymin"]],
-              X_max = bbox[["xmax"]],
-              Y_max = bbox[["ymax"]],
-              size = size) %>%
-      dplyr::first()
-  } else {
-    stopifnot(is.list(bbox))
-
+  if (is.list(bbox)) {
     bbox <- bbox %>%
       purrr::map_dfr(function(bbox) {
-        stopifnot(inherits(bbox, "bbox"))
+        bbox <- sf::st_bbox(bbox)
 
         tibble::tibble(X_min = bbox[["xmin"]],
                        Y_min = bbox[["ymin"]],
@@ -83,12 +76,21 @@ bbox_to_mesh <- function(bbox, size) {
               X_max = bbox$X_max,
               Y_max = bbox$Y_max,
               size = size)
+  } else {
+    bbox <- sf::st_bbox(bbox)
+
+    mesh_grid(X_min = bbox[["xmin"]],
+              Y_min = bbox[["ymin"]],
+              X_max = bbox[["xmax"]],
+              Y_max = bbox[["ymax"]],
+              size = size) %>%
+      dplyr::first()
   }
 }
 
 #' Converting regional meshes to sfc geometries
 #'
-#' @name sfc
+#' @name mesh_to_geometry
 #'
 #' @inheritParams mesh
 #' @param crs Coordinate reference system.
@@ -97,21 +99,21 @@ bbox_to_mesh <- function(bbox, size) {
 #' \code{mesh_to_point} returns a \code{sfc_POINT} vector.
 NULL
 
-mesh_to_sfc <- function(mesh,
-                        type = "POLYGON",
-                        crs = sf::NA_crs_) {
+mesh_to_geometry <- function(mesh,
+                             type = "POLYGON",
+                             crs = sf::NA_crs_) {
   stopifnot(is_mesh(mesh))
   arg_match(type, c("POLYGON", "POINT"))
 
-  geom <- tibble::tibble(mesh = mesh) %>%
+  geometry <- tibble::tibble(mesh = mesh) %>%
     vec_unique()
-  geom <- vec_slice(geom,
-                    !is.na(geom$mesh))
+  geometry <- vec_slice(geometry ,
+                        !is.na(geometry$mesh))
 
   if (type == "POLYGON") {
-    XY <- mesh_to_XY(geom$mesh,
+    XY <- mesh_to_XY(geometry$mesh,
                      center = FALSE)
-    geom$geom <- list(XY$X_min, XY$Y_min, XY$X_max, XY$Y_max) %>%
+    geometry$geometry <- list(XY$X_min, XY$Y_min, XY$X_max, XY$Y_max) %>%
       purrr::pmap(function(X_min, Y_min, X_max, Y_max) {
         if (is.na(X_min) || is.na(Y_min) || is.na(X_max) || is.na(Y_max)) {
           sf::st_polygon() %>%
@@ -126,15 +128,15 @@ mesh_to_sfc <- function(mesh,
       }) %>%
       purrr::reduce(c)
   } else {
-    geom$geom <- mesh_to_XY(geom$mesh,
-                            center = TRUE) %>%
+    geometry$geometry <- mesh_to_XY(geometry$mesh,
+                                    center = TRUE) %>%
       sf::st_as_sf(coords = c("X", "Y"),
                    crs = crs) %>%
       sf::st_geometry()
   }
 
   tibble::tibble(mesh = mesh) %>%
-    dplyr::left_join(geom,
+    dplyr::left_join(geometry,
                      by = "mesh") %>%
     sf::st_as_sf() %>%
     sf::st_geometry()
@@ -142,21 +144,21 @@ mesh_to_sfc <- function(mesh,
 
 #' @export
 #'
-#' @rdname sfc
+#' @rdname mesh_to_geometry
 mesh_to_polygon <- function(mesh,
                             crs = sf::NA_crs_) {
   mesh %>%
-    mesh_to_sfc(type = "POLYGON",
-                crs = crs)
+    mesh_to_geometry(type = "POLYGON",
+                     crs = crs)
 }
 
 #' @export
-#' @rdname sfc
+#' @rdname mesh_to_geometry
 mesh_to_point <- function(mesh,
                           crs = sf::NA_crs_) {
   mesh %>%
-    mesh_to_sfc(type = "POINT",
-                crs = crs)
+    mesh_to_geometry(type = "POINT",
+                     crs = crs)
 }
 
 #' @export

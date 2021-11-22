@@ -6,8 +6,8 @@ test_that("polygon_to_mesh", {
     sf::st_sfc()
   polygon <- rep(polygon, 3L)
 
-  mesh <- sfc_to_mesh(polygon,
-                      size = "500m")
+  mesh <- geometry_to_mesh(polygon,
+                           size = "500m")
   expect_s3_class(mesh[[1L]], "mesh")
 })
 
@@ -19,8 +19,8 @@ test_that("point_to_mesh", {
     sf::st_sfc() %>%
     sf::st_cast("POINT")
 
-  mesh <- sfc_to_mesh(point,
-                      size = "1km")
+  mesh <- geometry_to_mesh(point,
+                           size = "1km")
   expect_s3_class(mesh[[1L]], "mesh")
 })
 
