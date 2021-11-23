@@ -1,6 +1,7 @@
 #' Conversion between mesh and coordinates (longitude and latitude)
 #'
 #' @name XY
+NULL
 
 #' @rdname XY
 #'
