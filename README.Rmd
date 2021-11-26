@@ -45,7 +45,7 @@ library(dplyr)
 
 ### 文字列・数値からの地域メッシュの生成
 
-文字列・数値から地域メッシュを生成するためには`mesh_***m()`，`mesh_auto()`関数を使用します．
+文字列・数値から地域メッシュを生成するためには`mesh_80km()`，`mesh_auto()`などの関数を使用します．
 
 - `mesh_auto()`関数はメッシュサイズを自動的に決定します．
 - デフォルト（`strict = T`）では，メッシュコードの桁数が所定の桁数であることを要求します．
@@ -66,22 +66,22 @@ mesh_auto(x, strict = F)
 
 ### 地域メッシュのサイズの変換
 
-`mesh_zoomin()`，`mesh_zoomout()`関数により，地域メッシュのサイズ変換・細分化を行います．
+地域メッシュのメッシュサイズを粗くする場合には，`mesh_80km()`などの関数を使用します．
+また，`mesh_subdivide()`関数により，地域メッシュの細分化を行います．
 
-- `mesh_zoomin()`は元のメッシュに含まれるメッシュを要素にもつリストを出力します．
-- 100 mメッシュから500 mメッシュへの変換に対応．
+- `mesh_subdivide()`は元のメッシュに含まれるメッシュを要素にもつリストを出力します．
+- 100 mメッシュから500 mメッシュへの変換に対応しています．
 
 ```{r}
 mesh10km <- mesh_10km(x[1:2],
                       strict = F)
 
-mesh_zoomout(mesh10km, 
-             size = "80km")
+mesh_80km(mesh10km)
 
-zoomin <- mesh_zoomin(mesh10km,
-                      size = "1km")
-print(zoomin)
-plot(zoomin[[1]])
+subdivide <- mesh_subdivide(mesh10km,
+                            size = "1km")
+print(subdivide)
+plot(subdivide[[1]])
 ```
 
 ### 経度・緯度から地域メッシュへの変換
