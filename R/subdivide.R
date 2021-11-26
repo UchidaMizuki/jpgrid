@@ -1,14 +1,14 @@
-#' Zoom-in regional meshes
+#' Subdivide regional meshes
 #'
-#' \code{mesh_zoomin} makes the regional meshes finer.
-#'
-#' @export
+#' \code{mesh_subdivide} makes the regional meshes finer.
 #'
 #' @inheritParams mesh
 #' @inheritParams size
 #'
-#' @return \code{mesh_zoomin} returns a list of \code{mesh} class vector.
-mesh_zoomin <- function(mesh, size) {
+#' @return A list of \code{mesh} class vector.
+#'
+#' @export
+mesh_subdivide <- function(mesh, size) {
   stopifnot(is_mesh(mesh))
 
   size <- size_match(size)
@@ -29,7 +29,7 @@ mesh_zoomin <- function(mesh, size) {
                   n_Y_max <- (n_Y + 1) * ratio - 1
 
                   n_XY <- tidyr::expand_grid(n_X = n_X_min:n_X_max,
-                                     n_Y = n_Y_min:n_Y_max)
+                                             n_Y = n_Y_min:n_Y_max)
                   new_mesh(size = size,
                            n_X = n_XY$n_X,
                            n_Y = n_XY$n_Y)
@@ -37,27 +37,4 @@ mesh_zoomin <- function(mesh, size) {
                   new_mesh(size = size)
                 }
               })
-}
-
-#' Zoom-out regional meshes
-#'
-#' \code{mesh_zoomout} makes the regional meshes coarser.
-#'
-#' @export
-#'
-#' @inheritParams mesh
-#' @inheritParams size
-#'
-#' @return \code{mesh_zoomout} returns a \code{mesh} class vector.
-mesh_zoomout <- function(mesh, size) {
-  stopifnot(is_mesh(mesh))
-
-  size <- size_match(size)
-  ratio <- size / mesh_size(mesh)
-
-  stopifnot(ratio %% 1 == 0)
-
-  new_mesh(size = size,
-           n_X = field(mesh, "n_X") %/% ratio,
-           n_Y = field(mesh, "n_Y") %/% ratio)
 }

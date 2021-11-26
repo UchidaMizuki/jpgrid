@@ -13,6 +13,7 @@ LazyData: true
 Imports: 
     dplyr (>= 1.0.7),
     geosphere (>= 1.5.14),
+    lifecycle (>= 1.0.1),
     magrittr (>= 2.0.1),
     purrr (>= 0.3.4),
     rlang (>= 0.4.12),
@@ -21,7 +22,7 @@ Imports:
     tibble (>= 3.1.6),
     tidyr (>= 1.1.4),
     units (>= 0.7.2),
-    utils (>= 4.1.2),
+    utils,
     vctrs (>= 0.3.8)
 RoxygenNote: 7.1.2
 Suggests: 
