@@ -19,7 +19,7 @@ size_match <- function(size) {
 }
 
 mesh_size <- function(mesh) {
-  switch(class(mesh)[1],
+  switch(class(mesh)[1L],
          mesh_80km = 80000L,
          mesh_10km = 10000L,
          mesh_1km = 1000L,

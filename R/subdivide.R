@@ -14,7 +14,8 @@ mesh_subdivide <- function(mesh, size) {
   size <- size_match(size)
   ratio <- mesh_size(mesh) / size
 
-  stopifnot(ratio %% 1 == 0)
+  stopifnot(ratio %% 1L == 0L)
+  ratio <- as.integer(ratio)
 
   n_X <- field(mesh, "n_X")
   n_Y <- field(mesh, "n_Y")
@@ -23,10 +24,10 @@ mesh_subdivide <- function(mesh, size) {
               function(n_X, n_Y) {
                 if (!is.na(n_X) && !is.na(n_Y)) {
                   n_X_min <- n_X * ratio
-                  n_X_max <- (n_X + 1) * ratio - 1
+                  n_X_max <- (n_X + 1L) * ratio - 1L
 
                   n_Y_min <- n_Y * ratio
-                  n_Y_max <- (n_Y + 1) * ratio - 1
+                  n_Y_max <- (n_Y + 1L) * ratio - 1L
 
                   n_XY <- tidyr::expand_grid(n_X = n_X_min:n_X_max,
                                              n_Y = n_Y_min:n_Y_max)

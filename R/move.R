@@ -29,12 +29,13 @@ mesh_neighbor <- function(mesh,
                           n = 1L,
                           moore = TRUE,
                           simplify = TRUE) {
-  stopifnot(n >= 0,
-            n %% 1 == 0)
+  stopifnot(n >= 0L,
+            n %% 1L == 0L)
 
   n_XY <- n %>%
     purrr::map_dfr(function(n) {
-      n_XY <- tidyr::expand_grid(n_X = -n:n,
+      n_XY <- tidyr::expand_grid(n = n,
+                                 n_X = -n:n,
                                  n_Y = -n:n)
       vec_slice(n_XY,
                 (!moore | abs(n_XY$n_X) == n | abs(n_XY$n_Y) == n) &

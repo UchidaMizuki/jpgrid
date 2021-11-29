@@ -23,7 +23,7 @@ mesh_distance <- function(mesh, mesh_to,
                            n_Y = field(mesh, "n_Y"),
                            n_Y_to = field(mesh_to, "n_Y"))
 
-    length_X <- size / 80000
+    length_X <- size / 80000L
     length_Y <- length_X / 1.5
 
     distance <- vec_unique(mesh)
@@ -57,10 +57,10 @@ mesh_distance <- function(mesh, mesh_to,
         }
 
         if (close) {
-          mesh_to <- c(utils::tail(mesh, -1), mesh[1])
+          mesh_to <- c(utils::tail(mesh, -1L), mesh[1L])
         } else {
-          mesh_to <- utils::tail(mesh, -1)
-          mesh <- utils::head(mesh, -1)
+          mesh_to <- utils::tail(mesh, -1L)
+          mesh <- utils::head(mesh, -1L)
         }
 
         mesh_distance(mesh, mesh_to) %>%
