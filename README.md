@@ -11,9 +11,23 @@ status](https://www.r-pkg.org/badges/version/japanmesh)](https://CRAN.R-project.
 
 README is currently only available in Japanese.
 
-地域メッシュと経度・緯度との変換や異なるサイズの地域メッシュ間の変換などを行うためのRパッケージです．
+japanmeshは，日本で用いられる「[地域メッシュ](https://ja.wikipedia.org/wiki/%E5%9C%B0%E5%9F%9F%E3%83%A1%E3%83%83%E3%82%B7%E3%83%A5)」を利用するためのRパッケージです．
+80 kmメッシュ (1次メッシュ) から100 mメッシュ (3次メッシュ1/10細分区画)
+までに対応しています．
+地域メッシュの詳細については，[統計局ページ](https://www.stat.go.jp/data/mesh/pdf/gaiyo1.pdf)を確認してください．
+
+japanmeshは，[jpmesh](https://github.com/uribo/jpmesh)より高速な処理を可能とするために開発されたものです．
+japanmeshのjpmeshとの主な違いとして以下が挙げられます．
+
+1.  メッシュコードに，メッシュサイズ (`mesh_80km`など)
+    が明示的に与えられます．
+2.  国土にかからない (海上の) メッシュにも対応しています．
+3.  n次隣接メッシュの抽出・メッシュ間の (線分)
+    経路上のメッシュ抽出や距離算出などの複雑な処理が可能です．
 
 ## インストール方法
+
+CRANからインストールが可能です．
 
 ``` r
 install.packages("japanmesh")
@@ -30,8 +44,10 @@ devtools::install_github("UchidaMizuki/japanmesh")
 
 ``` r
 library(japanmesh)
+
 library(tibble)
 library(dplyr)
+library(ggplot2)
 ```
 
 ### 文字列・数値からの地域メッシュの生成
@@ -77,51 +93,34 @@ mesh_auto(x, strict = F)
 また，`mesh_subdivide()`関数により，地域メッシュの細分化を行います．
 
 -   `mesh_subdivide()`は元のメッシュに含まれるメッシュを要素にもつリストを出力します．
--   100 mメッシュから500 mメッシュへの変換に対応しています．
+-   500 mメッシュ・100 mメッシュ間の変換に対応しています．
 
 ``` r
-mesh10km <- mesh_10km(x[1:2],
-                      strict = F)
+mesh500m <- mesh_500m("533945764")
 
-mesh_80km(mesh10km)
-#> <mesh_80km[2]>
-#> [1] 5339 5339
+mesh_1km(mesh500m)
+#> <mesh_1km[1]>
+#> [1] 53394576
 
-subdivide <- mesh_subdivide(mesh10km,
-                            size = "1km")
-print(subdivide)
+mesh100m <- mesh_subdivide(mesh500m,
+                           size = "100m")
+mesh100m
 #> [[1]]
-#> <mesh_1km[100]>
-#>   [1] 53394500 53394510 53394520 53394530 53394540 53394550 53394560 53394570
-#>   [9] 53394580 53394590 53394501 53394511 53394521 53394531 53394541 53394551
-#>  [17] 53394561 53394571 53394581 53394591 53394502 53394512 53394522 53394532
-#>  [25] 53394542 53394552 53394562 53394572 53394582 53394592 53394503 53394513
-#>  [33] 53394523 53394533 53394543 53394553 53394563 53394573 53394583 53394593
-#>  [41] 53394504 53394514 53394524 53394534 53394544 53394554 53394564 53394574
-#>  [49] 53394584 53394594 53394505 53394515 53394525 53394535 53394545 53394555
-#>  [57] 53394565 53394575 53394585 53394595 53394506 53394516 53394526 53394536
-#>  [65] 53394546 53394556 53394566 53394576 53394586 53394596 53394507 53394517
-#>  [73] 53394527 53394537 53394547 53394557 53394567 53394577 53394587 53394597
-#>  [81] 53394508 53394518 53394528 53394538 53394548 53394558 53394568 53394578
-#>  [89] 53394588 53394598 53394509 53394519 53394529 53394539 53394549 53394559
-#>  [97] 53394569 53394579 53394589 53394599
-#> 
-#> [[2]]
-#> <mesh_1km[100]>
-#>   [1] 53393500 53393510 53393520 53393530 53393540 53393550 53393560 53393570
-#>   [9] 53393580 53393590 53393501 53393511 53393521 53393531 53393541 53393551
-#>  [17] 53393561 53393571 53393581 53393591 53393502 53393512 53393522 53393532
-#>  [25] 53393542 53393552 53393562 53393572 53393582 53393592 53393503 53393513
-#>  [33] 53393523 53393533 53393543 53393553 53393563 53393573 53393583 53393593
-#>  [41] 53393504 53393514 53393524 53393534 53393544 53393554 53393564 53393574
-#>  [49] 53393584 53393594 53393505 53393515 53393525 53393535 53393545 53393555
-#>  [57] 53393565 53393575 53393585 53393595 53393506 53393516 53393526 53393536
-#>  [65] 53393546 53393556 53393566 53393576 53393586 53393596 53393507 53393517
-#>  [73] 53393527 53393537 53393547 53393557 53393567 53393577 53393587 53393597
-#>  [81] 53393508 53393518 53393528 53393538 53393548 53393558 53393568 53393578
-#>  [89] 53393588 53393598 53393509 53393519 53393529 53393539 53393549 53393559
-#>  [97] 53393569 53393579 53393589 53393599
-plot(subdivide[[1]])
+#> <mesh_100m[25]>
+#>  [1] 5339457655 5339457665 5339457675 5339457685 5339457695 5339457656
+#>  [7] 5339457666 5339457676 5339457686 5339457696 5339457657 5339457667
+#> [13] 5339457677 5339457687 5339457697 5339457658 5339457668 5339457678
+#> [19] 5339457688 5339457698 5339457659 5339457669 5339457679 5339457689
+#> [25] 5339457699
+
+tibble(mesh100m = mesh100m[[1]]) %>% 
+  mutate(polygon = mesh_to_polygon(mesh100m)) %>% 
+  sf::st_as_sf() %>%
+  
+  ggplot() +
+  geom_sf() +
+  geom_sf_text(aes(label = mesh100m))
+#> Don't know how to automatically pick scale for object of type mesh_100m/mesh/vctrs_rcrd/vctrs_vctr. Defaulting to continuous.
 ```
 
 <img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
@@ -134,13 +133,14 @@ plot(subdivide[[1]])
 tibble(X = c(139.7008, 135.4375), # 経度
        Y = c(35.68906, 34.70833)) %>% # 緯度
   mutate(mesh100m = XY_to_mesh(X, Y, size = "100m"),
-         mesh125m = XY_to_mesh(X, Y, size = "125m"))
-#> # A tibble: 2 x 4
-#>       X     Y   mesh100m    mesh125m
-#>   <dbl> <dbl> <msh_100m>  <msh_125m>
-#> 1  140.  35.7 5339452660 53394526313
-#> 2  135.  34.7 5235034499 52350344444
+         mesh125m = XY_to_mesh(X, Y, size = "125m")) %>% 
+  knitr::kable()
 ```
+
+|        X |        Y | mesh100m   | mesh125m    |
+|---------:|---------:|:-----------|:------------|
+| 139.7008 | 35.68906 | 5339452660 | 53394526313 |
+| 135.4375 | 34.70833 | 5235034499 | 52350344444 |
 
 ### 地域メッシュから経度・緯度への変換
 
@@ -150,13 +150,14 @@ tibble(X = c(139.7008, 135.4375), # 経度
 tibble(mesh = c("5339452660", "5235034590")) %>% 
   mutate(mesh %>% 
            mesh_100m() %>% 
-           mesh_to_XY())
-#> # A tibble: 2 x 3
-#>   mesh           X     Y
-#>   <chr>      <dbl> <dbl>
-#> 1 5339452660  140.  35.7
-#> 2 5235034590  135.  34.7
+           mesh_to_XY()) %>% 
+  knitr::kable()
 ```
+
+| mesh       |        X |        Y |
+|:-----------|---------:|---------:|
+| 5339452660 | 139.7006 | 35.68875 |
+| 5235034590 | 135.4381 | 34.70792 |
 
 ### 隣接メッシュの算出
 
@@ -167,37 +168,38 @@ tibble(mesh = c("5339452660", "5235034590")) %>%
 
 ``` r
 neighbor <- mesh_10km("644142") %>% 
-  mesh_neighbor(n = c(2, 5))
+  mesh_neighbor(n = c(0:2),
+                simplify = F)
 
-print(neighbor)
-#> [[1]]
-#> <mesh_10km[56]>
-#>  [1] 644120 644130 644140 644150 644160 644121 644161 644122 644162 644123
-#> [11] 644163 644124 644134 644144 644154 644164 634075 644005 644015 644025
-#> [21] 644035 644045 644055 644065 644075 654005 654015 634076 654016 634077
-#> [31] 654017 634170 654110 634171 654111 634172 654112 634173 654113 634174
-#> [41] 654114 634175 654115 634176 654116 634177 644107 644117 644127 644137
-#> [51] 644147 644157 644167 644177 654107 654117
-plot(neighbor[[1]])
+neighbor[[1]] %>% 
+  mutate(geometry = mesh_to_polygon(mesh_neighbor)) %>% 
+  sf::st_as_sf() %>% 
+  
+  ggplot(aes(fill = as.factor(n))) +
+  geom_sf() +
+  geom_sf_text(aes(label = mesh_neighbor))
+#> Don't know how to automatically pick scale for object of type mesh_10km/mesh/vctrs_rcrd/vctrs_vctr. Defaulting to continuous.
 ```
 
 <img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
 
 ``` r
 neighbor_neumann <- mesh_10km("644142") %>% 
-  mesh_neighbor(n = c(2, 5),
+  mesh_neighbor(n = c(0:2),
+                simplify = F,
                 moore = F)
 
-print(neighbor_neumann)
-#> [[1]]
-#> <mesh_10km[28]>
-#>  [1] 644140 644131 644151 644122 644162 644133 644153 644144 644045 644036
-#> [11] 644056 644027 644067 644110 644170 644101 654101 634172 654112 644103
-#> [21] 654103 644114 644174 644125 644165 644136 644156 644147
-plot(neighbor_neumann[[1]])
+neighbor_neumann[[1]] %>% 
+  mutate(geometry = mesh_to_polygon(mesh_neighbor)) %>% 
+  sf::st_as_sf() %>% 
+  
+  ggplot(aes(fill = as.factor(n))) +
+  geom_sf() +
+  geom_sf_text(aes(label = mesh_neighbor))
+#> Don't know how to automatically pick scale for object of type mesh_10km/mesh/vctrs_rcrd/vctrs_vctr. Defaulting to continuous.
 ```
 
-<img src="man/figures/README-unnamed-chunk-7-2.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
 
 ### メッシュ間の線分描画
 
@@ -220,7 +222,7 @@ print(line)
 plot(line[[1]])
 ```
 
-<img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-9-1.png" width="100%" />
 
 メッシュの`list`を与えることで複数メッシュを通る場合に対応可能です．
 
@@ -252,7 +254,7 @@ print(line)
 plot(line[[1]])
 ```
 
-<img src="man/figures/README-unnamed-chunk-9-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-10-1.png" width="100%" />
 
 ### メッシュ間距離の算出
 
@@ -277,95 +279,14 @@ print(distance)
 -   `mesh_to_polygon()`関数および`mesh_to_point()`関数により`sfc`ジオメトリを出力可能です．
 -   80kmメッシュの桁が負や三桁以上になる範囲外のメッシュについては，当該コードを`<-1>`，`<123>`のように表示し，既存メッシュと明確に区別できるようにしています．
 
-## 他パッケージとの比較
+## jpmeshとの処理速度の比較
 
-地域メッシュを扱うRパッケージとして，本パッケージの他に`jpmesh`パッケージがあります．
-本パッケージの`jpmesh`との優位点として，以下が挙げられます．
+本パッケージのメッシュ・緯度経度間の変換速度は，`jpmesh`パッケージと比べて数百倍ほど高速です．
 
--   処理速度が`jpmesh`パッケージより速い場合があります．
--   `jpmesh::meshcode()`と違い，`as_mesh()`に`NA`を入力してもエラーを吐きません．
+    #> Coordinate system already present. Adding new coordinate system, which will replace the existing one.
 
-### `jpmesh`パッケージとの処理速度の比較
+<img src="man/figures/README-unnamed-chunk-12-1.png" width="100%" />
 
-以下の例では，本パッケージの計算速度は，`jpmesh`パッケージと比べて数百倍程度，高速です．
+    #> Coordinate system already present. Adding new coordinate system, which will replace the existing one.
 
-``` r
-set.seed(1234)
-df <- tibble(X = runif(1e3, 139, 140),
-             Y = runif(1e3, 39, 40))
-
-# XY to mesh
-# jpmesh
-tictoc::tic()
-df_jpmesh <- df %>% 
-  mutate(mesh = jpmesh::coords_to_mesh(X, Y,
-                                       mesh_size = 1))
-head(df_jpmesh)
-#> # A tibble: 6 x 3
-#>       X     Y       mesh
-#>   <dbl> <dbl> <meshcode>
-#> 1  139.  39.8   59396009
-#> 2  140.  39.5   59391489
-#> 3  140.  39.1   58395438
-#> 4  140.  39.4   59390429
-#> 5  140.  39.8   59395618
-#> 6  140.  39.4   59390561
-tictoc::toc()
-#> 7.12 sec elapsed
-
-# japanmesh
-tictoc::tic()
-df_japanmesh <- df %>% 
-  mutate(mesh = XY_to_mesh(X, Y, 
-                           size = "1km"))
-head(df_japanmesh)
-#> # A tibble: 6 x 3
-#>       X     Y       mesh
-#>   <dbl> <dbl> <mesh_1km>
-#> 1  139.  39.8   59396009
-#> 2  140.  39.5   59391489
-#> 3  140.  39.1   58395438
-#> 4  140.  39.4   59390429
-#> 5  140.  39.8   59395618
-#> 6  140.  39.4   59390561
-tictoc::toc()
-#> 0.02 sec elapsed
-
-# mesh to XY
-# jpmesh
-tictoc::tic()
-df_jpmesh <- df_jpmesh %>% 
-  select(mesh) %>% 
-  mutate(jpmesh::mesh_to_coords(mesh),
-         .keep = "unused")
-head(df_jpmesh)
-#> # A tibble: 6 x 5
-#>     meshcode lng_center lat_center lng_error lat_error
-#>   <meshcode>      <dbl>      <dbl>     <dbl>     <dbl>
-#> 1   59396009       139.       39.8   0.00625   0.00417
-#> 2   59391489       140.       39.5   0.00625   0.00417
-#> 3   58395438       140.       39.1   0.00625   0.00417
-#> 4   59390429       140.       39.4   0.00625   0.00417
-#> 5   59395618       140.       39.8   0.00625   0.00417
-#> 6   59390561       140.       39.4   0.00625   0.00417
-tictoc::toc()
-#> 10.59 sec elapsed
-
-# japanmesh
-tictoc::tic()
-df_japanmesh <- df_japanmesh %>% 
-  select(mesh) %>% 
-  mutate(mesh_to_XY(mesh))
-head(df_japanmesh)
-#> # A tibble: 6 x 3
-#>         mesh     X     Y
-#>   <mesh_1km> <dbl> <dbl>
-#> 1   59396009  139.  39.8
-#> 2   59391489  140.  39.5
-#> 3   58395438  140.  39.1
-#> 4   59390429  140.  39.4
-#> 5   59395618  140.  39.8
-#> 6   59390561  140.  39.4
-tictoc::toc()
-#> 0.02 sec elapsed
-```
+<img src="man/figures/README-unnamed-chunk-13-1.png" width="100%" />
