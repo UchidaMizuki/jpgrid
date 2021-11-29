@@ -283,10 +283,6 @@ print(distance)
 
 本パッケージのメッシュ・緯度経度間の変換速度は，`jpmesh`パッケージと比べて数百倍ほど高速です．
 
-    #> Coordinate system already present. Adding new coordinate system, which will replace the existing one.
-
 <img src="man/figures/README-unnamed-chunk-12-1.png" width="100%" />
-
-    #> Coordinate system already present. Adding new coordinate system, which will replace the existing one.
 
 <img src="man/figures/README-unnamed-chunk-13-1.png" width="100%" />
