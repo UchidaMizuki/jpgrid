@@ -19,14 +19,24 @@ knitr::opts_chunk$set(
 [![CRAN status](https://www.r-pkg.org/badges/version/japanmesh)](https://CRAN.R-project.org/package=japanmesh)
 <!-- badges: end -->
 
-README is currently only available in Japanese.
+The English version of the README is [here](https://github.com/UchidaMizuki/japanmesh/blob/main/README.en.md).
 
-japanmeshは，日本で用いられる「[地域メッシュ](https://ja.wikipedia.org/wiki/%E5%9C%B0%E5%9F%9F%E3%83%A1%E3%83%83%E3%82%B7%E3%83%A5)」を利用するためのRパッケージです．
-80 kmメッシュ (1次メッシュ) から100 mメッシュ (3次メッシュ1/10細分区画) までに対応しています．
-地域メッシュの詳細については，[統計局ページ](https://www.stat.go.jp/data/mesh/pdf/gaiyo1.pdf)を確認してください．
+japanmeshは，日本産業規格JIS X 0410[地域メッシュコード](https://www.jisc.go.jp/app/jis/general/GnrJISNumberNameSearchList?show&jisStdNo=X0410)
+で定められた基準地域メッシュ (1次～3次) と分割地域メッシュ，および3次メッシュ1/10細分区画を利用するためのRパッケージです．
+地域メッシュコードは，経度・緯度に基づいて，日本全国の地域に設定された正方形に近い地域区分です．
+地域メッシュコードの詳細については，[統計局ページ](https://www.stat.go.jp/data/mesh/pdf/gaiyo1.pdf)を確認してください．
 
-japanmeshは，[jpmesh](https://github.com/uribo/jpmesh)より高速な処理を可能とするために開発されたものです．
-japanmeshのjpmeshとの主な違いとして以下が挙げられます．
+地域メッシュコードの概要を以下に示します．
+
+```{r,echo=FALSE}
+df <- tibble::tibble(`名称` = c("1次メッシュ", "2次メッシュ", "3次メッシュ", "2分の1メッシュ", "4分の1メッシュ", "8分の1メッシュ", "3次メッシュ1/10細分区画"),
+                     `一片の長さ` = c("約80km", "約10km", "約1km", "約500m", "約250m", "約125m", "約100m"),
+                     `桁数` = c(4, 6, 8, 9, 10, 11, 10))
+knitr::kable(df)
+```
+
+japanmeshは，Rパッケージの[jpmesh](https://github.com/uribo/jpmesh)より高速な処理を可能とするために開発されたものです．
+japanmeshとjpmeshとの主な違いとして以下が挙げられます．
 
 1. メッシュコードに，メッシュサイズ (`mesh_80km`など) が明示的に与えられます．
 2. 国土にかからない (海上の) メッシュにも対応しています．
@@ -56,12 +66,12 @@ library(dplyr)
 library(ggplot2)
 ```
 
-### 文字列・数値からの地域メッシュの生成
+### 文字列・数値からの地域メッシュコードの生成
 
-文字列・数値から地域メッシュを生成するためには`mesh_80km()`，`mesh_auto()`などの関数を使用します．
+文字列・数値から地域メッシュコードを生成するためには`mesh_80km()`，`mesh_auto()`などの関数を使用します．
 
 - `mesh_auto()`関数はメッシュサイズを自動的に決定します．
-- デフォルト（`strict = T`）では，メッシュコードの桁数が所定の桁数であることを要求します．
+- デフォルト（`strict = TRUE`）では，メッシュコードの桁数が所定の桁数であることを要求します．
 
 ```{r}
 library(japanmesh)
@@ -77,10 +87,10 @@ mesh_125m(x, strict = F)
 mesh_auto(x, strict = F)
 ```
 
-### 地域メッシュのサイズの変換
+### 地域メッシュコードのサイズの変換
 
-地域メッシュのメッシュサイズを粗くする場合には，`mesh_80km()`などの関数を使用します．
-また，`mesh_subdivide()`関数により，地域メッシュの細分化を行います．
+地域メッシュコードのメッシュサイズを粗くする場合には，`mesh_80km()`などの関数を使用します．
+また，`mesh_subdivide()`関数により，地域メッシュコードの細分化を行います．
 
 - `mesh_subdivide()`は元のメッシュに含まれるメッシュを要素にもつリストを出力します．
 - 500 mメッシュ・100 mメッシュ間の変換に対応しています．
@@ -103,9 +113,9 @@ tibble(mesh100m = mesh100m[[1]]) %>%
   geom_sf_text(aes(label = mesh100m))
 ```
 
-### 経度・緯度から地域メッシュへの変換
+### 経度・緯度から地域メッシュコードへの変換
 
-`XY_to_mesh()`関数は，経度・緯度を地域メッシュに変換します．
+`XY_to_mesh()`関数は，経度・緯度を地域メッシュコードに変換します．
 
 ```{r}
 tibble(X = c(139.7008, 135.4375), # 経度
@@ -115,9 +125,9 @@ tibble(X = c(139.7008, 135.4375), # 経度
   knitr::kable()
 ```
 
-### 地域メッシュから経度・緯度への変換
+### 地域メッシュコードから経度・緯度への変換
 
-`mesh_to_XY()`関数は，地域メッシュを経度・緯度に変換します．
+`mesh_to_XY()`関数は，地域メッシュコードを経度・緯度に変換します．
 
 ```{r}
 tibble(mesh = c("5339452660", "5235034590")) %>% 
@@ -132,12 +142,12 @@ tibble(mesh = c("5339452660", "5235034590")) %>%
 `mesh_neighbor()`関数は，隣接するメッシュを算出します．
 
 - `n`を指定することでn次隣接メッシュの算出が可能
-- `moore = F`でノイマン近傍での算出が可能
+- `moore = FALSE`でノイマン近傍での算出が可能
 
 ```{r}
 neighbor <- mesh_10km("644142") %>% 
   mesh_neighbor(n = c(0:2),
-                simplify = F)
+                simplify = FALSE)
 
 neighbor[[1]] %>% 
   mutate(geometry = mesh_to_polygon(mesh_neighbor)) %>% 
@@ -179,16 +189,16 @@ plot(line[[1]])
 
 メッシュの`list`を与えることで複数メッシュを通る場合に対応可能です．
 
-- `close = T`で線分を閉じます．
-- `skip_na = T`で`NA`をスキップします．
+- `close = TRUE`で線分を閉じます．
+- `skip_na = TRUE`で`NA`をスキップします．
 
 ```{r}
 mesh_1 <- mesh_80km(c("6441", "5339", NA, "5250"))
 mesh_2 <- mesh_80km(c("6439", "5211", "4013", "6635"))
 
 line <- mesh_line(list(mesh_1, mesh_2), 
-                  close = T,
-                  skip_na = T)
+                  close = TRUE,
+                  skip_na = TRUE)
 
 print(line)
 plot(line[[1]])
@@ -210,7 +220,7 @@ print(distance)
 ```
 
 ### その他
-- `mesh_move()`関数により，東西南北方向の地域メッシュを算出可能です．
+- `mesh_move()`関数により，東西南北方向の地域メッシュコードを算出可能です．
 - `mesh_to_polygon()`関数および`mesh_to_point()`関数により`sfc`ジオメトリを出力可能です．
 - 80kmメッシュの桁が負や三桁以上になる範囲外のメッシュについては，当該コードを`<-1>`，`<123>`のように表示し，既存メッシュと明確に区別できるようにしています．
 

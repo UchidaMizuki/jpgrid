@@ -1,32 +1,37 @@
-Package: japanmesh
 Type: Package
-Version: 0.1.0.9000
-Authors@R: person("Mizuki", "Uchida", email = "uchidamizuki@vivaldi.net", role = c("aut", "cre"))
-Title: Functions for Regional Mesh in Japan
-Description: Functions for regional mesh in Japan. 
-    Conversion between mesh codes and longitude/latitude, and between mesh codes of different scales.
+Package: japanmesh
+Title: Functions for the Japanese Regional Mesh Codes (JIS X 0410).
+Version: 0.1.1
+Authors@R: 
+    person("Mizuki", "Uchida", , "uchidamizuki@vivaldi.net", role = c("aut", "cre"))
+Description: Functions for the Japanese regional mesh codes defined in JIS
+    X 0410
+    (https://www.jisc.go.jp/app/jis/general/GnrJISNumberNameSearchList?show&jisStdNo=X0410).
+    Conversion between regional mesh codes and longitude/latitude, and
+    between mesh codes of different scales.
 License: MIT + file LICENSE
 URL: https://github.com/UchidaMizuki/japanmesh
 BugReports: https://github.com/UchidaMizuki/japanmesh/issues
-Encoding: UTF-8
-LazyData: true
+Depends: 
+    R (>= 2.10)
 Imports: 
-    dplyr (>= 1.0.7),
-    geosphere (>= 1.5.14),
-    lifecycle (>= 1.0.1),
-    magrittr (>= 2.0.1),
-    purrr (>= 0.3.4),
-    rlang (>= 0.4.12),
-    sf (>= 1.0.3),
+    dplyr (>= 0.8.0),
+    geosphere,
+    lifecycle (>= 0.1.0),
+    magrittr,
+    purrr (>= 0.3.0),
+    rlang (>= 0.3.0),
+    sf,
     stringr (>= 1.4.0),
-    tibble (>= 3.1.6),
-    tidyr (>= 1.1.4),
-    units (>= 0.7.2),
+    tibble,
+    tidyr (>= 1.0.0),
+    units,
     utils,
-    vctrs (>= 0.3.8)
-RoxygenNote: 7.1.2
+    vctrs
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
-Depends: 
-    R (>= 2.10)
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2

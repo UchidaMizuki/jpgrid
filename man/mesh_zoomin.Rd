@@ -15,6 +15,6 @@ mesh_zoomin(mesh, size)
 A list of \code{mesh} class vector.
 }
 \description{
-`r lifecycle::badge("deprecated")`
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 \code{mesh_zoomin} makes the regional meshes finer.
 }

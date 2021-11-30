@@ -1,0 +1,251 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# japanmesh
+
+<!-- badges: start -->
+[![CRAN status](https://www.r-pkg.org/badges/version/japanmesh)](https://CRAN.R-project.org/package=japanmesh)
+<!-- badges: end -->
+
+japanmesh is an R package for using the reference regional mesh (1st to 3rd), the split regional mesh as defined by the JIS (Japan Industrial Standard) X 0410 '[regional mesh code](https://www.jisc.go.jp/app/jis/general/GnrJISNumberNameSearchList?show&jisStdNo=X0410)' and 1/10 subdivision of the 3rd mesh.
+Regional mesh codes are square-like regional divisions set up for all regions of Japan based on longitude and latitude. For more information on regional meshes, please check [the Statistics Bureau of Japan page](https://www.stat.go.jp/data/mesh/pdf/gaiyo1.pdf).
+
+A summary of the regional mesh codes is shown below.
+
+```{r,echo=FALSE}
+df <- tibble::tibble(`Name` = c("the 1st mesh", "the 2nd mesh", "the 3rd mesh", "the 1/2 mesh", "the 1/4 mesh", "the 1/8 mesh", "1/10 subdivision of the 3rd mesh"),
+                     `Length` = c("Abount 80km", "Abount 10km", "Abount 1km", "Abount 500m", "Abount 250m", "Abount 125m", "Abount 100m"),
+                     `Number of digits` = c(4, 6, 8, 9, 10, 11, 10))
+knitr::kable(df)
+```
+
+japanmesh has been developed to enable faster processing than the R package [jpmesh](https://github.com/uribo/jpmesh).
+The main differences between japanmesh and jpmesh are as follows
+
+1. Explicitly given a mesh size (such as `mesh_80km`). 
+2. Non-land (ocean) meshes are supported.
+3. It can extract nth-order neighboring meshes and perform complex operations such as extracting meshes and calculating the distance of (line) paths between meshes.
+
+## Installation
+
+You can install japanmesh from CRAN.
+
+``` r
+install.packages("japanmesh")
+```
+
+You can also install the development version from GitHub.
+
+``` r
+# install.packages("devtools")
+devtools::install_github("UchidaMizuki/japanmesh")
+```
+## Usage
+
+```{r,message=FALSE,warning=FALSE}
+library(japanmesh)
+
+library(tibble)
+library(dplyr)
+library(ggplot2)
+```
+
+### Generation of regional mesh codes from character strings or numbers
+
+Use functions such as `mesh_80km()`, `mesh_auto()`, etc. to generate regional mesh codes from strings or numbers.
+
+- The `mesh_auto()` function automatically determines the mesh size.
+- The default (`strict = TRUE`) requires the mesh codes to have a given number of digits.
+
+```{r}
+library(japanmesh)
+
+x <- c("53394526313", "5339358633", "533945764", "53394611", "523503", "5339", NA)
+
+mesh_80km(x)
+mesh_125m(x)
+mesh_auto(x)
+
+mesh_80km(x, strict = F)
+mesh_125m(x, strict = F)
+mesh_auto(x, strict = F)
+```
+
+### Converting the mesh size of regional mesh codes
+
+Use functions such as `mesh_80km()` to coarsen the mesh size of regional mesh codes.
+The `mesh_subdivide()` function can be used to subdivide regional mesh codes.
+
+- `mesh_subdivide()` outputs a list of mesh codes whose elements are contained in the original meshes.
+- The conversion between 500m mesh and 100m mesh is supported.
+
+```{r}
+mesh500m <- mesh_500m("533945764")
+
+mesh_1km(mesh500m)
+
+mesh100m <- mesh_subdivide(mesh500m,
+                           size = "100m")
+mesh100m
+
+tibble(mesh100m = mesh100m[[1]]) %>% 
+  mutate(polygon = mesh_to_polygon(mesh100m)) %>% 
+  sf::st_as_sf() %>%
+  
+  ggplot() +
+  geom_sf() +
+  geom_sf_text(aes(label = mesh100m))
+```
+
+### Conversion from longitude/latitude to regional mesh codes
+
+The `XY_to_mesh()` function converts longitude and latitude to regional mesh codes.
+
+```{r}
+tibble(X = c(139.7008, 135.4375), # longitude
+       Y = c(35.68906, 34.70833)) %>% # latitude
+  mutate(mesh100m = XY_to_mesh(X, Y, size = "100m"),
+         mesh125m = XY_to_mesh(X, Y, size = "125m")) %>% 
+  knitr::kable()
+```
+
+### Conversion from regional mesh codes to longitude/latitude
+
+The `mesh_to_XY()` function converts regional mesh codes to longitude and latitude.
+
+```{r}
+tibble(mesh = c("5339452660", "5235034590")) %>% 
+  mutate(mesh %>% 
+           mesh_100m() %>% 
+           mesh_to_XY()) %>% 
+  knitr::kable()
+```
+
+### Calculation of adjacent mesh codes
+
+The `mesh_neighbor()` function calculates the neighboring meshes.
+
+- nth order neighboring meshes can be calculated by specifying `n`.
+- Can be calculated in a Neumann neighborhood with `moore = FALSE`.
+
+```{r}
+neighbor <- mesh_10km("644142") %>% 
+  mesh_neighbor(n = c(0:2),
+                simplify = FALSE)
+
+neighbor[[1]] %>% 
+  mutate(geometry = mesh_to_polygon(mesh_neighbor)) %>% 
+  sf::st_as_sf() %>% 
+  
+  ggplot(aes(fill = as.factor(n))) +
+  geom_sf() +
+  geom_sf_text(aes(label = mesh_neighbor))
+```
+
+```{r}
+neighbor_neumann <- mesh_10km("644142") %>% 
+  mesh_neighbor(n = c(0:2),
+                simplify = F,
+                moore = F)
+
+neighbor_neumann[[1]] %>% 
+  mutate(geometry = mesh_to_polygon(mesh_neighbor)) %>% 
+  sf::st_as_sf() %>% 
+  
+  ggplot(aes(fill = as.factor(n))) +
+  geom_sf() +
+  geom_sf_text(aes(label = mesh_neighbor))
+```
+
+### Draw line segments between meshes
+
+The `mesh_line()` function extracts meshes that lie on the line segments between meshes.
+
+```{r}
+mesh_from <- mesh_80km(c("6441", "5339"))
+mesh_to <- mesh_80km(c("5237", "5235"))
+
+line <- mesh_line(mesh_from, mesh_to)
+
+print(line)
+plot(line[[1]])
+```
+
+It can handle the case of passing through multiple meshes by giving a `list` of meshes.
+
+- Close the line segment with `close = TRUE`.
+- `skip_na = TRUE` to skip `NA`.
+
+```{r}
+mesh_1 <- mesh_80km(c("6441", "5339", NA, "5250"))
+mesh_2 <- mesh_80km(c("6439", "5211", "4013", "6635"))
+
+line <- mesh_line(list(mesh_1, mesh_2), 
+                  close = TRUE,
+                  skip_na = TRUE)
+
+print(line)
+plot(line[[1]])
+```
+
+### Calculation of distance between meshes
+
+The `mesh_distance()` function calculates the distance between meshes (great circle distance).
+
+- As with `mesh_line()`, the path distance can be calculated by `list` of meshes.
+
+```{r}
+mesh_from <- mesh_80km(c("6441", "5339"))
+mesh_to <- mesh_80km(c("5237", "5235"))
+
+distance <- mesh_distance(mesh_from, mesh_to)
+
+print(distance)
+```
+
+### Others
+- The `mesh_move()` function can be used to calculate regional meshes in the east-west and north-south directions.
+- The `mesh_to_polygon()` and `mesh_to_point()` functions can output `sfc` geometry.
+- For meshes outside the range of the 80 km mesh, where the digits are negative or exceed three digits, the relevant code is displayed as `<-1>` or `<123>` to clearly distinguish them from existing meshes.
+
+## Comparison of processing speed with jpmesh package
+
+The conversion speed between meshes and latitude/longitude in this package is several hundred times faster than in the `jpmesh` package.
+
+```{r,echo=FALSE,message=FALSE}
+set.seed(1234)
+X <- runif(1e1, 139, 140)
+Y <- runif(1e1, 39, 40)
+
+microbenchmark::microbenchmark(`japanmesh::XY_to_mesh()` = XY_to_mesh(X, Y,
+                                                                    size = "1km"),
+                               `jpmesh::coords_to_mesh()` = jpmesh::coords_to_mesh(X, Y,
+                                                                                 mesh_size = 1)) %>% 
+  autoplot()
+```
+
+```{r,echo=FALSE,message=FALSE}
+set.seed(1234)
+X <- runif(1e1, 139, 140)
+Y <- runif(1e1, 39, 40)
+mesh_japanmesh <- XY_to_mesh(X, Y,
+                             size = "1km")
+mesh_jpmesh <- jpmesh::coords_to_mesh(X, Y, 
+                                      mesh_size = 1)
+
+microbenchmark::microbenchmark(`japanmesh::mesh_to_XY()` = mesh_to_XY(mesh_japanmesh),
+                               `jpmesh::mesh_to_coords()` = jpmesh::mesh_to_coords(mesh_jpmesh)) %>% 
+  autoplot()
+```

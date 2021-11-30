@@ -9,53 +9,54 @@
 status](https://www.r-pkg.org/badges/version/japanmesh)](https://CRAN.R-project.org/package=japanmesh)
 <!-- badges: end -->
 
-The English version of the README is
-[here](https://github.com/UchidaMizuki/japanmesh/blob/main/README.en.md).
+japanmesh is an R package for using the reference regional mesh (1st to
+3rd), the split regional mesh as defined by the JIS (Japan Industrial
+Standard) X 0410 ‘[regional mesh
+code](https://www.jisc.go.jp/app/jis/general/GnrJISNumberNameSearchList?show&jisStdNo=X0410)’
+and 1/10 subdivision of the 3rd mesh. Regional mesh codes are
+square-like regional divisions set up for all regions of Japan based on
+longitude and latitude. For more information on regional meshes, please
+check [the Statistics Bureau of Japan
+page](https://www.stat.go.jp/data/mesh/pdf/gaiyo1.pdf).
 
-japanmeshは，日本産業規格JIS X
-0410[地域メッシュコード](https://www.jisc.go.jp/app/jis/general/GnrJISNumberNameSearchList?show&jisStdNo=X0410)
-で定められた基準地域メッシュ (1次～3次)
-と分割地域メッシュ，および3次メッシュ1/10細分区画を利用するためのRパッケージです．
-地域メッシュコードは，経度・緯度に基づいて，日本全国の地域に設定された正方形に近い地域区分です．
-地域メッシュコードの詳細については，[統計局ページ](https://www.stat.go.jp/data/mesh/pdf/gaiyo1.pdf)を確認してください．
+A summary of the regional mesh codes is shown below.
 
-地域メッシュコードの概要を以下に示します．
+| Name                             | Length      | Number of digits |
+|:---------------------------------|:------------|-----------------:|
+| the 1st mesh                     | Abount 80km |                4 |
+| the 2nd mesh                     | Abount 10km |                6 |
+| the 3rd mesh                     | Abount 1km  |                8 |
+| the 1/2 mesh                     | Abount 500m |                9 |
+| the 1/4 mesh                     | Abount 250m |               10 |
+| the 1/8 mesh                     | Abount 125m |               11 |
+| 1/10 subdivision of the 3rd mesh | Abount 100m |               10 |
 
-| 名称                    | 一片の長さ | 桁数 |
-|:------------------------|:-----------|-----:|
-| 1次メッシュ             | 約80km     |    4 |
-| 2次メッシュ             | 約10km     |    6 |
-| 3次メッシュ             | 約1km      |    8 |
-| 2分の1メッシュ          | 約500m     |    9 |
-| 4分の1メッシュ          | 約250m     |   10 |
-| 8分の1メッシュ          | 約125m     |   11 |
-| 3次メッシュ1/10細分区画 | 約100m     |   10 |
+japanmesh has been developed to enable faster processing than the R
+package [jpmesh](https://github.com/uribo/jpmesh). The main differences
+between japanmesh and jpmesh are as follows
 
-japanmeshは，Rパッケージの[jpmesh](https://github.com/uribo/jpmesh)より高速な処理を可能とするために開発されたものです．
-japanmeshとjpmeshとの主な違いとして以下が挙げられます．
+1.  Explicitly given a mesh size (such as `mesh_80km`).
+2.  Non-land (ocean) meshes are supported.
+3.  It can extract nth-order neighboring meshes and perform complex
+    operations such as extracting meshes and calculating the distance of
+    (line) paths between meshes.
 
-1.  メッシュコードに，メッシュサイズ (`mesh_80km`など)
-    が明示的に与えられます．
-2.  国土にかからない (海上の) メッシュにも対応しています．
-3.  n次隣接メッシュの抽出・メッシュ間の (線分)
-    経路上のメッシュ抽出や距離算出などの複雑な処理が可能です．
+## Installation
 
-## インストール方法
-
-CRANからインストールが可能です．
+You can install japanmesh from CRAN.
 
 ``` r
 install.packages("japanmesh")
 ```
 
-開発版はGitHubからインストールしてください．
+You can also install the development version from GitHub.
 
 ``` r
 # install.packages("devtools")
 devtools::install_github("UchidaMizuki/japanmesh")
 ```
 
-## 使用方法
+## Usage
 
 ``` r
 library(japanmesh)
@@ -65,12 +66,14 @@ library(dplyr)
 library(ggplot2)
 ```
 
-### 文字列・数値からの地域メッシュコードの生成
+### Generation of regional mesh codes from character strings or numbers
 
-文字列・数値から地域メッシュコードを生成するためには`mesh_80km()`，`mesh_auto()`などの関数を使用します．
+Use functions such as `mesh_80km()`, `mesh_auto()`, etc. to generate
+regional mesh codes from strings or numbers.
 
--   `mesh_auto()`関数はメッシュサイズを自動的に決定します．
--   デフォルト（`strict = TRUE`）では，メッシュコードの桁数が所定の桁数であることを要求します．
+-   The `mesh_auto()` function automatically determines the mesh size.
+-   The default (`strict = TRUE`) requires the mesh codes to have a
+    given number of digits.
 
 ``` r
 library(japanmesh)
@@ -102,13 +105,15 @@ mesh_auto(x, strict = F)
 #> [1] 5339 5339 5339 5339 5235 5339 <NA>
 ```
 
-### 地域メッシュコードのサイズの変換
+### Converting the mesh size of regional mesh codes
 
-地域メッシュコードのメッシュサイズを粗くする場合には，`mesh_80km()`などの関数を使用します．
-また，`mesh_subdivide()`関数により，地域メッシュコードの細分化を行います．
+Use functions such as `mesh_80km()` to coarsen the mesh size of regional
+mesh codes. The `mesh_subdivide()` function can be used to subdivide
+regional mesh codes.
 
--   `mesh_subdivide()`は元のメッシュに含まれるメッシュを要素にもつリストを出力します．
--   500 mメッシュ・100 mメッシュ間の変換に対応しています．
+-   `mesh_subdivide()` outputs a list of mesh codes whose elements are
+    contained in the original meshes.
+-   The conversion between 500m mesh and 100m mesh is supported.
 
 ``` r
 mesh500m <- mesh_500m("533945764")
@@ -140,13 +145,14 @@ tibble(mesh100m = mesh100m[[1]]) %>%
 
 <img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
 
-### 経度・緯度から地域メッシュコードへの変換
+### Conversion from longitude/latitude to regional mesh codes
 
-`XY_to_mesh()`関数は，経度・緯度を地域メッシュコードに変換します．
+The `XY_to_mesh()` function converts longitude and latitude to regional
+mesh codes.
 
 ``` r
-tibble(X = c(139.7008, 135.4375), # 経度
-       Y = c(35.68906, 34.70833)) %>% # 緯度
+tibble(X = c(139.7008, 135.4375), # longitude
+       Y = c(35.68906, 34.70833)) %>% # latitude
   mutate(mesh100m = XY_to_mesh(X, Y, size = "100m"),
          mesh125m = XY_to_mesh(X, Y, size = "125m")) %>% 
   knitr::kable()
@@ -157,9 +163,10 @@ tibble(X = c(139.7008, 135.4375), # 経度
 | 139.7008 | 35.68906 | 5339452660 | 53394526313 |
 | 135.4375 | 34.70833 | 5235034499 | 52350344444 |
 
-### 地域メッシュコードから経度・緯度への変換
+### Conversion from regional mesh codes to longitude/latitude
 
-`mesh_to_XY()`関数は，地域メッシュコードを経度・緯度に変換します．
+The `mesh_to_XY()` function converts regional mesh codes to longitude
+and latitude.
 
 ``` r
 tibble(mesh = c("5339452660", "5235034590")) %>% 
@@ -174,12 +181,12 @@ tibble(mesh = c("5339452660", "5235034590")) %>%
 | 5339452660 | 139.7006 | 35.68875 |
 | 5235034590 | 135.4381 | 34.70792 |
 
-### 隣接メッシュの算出
+### Calculation of adjacent mesh codes
 
-`mesh_neighbor()`関数は，隣接するメッシュを算出します．
+The `mesh_neighbor()` function calculates the neighboring meshes.
 
--   `n`を指定することでn次隣接メッシュの算出が可能
--   `moore = FALSE`でノイマン近傍での算出が可能
+-   nth order neighboring meshes can be calculated by specifying `n`.
+-   Can be calculated in a Neumann neighborhood with `moore = FALSE`.
 
 ``` r
 neighbor <- mesh_10km("644142") %>% 
@@ -216,9 +223,10 @@ neighbor_neumann[[1]] %>%
 
 <img src="man/figures/README-unnamed-chunk-9-1.png" width="100%" />
 
-### メッシュ間の線分描画
+### Draw line segments between meshes
 
-`mesh_line()`関数により，メッシュ間の線分上に存在するメッシュを抽出します．
+The `mesh_line()` function extracts meshes that lie on the line segments
+between meshes.
 
 ``` r
 mesh_from <- mesh_80km(c("6441", "5339"))
@@ -239,10 +247,11 @@ plot(line[[1]])
 
 <img src="man/figures/README-unnamed-chunk-10-1.png" width="100%" />
 
-メッシュの`list`を与えることで複数メッシュを通る場合に対応可能です．
+It can handle the case of passing through multiple meshes by giving a
+`list` of meshes.
 
--   `close = TRUE`で線分を閉じます．
--   `skip_na = TRUE`で`NA`をスキップします．
+-   Close the line segment with `close = TRUE`.
+-   `skip_na = TRUE` to skip `NA`.
 
 ``` r
 mesh_1 <- mesh_80km(c("6441", "5339", NA, "5250"))
@@ -271,11 +280,13 @@ plot(line[[1]])
 
 <img src="man/figures/README-unnamed-chunk-11-1.png" width="100%" />
 
-### メッシュ間距離の算出
+### Calculation of distance between meshes
 
-`mesh_distance()`関数は，メッシュ間距離（大円距離）を算出します．
+The `mesh_distance()` function calculates the distance between meshes
+(great circle distance).
 
--   `mesh_line()`と同様にメッシュの`list`で経路距離を算出可能です．
+-   As with `mesh_line()`, the path distance can be calculated by `list`
+    of meshes.
 
 ``` r
 mesh_from <- mesh_80km(c("6441", "5339"))
@@ -288,15 +299,20 @@ print(distance)
 #> [1] 953014.2 371081.9
 ```
 
-### その他
+### Others
 
--   `mesh_move()`関数により，東西南北方向の地域メッシュコードを算出可能です．
--   `mesh_to_polygon()`関数および`mesh_to_point()`関数により`sfc`ジオメトリを出力可能です．
--   80kmメッシュの桁が負や三桁以上になる範囲外のメッシュについては，当該コードを`<-1>`，`<123>`のように表示し，既存メッシュと明確に区別できるようにしています．
+-   The `mesh_move()` function can be used to calculate regional meshes
+    in the east-west and north-south directions.
+-   The `mesh_to_polygon()` and `mesh_to_point()` functions can output
+    `sfc` geometry.
+-   For meshes outside the range of the 80 km mesh, where the digits are
+    negative or exceed three digits, the relevant code is displayed as
+    `<-1>` or `<123>` to clearly distinguish them from existing meshes.
 
-## jpmeshとの処理速度の比較
+## Comparison of processing speed with jpmesh package
 
-本パッケージのメッシュ・緯度経度間の変換速度は，`jpmesh`パッケージと比べて数百倍ほど高速です．
+The conversion speed between meshes and latitude/longitude in this
+package is several hundred times faster than in the `jpmesh` package.
 
 <img src="man/figures/README-unnamed-chunk-13-1.png" width="100%" />
 
