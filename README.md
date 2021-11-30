@@ -9,8 +9,8 @@
 status](https://www.r-pkg.org/badges/version/japanmesh)](https://CRAN.R-project.org/package=japanmesh)
 <!-- badges: end -->
 
-The English version of the README is
-[here](https://github.com/UchidaMizuki/japanmesh/blob/main/README.en.md).
+*[The English version of the README is
+here.](https://github.com/UchidaMizuki/japanmesh/blob/main/README.en.md)*
 
 japanmeshは，日本産業規格JIS X
 0410[地域メッシュコード](https://www.jisc.go.jp/app/jis/general/GnrJISNumberNameSearchList?show&jisStdNo=X0410)
@@ -19,7 +19,7 @@ japanmeshは，日本産業規格JIS X
 地域メッシュコードは，経度・緯度に基づいて，日本全国の地域に設定された正方形に近い地域区分です．
 地域メッシュコードの詳細については，[統計局ページ](https://www.stat.go.jp/data/mesh/pdf/gaiyo1.pdf)を確認してください．
 
-地域メッシュコードの概要を以下に示します．
+地域メッシュコードの概要を以下に示します．japanmeshでは，`mesh_80km`のように，メッシュの一片の長さで各地域メッシュコードを区別します．
 
 | 名称                    | 一片の長さ | 桁数 |
 |:------------------------|:-----------|-----:|
