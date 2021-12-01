@@ -7,6 +7,6 @@ Duration: 1m 7.6s
 
 0 errors √ | 0 warnings √ | 0 notes √
 
-- Fix package versions for `Imports`.
-- Update Description and README.
+- Fix the package versions of `utils` and other imports.
+- Update DESCRIPTION and README, and add an explanation of `regional mesh codes` in Japan.
 - Add new functions.
