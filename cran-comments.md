@@ -1,10 +1,12 @@
 ## Test environments
-* Windows 10 version 2004, R 4.2.0 Pre-release
+* Windows 10 version 2004, R 4.1.2
 * macOS Big Sur 11.5, R 4.1.0
 
 ## R CMD check results
-Duration: 1m 44.2s
+Duration: 1m 7.6s
 
-0 errors v | 0 warnings v | 0 notes v
+0 errors √ | 0 warnings √ | 0 notes √
 
-R CMD check succeeded
+- Fix package versions for `Imports`.
+- Add new functions.
+- Update README.
