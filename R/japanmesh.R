@@ -1,4 +1,4 @@
-#' Functions for the Japanese Regional Mesh Codes (JIS X 0410).
+#' Functions for the Japanese Regional Mesh Codes (JIS X 0410)
 #'
 #' japanmesh is an R package for using the reference regional mesh (the 1st mesh to the 3rd mesh),
 #' the split regional mesh as defined by the JIS (Japan Industrial Standard) X 0410 'regional mesh code'
