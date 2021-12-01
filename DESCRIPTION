@@ -1,11 +1,11 @@
 Type: Package
 Package: japanmesh
-Title: Functions for the Japanese Regional Mesh Codes (JIS X 0410).
+Title: Functions for the Japanese Regional Mesh Codes ('JIS X 0410')
 Version: 0.1.1
 Authors@R: 
     person("Mizuki", "Uchida", , "uchidamizuki@vivaldi.net", role = c("aut", "cre"))
-Description: Functions for the Japanese regional mesh codes defined in JIS
-    X 0410
+Description: Functions for the Japanese regional mesh codes defined in 'JIS
+    X 0410'
     (https://www.jisc.go.jp/app/jis/general/GnrJISNumberNameSearchList?show&jisStdNo=X0410).
     Conversion between regional mesh codes and longitude/latitude, and
     between mesh codes of different scales.

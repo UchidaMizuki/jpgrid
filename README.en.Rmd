@@ -19,14 +19,14 @@ knitr::opts_chunk$set(
 [![CRAN status](https://www.r-pkg.org/badges/version/japanmesh)](https://CRAN.R-project.org/package=japanmesh)
 <!-- badges: end -->
 
-japanmesh is an R package for using the reference regional mesh (1st to 3rd), the split regional mesh as defined by the JIS (Japan Industrial Standard) X 0410 '[regional mesh code](https://www.jisc.go.jp/app/jis/general/GnrJISNumberNameSearchList?show&jisStdNo=X0410)' and 1/10 subdivision of the 3rd mesh.
+japanmesh is an R package for using the reference regional mesh (the 1st mesh to the 3rd mesh), the split regional mesh as defined by the JIS (Japan Industrial Standard) X 0410 '[regional mesh code](https://www.jisc.go.jp/app/jis/general/GnrJISNumberNameSearchList?show&jisStdNo=X0410)' and 1/10 subdivision of the 3rd mesh.
 Regional mesh codes are square-like regional divisions set up for all regions of Japan based on longitude and latitude. For more information on regional meshes, please check [the Statistics Bureau of Japan page](https://www.stat.go.jp/data/mesh/pdf/gaiyo1.pdf).
 
 A summary of the regional mesh codes is shown below. In japanmesh, each regional mesh code is distinguished by the length of a piece of mesh, such as `mesh_80km`.
 
 ```{r,echo=FALSE}
-df <- tibble::tibble(`Name` = c("the 1st mesh", "the 2nd mesh", "the 3rd mesh", "the 1/2 mesh", "the 1/4 mesh", "the 1/8 mesh", "1/10 subdivision of the 3rd mesh"),
-                     `Length` = c("Abount 80km", "Abount 10km", "Abount 1km", "Abount 500m", "Abount 250m", "Abount 125m", "Abount 100m"),
+df <- tibble::tibble(`Name` = c("1st mesh", "2nd mesh", "3rd mesh", "1/2 mesh", "1/4 mesh", "1/8 mesh", "1/10 subdivision of the 3rd mesh"),
+                     `Edge length` = c("Abount 80km", "Abount 10km", "Abount 1km", "Abount 500m", "Abount 250m", "Abount 125m", "Abount 100m"),
                      `Number of digits` = c(4, 6, 8, 9, 10, 11, 10))
 knitr::kable(df)
 ```
@@ -78,9 +78,9 @@ mesh_80km(x)
 mesh_125m(x)
 mesh_auto(x)
 
-mesh_80km(x, strict = F)
-mesh_125m(x, strict = F)
-mesh_auto(x, strict = F)
+mesh_80km(x, strict = FALSE)
+mesh_125m(x, strict = FALSE)
+mesh_auto(x, strict = FALSE)
 ```
 
 ### Converting the mesh size of regional mesh codes
@@ -101,9 +101,7 @@ mesh100m <- mesh_subdivide(mesh500m,
 mesh100m
 
 tibble(mesh100m = mesh100m[[1]]) %>% 
-  mutate(polygon = mesh_to_polygon(mesh100m)) %>% 
-  sf::st_as_sf() %>%
-  
+  sf::st_set_geometry(mesh_to_polygon(.$mesh100m)) %>% 
   ggplot() +
   geom_sf() +
   geom_sf_text(aes(label = mesh100m))
@@ -126,10 +124,8 @@ tibble(X = c(139.7008, 135.4375), # longitude
 The `mesh_to_XY()` function converts regional mesh codes to longitude and latitude.
 
 ```{r}
-tibble(mesh = c("5339452660", "5235034590")) %>% 
-  mutate(mesh %>% 
-           mesh_100m() %>% 
-           mesh_to_XY()) %>% 
+tibble(mesh = mesh_100m(c("5339452660", "5235034590"))) %>% 
+  mutate(mesh_to_XY(mesh)) %>% 
   knitr::kable()
 ```
 
@@ -146,8 +142,7 @@ neighbor <- mesh_10km("644142") %>%
                 simplify = FALSE)
 
 neighbor[[1]] %>% 
-  mutate(geometry = mesh_to_polygon(mesh_neighbor)) %>% 
-  sf::st_as_sf() %>% 
+  sf::st_set_geometry(mesh_to_polygon(.$mesh_neighbor)) %>% 
   
   ggplot(aes(fill = as.factor(n))) +
   geom_sf() +
@@ -161,8 +156,7 @@ neighbor_neumann <- mesh_10km("644142") %>%
                 moore = F)
 
 neighbor_neumann[[1]] %>% 
-  mutate(geometry = mesh_to_polygon(mesh_neighbor)) %>% 
-  sf::st_as_sf() %>% 
+  sf::st_set_geometry(mesh_to_polygon(.$mesh_neighbor)) %>% 
   
   ggplot(aes(fill = as.factor(n))) +
   geom_sf() +
@@ -179,8 +173,11 @@ mesh_to <- mesh_80km(c("5237", "5235"))
 
 line <- mesh_line(mesh_from, mesh_to)
 
-print(line)
-plot(line[[1]])
+tibble::tibble(mesh = line[[1]]) %>% 
+  sf::st_set_geometry(mesh_to_polygon(.$mesh)) %>% 
+  ggplot() +
+  geom_sf() +
+  geom_sf_text(aes(label = mesh))
 ```
 
 It can handle the case of passing through multiple meshes by giving a `list` of meshes.
@@ -196,8 +193,11 @@ line <- mesh_line(list(mesh_1, mesh_2),
                   close = TRUE,
                   skip_na = TRUE)
 
-print(line)
-plot(line[[1]])
+tibble::tibble(mesh = line[[1]]) %>% 
+  sf::st_set_geometry(mesh_to_polygon(.$mesh)) %>% 
+  ggplot() +
+  geom_sf() +
+  geom_sf_text(aes(label = mesh))
 ```
 
 ### Calculation of distance between meshes
@@ -246,6 +246,7 @@ mesh_jpmesh <- jpmesh::coords_to_mesh(X, Y,
                                       mesh_size = 1)
 
 microbenchmark::microbenchmark(`japanmesh::mesh_to_XY()` = mesh_to_XY(mesh_japanmesh),
-                               `jpmesh::mesh_to_coords()` = jpmesh::mesh_to_coords(mesh_jpmesh)) %>% 
+                               `jpmesh::mesh_to_coords()` = jpmesh::mesh_to_coords(mesh_jpmesh),
+                               setup = set.seed(4321)) %>% 
   autoplot()
 ```

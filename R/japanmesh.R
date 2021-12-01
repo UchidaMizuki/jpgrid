@@ -1,7 +1,19 @@
+#' Functions for the Japanese Regional Mesh Codes (JIS X 0410).
+#'
+#' japanmesh is an R package for using the reference regional mesh (the 1st mesh to the 3rd mesh),
+#' the split regional mesh as defined by the JIS (Japan Industrial Standard) X 0410 'regional mesh code'
+#' and 1/10 subdivision of the 3rd mesh.
+#' Regional mesh codes are square-like regional divisions set up for all regions of Japan based on longitude and latitude.
+#'
+#' @seealso <https://www.jisc.go.jp/app/jis/general/GnrJISNumberNameSearchList?show&jisStdNo=X0410>
+#' @seealso <https://www.stat.go.jp/data/mesh/pdf/gaiyo1.pdf>
+#'
 #' @import vctrs
 #' @import rlang
 #' @importFrom magrittr %>%
-NULL
+#'
+#' @name japanmesh
+"_PACKAGE"
 
 #' @name mesh
 #' @param mesh A \code{mesh} vector.

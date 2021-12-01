@@ -1,6 +1,5 @@
 #' Zoom-in regional meshes
 #'
-#' @description
 #' `r lifecycle::badge("deprecated")`
 #' \code{mesh_zoomin} makes the regional meshes finer.
 #'
@@ -18,6 +17,7 @@ mesh_zoomin <- function(mesh, size) {
 
 #' Zoom-out regional meshes
 #'
+#' `r lifecycle::badge("deprecated")`
 #' \code{mesh_zoomout} makes the regional meshes coarser.
 #'
 #' @export

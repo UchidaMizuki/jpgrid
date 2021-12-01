@@ -9,9 +9,9 @@
 status](https://www.r-pkg.org/badges/version/japanmesh)](https://CRAN.R-project.org/package=japanmesh)
 <!-- badges: end -->
 
-japanmesh is an R package for using the reference regional mesh (1st to
-3rd), the split regional mesh as defined by the JIS (Japan Industrial
-Standard) X 0410 ‘[regional mesh
+japanmesh is an R package for using the reference regional mesh (the 1st
+mesh to the 3rd mesh), the split regional mesh as defined by the JIS
+(Japan Industrial Standard) X 0410 ‘[regional mesh
 code](https://www.jisc.go.jp/app/jis/general/GnrJISNumberNameSearchList?show&jisStdNo=X0410)’
 and 1/10 subdivision of the 3rd mesh. Regional mesh codes are
 square-like regional divisions set up for all regions of Japan based on
@@ -19,16 +19,18 @@ longitude and latitude. For more information on regional meshes, please
 check [the Statistics Bureau of Japan
 page](https://www.stat.go.jp/data/mesh/pdf/gaiyo1.pdf).
 
-A summary of the regional mesh codes is shown below.
+A summary of the regional mesh codes is shown below. In japanmesh, each
+regional mesh code is distinguished by the length of a piece of mesh,
+such as `mesh_80km`.
 
-| Name                             | Length      | Number of digits |
+| Name                             | Edge length | Number of digits |
 |:---------------------------------|:------------|-----------------:|
-| the 1st mesh                     | Abount 80km |                4 |
-| the 2nd mesh                     | Abount 10km |                6 |
-| the 3rd mesh                     | Abount 1km  |                8 |
-| the 1/2 mesh                     | Abount 500m |                9 |
-| the 1/4 mesh                     | Abount 250m |               10 |
-| the 1/8 mesh                     | Abount 125m |               11 |
+| 1st mesh                         | Abount 80km |                4 |
+| 2nd mesh                         | Abount 10km |                6 |
+| 3rd mesh                         | Abount 1km  |                8 |
+| 1/2 mesh                         | Abount 500m |                9 |
+| 1/4 mesh                         | Abount 250m |               10 |
+| 1/8 mesh                         | Abount 125m |               11 |
 | 1/10 subdivision of the 3rd mesh | Abount 100m |               10 |
 
 japanmesh has been developed to enable faster processing than the R
@@ -92,14 +94,14 @@ mesh_auto(x)
 #> <mesh_80km[7]>
 #> [1] <NA> <NA> <NA> <NA> <NA> 5339 <NA>
 
-mesh_80km(x, strict = F)
+mesh_80km(x, strict = FALSE)
 #> <mesh_80km[7]>
 #> [1] 5339 5339 5339 5339 5235 5339 <NA>
-mesh_125m(x, strict = F)
+mesh_125m(x, strict = FALSE)
 #> <mesh_125m[7]>
 #> [1] 53394526313 <NA>        <NA>        <NA>        <NA>        <NA>       
 #> [7] <NA>
-mesh_auto(x, strict = F)
+mesh_auto(x, strict = FALSE)
 #> Guessing mesh size as `80km`
 #> <mesh_80km[7]>
 #> [1] 5339 5339 5339 5339 5235 5339 <NA>
@@ -134,9 +136,7 @@ mesh100m
 #> [25] 5339457699
 
 tibble(mesh100m = mesh100m[[1]]) %>% 
-  mutate(polygon = mesh_to_polygon(mesh100m)) %>% 
-  sf::st_as_sf() %>%
-  
+  sf::st_set_geometry(mesh_to_polygon(.$mesh100m)) %>% 
   ggplot() +
   geom_sf() +
   geom_sf_text(aes(label = mesh100m))
@@ -169,10 +169,8 @@ The `mesh_to_XY()` function converts regional mesh codes to longitude
 and latitude.
 
 ``` r
-tibble(mesh = c("5339452660", "5235034590")) %>% 
-  mutate(mesh %>% 
-           mesh_100m() %>% 
-           mesh_to_XY()) %>% 
+tibble(mesh = mesh_100m(c("5339452660", "5235034590"))) %>% 
+  mutate(mesh_to_XY(mesh)) %>% 
   knitr::kable()
 ```
 
@@ -194,8 +192,7 @@ neighbor <- mesh_10km("644142") %>%
                 simplify = FALSE)
 
 neighbor[[1]] %>% 
-  mutate(geometry = mesh_to_polygon(mesh_neighbor)) %>% 
-  sf::st_as_sf() %>% 
+  sf::st_set_geometry(mesh_to_polygon(.$mesh_neighbor)) %>% 
   
   ggplot(aes(fill = as.factor(n))) +
   geom_sf() +
@@ -212,8 +209,7 @@ neighbor_neumann <- mesh_10km("644142") %>%
                 moore = F)
 
 neighbor_neumann[[1]] %>% 
-  mutate(geometry = mesh_to_polygon(mesh_neighbor)) %>% 
-  sf::st_as_sf() %>% 
+  sf::st_set_geometry(mesh_to_polygon(.$mesh_neighbor)) %>% 
   
   ggplot(aes(fill = as.factor(n))) +
   geom_sf() +
@@ -234,15 +230,12 @@ mesh_to <- mesh_80km(c("5237", "5235"))
 
 line <- mesh_line(mesh_from, mesh_to)
 
-print(line)
-#> [[1]]
-#> <mesh_80km[13]>
-#>  [1] 6441 6341 6240 6140 6040 5939 5839 5739 5638 5538 5438 5337 5237
-#> 
-#> [[2]]
-#> <mesh_80km[5]>
-#> [1] 5339 5338 5237 5236 5235
-plot(line[[1]])
+tibble::tibble(mesh = line[[1]]) %>% 
+  sf::st_set_geometry(mesh_to_polygon(.$mesh)) %>% 
+  ggplot() +
+  geom_sf() +
+  geom_sf_text(aes(label = mesh))
+#> Don't know how to automatically pick scale for object of type mesh_80km/mesh/vctrs_rcrd/vctrs_vctr. Defaulting to continuous.
 ```
 
 <img src="man/figures/README-unnamed-chunk-10-1.png" width="100%" />
@@ -261,21 +254,12 @@ line <- mesh_line(list(mesh_1, mesh_2),
                   close = TRUE,
                   skip_na = TRUE)
 
-print(line)
-#> [[1]]
-#> <mesh_80km[37]>
-#>  [1] 6441 6341 6241 6140 6040 5940 5840 5740 5640 5539 5439 5339 5339 5340 5341
-#> [16] 5342 5343 5344 5245 5246 5247 5248 5249 5250 5250 5349 5448 5548 5647 5746
-#> [31] 5845 5945 6044 6143 6242 6342 6441
-#> 
-#> [[2]]
-#> <mesh_80km[74]>
-#>  [1] 6439 6438 6337 6336 6235 6234 6133 6132 6131 6030 6029 5928 5927 5826 5825
-#> [16] 5824 5723 5722 5621 5620 5519 5518 5517 5416 5415 5314 5313 5212 5211 5211
-#> [31] 5111 5011 4912 4812 4712 4612 4512 4412 4313 4213 4113 4013 4013 4114 4215
-#> [46] 4316 4416 4517 4618 4719 4820 4921 5021 5122 5223 5324 5425 5526 5627 5727
-#> [61] 5828 5929 6030 6131 6232 6332 6433 6534 6635 6635 6536 6537 6438 6439
-plot(line[[1]])
+tibble::tibble(mesh = line[[1]]) %>% 
+  sf::st_set_geometry(mesh_to_polygon(.$mesh)) %>% 
+  ggplot() +
+  geom_sf() +
+  geom_sf_text(aes(label = mesh))
+#> Don't know how to automatically pick scale for object of type mesh_80km/mesh/vctrs_rcrd/vctrs_vctr. Defaulting to continuous.
 ```
 
 <img src="man/figures/README-unnamed-chunk-11-1.png" width="100%" />

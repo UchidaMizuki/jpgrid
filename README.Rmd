@@ -29,7 +29,7 @@ japanmeshは，日本産業規格JIS X 0410[地域メッシュコード](https:/
 地域メッシュコードの概要を以下に示します．japanmeshでは，`mesh_80km`のように，メッシュの一片の長さで各地域メッシュコードを区別します．
 
 ```{r,echo=FALSE}
-df <- tibble::tibble(`名称` = c("1次メッシュ", "2次メッシュ", "3次メッシュ", "2分の1メッシュ", "4分の1メッシュ", "8分の1メッシュ", "3次メッシュ1/10細分区画"),
+df <- tibble::tibble(`名称` = c("第1次地域区画 (1次メッシュ)", "第2次地域区画 (2次メッシュ)", "第3次地域区画 (3次メッシュ)", "2分の1地域メッシュ", "4分の1地域メッシュ", "8分の1地域メッシュ", "3次メッシュ1/10細分区画"),
                      `一片の長さ` = c("約80km", "約10km", "約1km", "約500m", "約250m", "約125m", "約100m"),
                      `桁数` = c(4, 6, 8, 9, 10, 11, 10))
 knitr::kable(df)
@@ -82,9 +82,9 @@ mesh_80km(x)
 mesh_125m(x)
 mesh_auto(x)
 
-mesh_80km(x, strict = F)
-mesh_125m(x, strict = F)
-mesh_auto(x, strict = F)
+mesh_80km(x, strict = FALSE)
+mesh_125m(x, strict = FALSE)
+mesh_auto(x, strict = FALSE)
 ```
 
 ### 地域メッシュコードのサイズの変換
@@ -105,9 +105,7 @@ mesh100m <- mesh_subdivide(mesh500m,
 mesh100m
 
 tibble(mesh100m = mesh100m[[1]]) %>% 
-  mutate(polygon = mesh_to_polygon(mesh100m)) %>% 
-  sf::st_as_sf() %>%
-  
+  sf::st_set_geometry(mesh_to_polygon(.$mesh100m)) %>% 
   ggplot() +
   geom_sf() +
   geom_sf_text(aes(label = mesh100m))
@@ -130,10 +128,8 @@ tibble(X = c(139.7008, 135.4375), # 経度
 `mesh_to_XY()`関数は，地域メッシュコードを経度・緯度に変換します．
 
 ```{r}
-tibble(mesh = c("5339452660", "5235034590")) %>% 
-  mutate(mesh %>% 
-           mesh_100m() %>% 
-           mesh_to_XY()) %>% 
+tibble(mesh = mesh_100m(c("5339452660", "5235034590"))) %>% 
+  mutate(mesh_to_XY(mesh)) %>% 
   knitr::kable()
 ```
 
@@ -150,8 +146,7 @@ neighbor <- mesh_10km("644142") %>%
                 simplify = FALSE)
 
 neighbor[[1]] %>% 
-  mutate(geometry = mesh_to_polygon(mesh_neighbor)) %>% 
-  sf::st_as_sf() %>% 
+  sf::st_set_geometry(mesh_to_polygon(.$mesh_neighbor)) %>% 
   
   ggplot(aes(fill = as.factor(n))) +
   geom_sf() +
@@ -165,8 +160,7 @@ neighbor_neumann <- mesh_10km("644142") %>%
                 moore = F)
 
 neighbor_neumann[[1]] %>% 
-  mutate(geometry = mesh_to_polygon(mesh_neighbor)) %>% 
-  sf::st_as_sf() %>% 
+  sf::st_set_geometry(mesh_to_polygon(.$mesh_neighbor)) %>% 
   
   ggplot(aes(fill = as.factor(n))) +
   geom_sf() +
@@ -183,8 +177,11 @@ mesh_to <- mesh_80km(c("5237", "5235"))
 
 line <- mesh_line(mesh_from, mesh_to)
 
-print(line)
-plot(line[[1]])
+tibble::tibble(mesh = line[[1]]) %>% 
+  sf::st_set_geometry(mesh_to_polygon(.$mesh)) %>% 
+  ggplot() +
+  geom_sf() +
+  geom_sf_text(aes(label = mesh))
 ```
 
 メッシュの`list`を与えることで複数メッシュを通る場合に対応可能です．
@@ -200,8 +197,11 @@ line <- mesh_line(list(mesh_1, mesh_2),
                   close = TRUE,
                   skip_na = TRUE)
 
-print(line)
-plot(line[[1]])
+tibble::tibble(mesh = line[[1]]) %>% 
+  sf::st_set_geometry(mesh_to_polygon(.$mesh)) %>% 
+  ggplot() +
+  geom_sf() +
+  geom_sf_text(aes(label = mesh))
 ```
 
 ### メッシュ間距離の算出
@@ -250,6 +250,7 @@ mesh_jpmesh <- jpmesh::coords_to_mesh(X, Y,
                                       mesh_size = 1)
 
 microbenchmark::microbenchmark(`japanmesh::mesh_to_XY()` = mesh_to_XY(mesh_japanmesh),
-                               `jpmesh::mesh_to_coords()` = jpmesh::mesh_to_coords(mesh_jpmesh)) %>% 
+                               `jpmesh::mesh_to_coords()` = jpmesh::mesh_to_coords(mesh_jpmesh),
+                               setup = set.seed(4321)) %>% 
   autoplot()
 ```
