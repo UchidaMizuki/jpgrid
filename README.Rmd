@@ -226,7 +226,7 @@ print(distance)
 
 ## jpmeshとの処理速度の比較
 
-本パッケージのメッシュ・緯度経度間の変換速度は，`jpmesh`パッケージと比べて数百倍ほど高速です．
+本パッケージのメッシュ・緯度経度間の変換速度は，`jpmesh`パッケージと比べて数十～数百倍ほど高速です．
 
 ```{r,echo=FALSE,message=FALSE}
 set.seed(1234)
@@ -236,7 +236,8 @@ Y <- runif(1e1, 39, 40)
 microbenchmark::microbenchmark(`japanmesh::XY_to_mesh()` = XY_to_mesh(X, Y,
                                                                     size = "1km"),
                                `jpmesh::coords_to_mesh()` = jpmesh::coords_to_mesh(X, Y,
-                                                                                 mesh_size = 1)) %>% 
+                                                                                 mesh_size = 1),
+                               setup = set.seed(4321)) %>% 
   autoplot()
 ```
 

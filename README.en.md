@@ -296,7 +296,8 @@ print(distance)
 ## Comparison of processing speed with jpmesh package
 
 The conversion speed between meshes and latitude/longitude in this
-package is several hundred times faster than in the `jpmesh` package.
+package is several tens to several hundred times faster than in the
+`jpmesh` package.
 
 <img src="man/figures/README-unnamed-chunk-13-1.png" width="100%" />
 

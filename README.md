@@ -278,7 +278,7 @@ print(distance)
 
 ## jpmeshとの処理速度の比較
 
-本パッケージのメッシュ・緯度経度間の変換速度は，`jpmesh`パッケージと比べて数百倍ほど高速です．
+本パッケージのメッシュ・緯度経度間の変換速度は，`jpmesh`パッケージと比べて数十～数百倍ほど高速です．
 
 <img src="man/figures/README-unnamed-chunk-13-1.png" width="100%" />
 
