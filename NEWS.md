@@ -6,7 +6,6 @@
 ## Others
 - Fix the package versions of `utils` and other imports.
 - Update DESCRIPTION and README, and add an explanation of `regional mesh codes` in Japan.
-- Add new functions.
 
 # version 0.1.0
 Initial version.
