@@ -38,7 +38,7 @@ geometry_to_mesh <- function(geometry, size,
     bbox_to_mesh(size = size) %>%
     purrr::modify(function(mesh) {
       tibble::tibble(mesh = mesh) %>%
-        sf::st_set_geometry(mesh_to_polygon(mesh))
+        sf::st_set_geometry(mesh_as_sfc(mesh))
     })
 
   purrr::map2(mesh, geometry,
@@ -60,30 +60,32 @@ geometry_to_mesh <- function(geometry, size,
 #' @export
 bbox_to_mesh <- function(bbox, size) {
   if (is.list(bbox)) {
-    bbox <- bbox %>%
-      purrr::map_dfr(function(bbox) {
-        bbox <- sf::st_bbox(bbox)
-
-        tibble::tibble(X_min = bbox[["xmin"]],
-                       Y_min = bbox[["ymin"]],
-                       X_max = bbox[["xmax"]],
-                       Y_max = bbox[["ymax"]])
+    bbox %>%
+      purrr::map(function(bbox) {
+        bbox_to_mesh(bbox, size)
       })
-
-    mesh_grid(X_min = bbox$X_min,
-              Y_min = bbox$Y_min,
-              X_max = bbox$X_max,
-              Y_max = bbox$Y_max,
-              size = size)
   } else {
     bbox <- sf::st_bbox(bbox)
+    size <- size_match(size)
 
-    mesh_grid(X_min = bbox[["xmin"]],
-              Y_min = bbox[["ymin"]],
-              X_max = bbox[["xmax"]],
-              Y_max = bbox[["ymax"]],
-              size = size) %>%
-      dplyr::first()
+    mesh_min <- XY_to_mesh(X = bbox[["xmin"]],
+                           Y = bbox[["ymin"]],
+                           size = size)
+    n_X_min <- field(mesh_min, "n_X")
+    n_Y_min <- field(mesh_min, "n_Y")
+
+    mesh_max <- XY_to_mesh(X = bbox[["xmax"]],
+                           Y = bbox[["ymax"]],
+                           size = size)
+    n_X_max <- field(mesh_max, "n_X")
+    n_Y_max <- field(mesh_max, "n_Y")
+
+    n_XY <- tidyr::expand_grid(n_X = n_X_min:n_X_max,
+                               n_Y = n_Y_min:n_Y_max)
+
+    new_mesh(size = size,
+             n_X = n_XY$n_X,
+             n_Y = n_XY$n_Y)
   }
 }
 
@@ -142,6 +144,7 @@ mesh_as_sfc <- function(x,
 #' @param x A data frame.
 #' @param as_points Return the center points of the meshes or not?
 #' @param crs Coordinate reference system.
+#' @param mesh_column_name A scalar character.
 #' @param ... passed on to \code{sf::st_as_sf()}.
 #'
 #' @return A \code{sf} object.
@@ -150,13 +153,21 @@ mesh_as_sfc <- function(x,
 mesh_as_sf <- function(x,
                        as_points = FALSE,
                        crs = sf::NA_crs_,
+                       mesh_column_name = NULL,
                        ...) {
   stopifnot(is.data.frame(x))
 
-  i <- x %>%
-    purrr::map_lgl(is_mesh)
+  if (is.null(mesh_column_name)) {
+    i <- x %>%
+      purrr::map_lgl(is_mesh)
+    mesh_column_name <- names(x) %>%
+      vec_slice(i) %>%
+      vec_slice(1L)
+  }
+  mesh <- x[[mesh_column_name]]
+
   x %>%
-    sf::st_set_geometry(x[i][[1L]] %>%
+    sf::st_set_geometry(mesh %>%
                           mesh_as_sfc(as_points = as_points,
                                       crs = crs)) %>%
     sf::st_as_sf(...)
