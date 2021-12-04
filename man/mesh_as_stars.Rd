@@ -11,7 +11,7 @@ mesh_as_stars(x, mesh_column_name = NULL, ...)
 
 \item{mesh_column_name}{A scalar character.}
 
-\item{...}{passed on to \code{stars::st_as_stars()}.}
+\item{...}{Passed on to \code{stars::st_as_stars()}.}
 }
 \value{
 A \code{stars} object.

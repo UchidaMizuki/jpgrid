@@ -4,14 +4,14 @@
 \alias{geometry_to_mesh}
 \title{Converting sfc geometries to regional meshes}
 \usage{
-geometry_to_mesh(geometry, size, .predicate = sf::st_intersects)
+geometry_to_mesh(geometry, size, ...)
 }
 \arguments{
 \item{geometry}{A \code{sfc} vector.}
 
 \item{size}{A mesh size.}
 
-\item{.predicate}{A \code{.predicate} parameter for \code{sf::st_filter} function.}
+\item{...}{Passed on to \code{stars::st_rasterize()}.}
 }
 \value{
 A list of \code{mesh} class vectors.

@@ -4,7 +4,7 @@
 \alias{mesh_rectangle}
 \title{Convert regional meshes into rectangular meshes}
 \usage{
-mesh_rectangle(mesh)
+mesh_rectangle(mesh, buffer = 0L)
 }
 \arguments{
 \item{mesh}{A \code{mesh} vector.}

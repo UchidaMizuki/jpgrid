@@ -22,32 +22,32 @@ point_to_mesh <- function(point, size) {
 #'
 #' @param geometry A \code{sfc} vector.
 #' @inheritParams size
-#' @param .predicate A \code{.predicate} parameter for \code{sf::st_filter} function.
+#' @param ... Passed on to \code{stars::st_rasterize()}.
 #'
 #' @return A list of \code{mesh} class vectors.
 #'
 #' @export
-geometry_to_mesh <- function(geometry, size,
-                             .predicate = sf::st_intersects) {
+geometry_to_mesh <- function(geometry, size, ...) {
   if (!inherits(geometry, "sfc")) {
     geometry <- sf::st_as_sfc(geometry)
   }
 
   mesh <- geometry %>%
-    purrr::map(sf::st_bbox) %>%
-    bbox_to_mesh(size = size) %>%
-    purrr::modify(function(mesh) {
-      tibble::tibble(mesh = mesh) %>%
-        sf::st_set_geometry(mesh_as_sfc(mesh))
-    })
+    sf::st_bbox() %>%
+    bbox_to_mesh(size = size)
+  mesh <- mesh_as_stars(mesh)
 
-  purrr::map2(mesh, geometry,
-              function(mesh, geometry) {
-                mesh %>%
-                  sf::st_filter(geometry,
-                                .predicate = .predicate) %>%
-                  purrr::chuck("mesh")
-              })
+  XY <- geometry %>%
+    sf::st_sf() %>%
+    stars::st_rasterize(mesh,
+                        ...) %>%
+    sf::st_as_sf(as_points = TRUE) %>%
+    sf::st_coordinates() %>%
+    tibble::as_tibble()
+
+  XY_to_mesh(X = XY$X,
+             Y = XY$Y,
+             size = size)
 }
 
 #' Converting bbox to regional meshes
@@ -115,28 +115,28 @@ mesh_as_sfc <- function(x,
       purrr::pmap(function(X_min, Y_min, X_max, Y_max) {
         if (is.na(X_min) || is.na(Y_min) || is.na(X_max) || is.na(Y_max)) {
           sf::st_polygon() %>%
-            sf::st_sfc(crs = crs)
+            sf::st_sfc()
         } else {
           sf::st_bbox(c(xmin = X_min,
                         ymin = Y_min,
                         xmax = X_max,
                         ymax = Y_max)) %>%
-            sf::st_as_sfc(crs = crs)
+            sf::st_as_sfc()
         }
       }) %>%
       purrr::reduce(c)
   } else {
     geometry$geometry <- mesh_to_XY(geometry$mesh,
                                     center = TRUE) %>%
-      sf::st_as_sf(coords = c("X", "Y"),
-                   crs = crs) %>%
+      sf::st_as_sf(coords = c("X", "Y")) %>%
       sf::st_geometry()
   }
 
   tibble::tibble(mesh = x) %>%
     dplyr::left_join(geometry,
                      by = "mesh") %>%
-    purrr::chuck("geometry")
+    purrr::chuck("geometry") %>%
+    sf::st_set_crs(crs)
 }
 
 #' Converting data frame containing regional meshes to sf
@@ -155,6 +155,9 @@ mesh_as_sf <- function(x,
                        crs = sf::NA_crs_,
                        mesh_column_name = NULL,
                        ...) {
+  if (is_mesh(x)) {
+    x <- tibble::tibble(mesh = x)
+  }
   stopifnot(is.data.frame(x))
 
   if (is.null(mesh_column_name)) {
