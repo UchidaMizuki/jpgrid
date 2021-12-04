@@ -222,7 +222,7 @@ print(distance)
 
 ## Comparison of processing speed with jpmesh package
 
-The conversion speed between meshes and latitude/longitude in this package is several tens to several hundred times faster than in the `jpmesh` package.
+The conversion speed between meshes and latitude/longitude in this package is several tens to several hundred times faster than in the jpmesh package.
 
 ```{r,echo=FALSE,message=FALSE}
 set.seed(1234)
