@@ -28,7 +28,7 @@ test_that("mesh_as_sfc", {
   mesh10km <- c("53394526313", 5339358633, "533945764", 53394611, "523503", 5339) %>%
     mesh_10km()
 
-  expect_s3_class(mesh_as_sfc(mesh10km, centroid = TRUE), "sfc_POINT")
+  expect_s3_class(mesh_as_sfc(mesh10km, as_points = TRUE), "sfc_POINT")
   expect_s3_class(mesh_as_sfc(mesh10km), "sfc_POLYGON")
 })
 

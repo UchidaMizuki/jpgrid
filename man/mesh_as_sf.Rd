@@ -4,12 +4,12 @@
 \alias{mesh_as_sf}
 \title{Converting data frame containing regional meshes to sf}
 \usage{
-mesh_as_sf(x, centroid = FALSE, crs = sf::NA_crs_, ...)
+mesh_as_sf(x, as_points = FALSE, crs = sf::NA_crs_, ...)
 }
 \arguments{
 \item{x}{A data frame.}
 
-\item{centroid}{Return the mesh centroids or not?}
+\item{as_points}{Return the center points of the meshes or not?}
 
 \item{crs}{Coordinate reference system.}
 

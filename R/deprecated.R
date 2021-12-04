@@ -58,7 +58,7 @@ mesh_to_polygon <- function(mesh,
 #' Converting regional meshes to sfc points
 #'
 #' `r lifecycle::badge("deprecated")`
-#' Use \code{mesh_as_sfc(centroid = TRUE)} instead of \code{mesh_to_polygon()}.
+#' Use \code{mesh_as_sfc(as_points = TRUE)} instead of \code{mesh_to_polygon()}.
 #'
 #' @inheritParams mesh
 #' @param crs Coordinate reference system.
@@ -68,9 +68,9 @@ mesh_to_polygon <- function(mesh,
 #' @export
 mesh_to_point <- function(mesh,
                           crs = sf::NA_crs_) {
-  lifecycle::deprecate_warn("1.0.0", "mesh_to_polygon()", "mesh_as_sfc(centroid)")
+  lifecycle::deprecate_warn("1.0.0", "mesh_to_polygon()", "mesh_as_sfc(as_points)")
 
   mesh %>%
-    mesh_as_sfc(centroid = TRUE,
+    mesh_as_sfc(as_points = TRUE,
                 crs = crs)
 }

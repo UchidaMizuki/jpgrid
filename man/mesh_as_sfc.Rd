@@ -4,17 +4,17 @@
 \alias{mesh_as_sfc}
 \title{Converting regional meshes to sfc geometries}
 \usage{
-mesh_as_sfc(x, centroid = FALSE, crs = sf::NA_crs_)
+mesh_as_sfc(x, as_points = FALSE, crs = sf::NA_crs_)
 }
 \arguments{
 \item{x}{A \code{mesh} vector.}
 
-\item{centroid}{Return the mesh centroids or not?}
+\item{as_points}{Return the center points of the meshes or not?}
 
 \item{crs}{Coordinate reference system.}
 }
 \value{
-A \code{sfc_POLYGON} vector (\code{centroid = FALSE}) or a \code{sfc_POINT} vector ((\code{centroid = TRUE})).
+A \code{sfc_POLYGON} vector (\code{as_points = FALSE}) or a \code{sfc_POINT} vector ((\code{as_points = TRUE})).
 }
 \description{
 Converting regional meshes to sfc geometries

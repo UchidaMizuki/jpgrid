@@ -16,5 +16,5 @@ A \code{sfc_POINT} vector.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
-Use \code{mesh_as_sfc(centroid = TRUE)} instead of \code{mesh_to_polygon()}.
+Use \code{mesh_as_sfc(as_points = TRUE)} instead of \code{mesh_to_polygon()}.
 }

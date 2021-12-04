@@ -90,14 +90,14 @@ bbox_to_mesh <- function(bbox, size) {
 #' Converting regional meshes to sfc geometries
 #'
 #' @param x A \code{mesh} vector.
-#' @param centroid Return the mesh centroids or not?
+#' @param as_points Return the center points of the meshes or not?
 #' @param crs Coordinate reference system.
 #'
-#' @return A \code{sfc_POLYGON} vector (\code{centroid = FALSE}) or a \code{sfc_POINT} vector ((\code{centroid = TRUE})).
+#' @return A \code{sfc_POLYGON} vector (\code{as_points = FALSE}) or a \code{sfc_POINT} vector ((\code{as_points = TRUE})).
 #'
 #' @export
 mesh_as_sfc <- function(x,
-                        centroid = FALSE,
+                        as_points = FALSE,
                         crs = sf::NA_crs_) {
   stopifnot(is_mesh(x))
 
@@ -106,7 +106,7 @@ mesh_as_sfc <- function(x,
   geometry <- vec_slice(geometry ,
                         !is.na(geometry$mesh))
 
-  if (!centroid) {
+  if (!as_points) {
     XY <- mesh_to_XY(geometry$mesh,
                      center = FALSE)
     geometry$geometry <- list(XY$X_min, XY$Y_min, XY$X_max, XY$Y_max) %>%
@@ -140,7 +140,7 @@ mesh_as_sfc <- function(x,
 #' Converting data frame containing regional meshes to sf
 #'
 #' @param x A data frame.
-#' @param centroid Return the mesh centroids or not?
+#' @param as_points Return the center points of the meshes or not?
 #' @param crs Coordinate reference system.
 #' @param ... passed on to \code{sf::st_as_sf()}.
 #'
@@ -148,7 +148,7 @@ mesh_as_sfc <- function(x,
 #'
 #' @export
 mesh_as_sf <- function(x,
-                       centroid = FALSE,
+                       as_points = FALSE,
                        crs = sf::NA_crs_,
                        ...) {
   stopifnot(is.data.frame(x))
@@ -157,18 +157,18 @@ mesh_as_sf <- function(x,
     purrr::map_lgl(is_mesh)
   x %>%
     sf::st_set_geometry(x[i][[1L]] %>%
-                          mesh_as_sfc(centroid = centroid,
+                          mesh_as_sfc(as_points = as_points,
                                       crs = crs)) %>%
     sf::st_as_sf(...)
 }
 
 #' @export
 plot.mesh <- function(x, y,
-                      centroid = FALSE,
+                      as_points = FALSE,
                       ...) {
   stopifnot(missing(y))
 
   x %>%
-    mesh_as_sfc(centroid = centroid) %>%
+    mesh_as_sfc(as_points = as_points) %>%
     plot(...)
 }
