@@ -24,12 +24,12 @@ test_that("point_to_mesh", {
   expect_s3_class(mesh[[1L]], "mesh")
 })
 
-test_that("mesh_to_geometry", {
+test_that("mesh_as_sfc", {
   mesh10km <- c("53394526313", 5339358633, "533945764", 53394611, "523503", 5339) %>%
     mesh_10km()
 
-  expect_s3_class(mesh_to_point(mesh10km), "sfc_POINT")
-  expect_s3_class(mesh_to_polygon(mesh10km), "sfc_POLYGON")
+  expect_s3_class(mesh_as_sfc(mesh10km, centroid = TRUE), "sfc_POINT")
+  expect_s3_class(mesh_as_sfc(mesh10km), "sfc_POLYGON")
 })
 
 test_that("bbox_to_mesh", {
@@ -46,4 +46,15 @@ test_that("bbox_to_mesh", {
                        size = "1km")
   expect_true(is.list(mesh))
   expect_equal(vctrs::vec_size(mesh[[1L]]), 12L)
+})
+
+test_that("mesh_as_sf", {
+  mesh10km_1 <- c("53394526313", 5339358633, "533945764", 53394611, "523503", 5339) %>%
+    mesh_10km(strict = FALSE)
+  mesh10km_2 <- rev(mesh10km_1)
+
+  sf <- tibble::tibble(mesh1 = mesh10km_1,
+                       mesh2 = mesh10km_2) %>%
+    mesh_as_sf()
+  expect_s3_class(sf, "sf")
 })

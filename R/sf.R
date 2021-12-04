@@ -18,7 +18,7 @@ point_to_mesh <- function(point, size) {
              size = size)
 }
 
-#' Converting geometries to regional meshes
+#' Converting sfc geometries to regional meshes
 #'
 #' @param geometry A \code{sfc} vector.
 #' @inheritParams size
@@ -89,27 +89,24 @@ bbox_to_mesh <- function(bbox, size) {
 
 #' Converting regional meshes to sfc geometries
 #'
-#' @name mesh_to_geometry
-#'
-#' @inheritParams mesh
+#' @param x A \code{mesh} vector.
+#' @param centroid Return the mesh centroids or not?
 #' @param crs Coordinate reference system.
 #'
-#' @return \code{mesh_to_polygon} returns a \code{sfc_POLYGON} vector.
-#' \code{mesh_to_point} returns a \code{sfc_POINT} vector.
-NULL
+#' @return A \code{sfc_POLYGON} vector (\code{centroid = FALSE}) or a \code{sfc_POINT} vector ((\code{centroid = TRUE})).
+#'
+#' @export
+mesh_as_sfc <- function(x,
+                        centroid = FALSE,
+                        crs = sf::NA_crs_) {
+  stopifnot(is_mesh(x))
 
-mesh_to_geometry <- function(mesh,
-                             type = "POLYGON",
-                             crs = sf::NA_crs_) {
-  stopifnot(is_mesh(mesh))
-  arg_match(type, c("POLYGON", "POINT"))
-
-  geometry <- tibble::tibble(mesh = mesh) %>%
+  geometry <- tibble::tibble(mesh = x) %>%
     vec_unique()
   geometry <- vec_slice(geometry ,
                         !is.na(geometry$mesh))
 
-  if (type == "POLYGON") {
+  if (!centroid) {
     XY <- mesh_to_XY(geometry$mesh,
                      center = FALSE)
     geometry$geometry <- list(XY$X_min, XY$Y_min, XY$X_max, XY$Y_max) %>%
@@ -134,38 +131,44 @@ mesh_to_geometry <- function(mesh,
       sf::st_geometry()
   }
 
-  tibble::tibble(mesh = mesh) %>%
+  tibble::tibble(mesh = x) %>%
     dplyr::left_join(geometry,
                      by = "mesh") %>%
     purrr::chuck("geometry")
 }
 
-#' @export
+#' Converting data frame containing regional meshes to sf
 #'
-#' @rdname mesh_to_geometry
-mesh_to_polygon <- function(mesh,
-                            crs = sf::NA_crs_) {
-  mesh %>%
-    mesh_to_geometry(type = "POLYGON",
-                     crs = crs)
-}
-
+#' @param x A data frame.
+#' @param centroid Return the mesh centroids or not?
+#' @param crs Coordinate reference system.
+#' @param ... passed on to \code{sf::st_as_sf()}.
+#'
+#' @return A \code{sf} object.
+#'
 #' @export
-#' @rdname mesh_to_geometry
-mesh_to_point <- function(mesh,
-                          crs = sf::NA_crs_) {
-  mesh %>%
-    mesh_to_geometry(type = "POINT",
-                     crs = crs)
+mesh_as_sf <- function(x,
+                       centroid = FALSE,
+                       crs = sf::NA_crs_,
+                       ...) {
+  stopifnot(is.data.frame(x))
+
+  i <- x %>%
+    purrr::map_lgl(is_mesh)
+  x %>%
+    sf::st_set_geometry(x[i][[1L]] %>%
+                          mesh_as_sfc(centroid = centroid,
+                                      crs = crs)) %>%
+    sf::st_as_sf(...)
 }
 
 #' @export
 plot.mesh <- function(x, y,
-                      type = "POLYGON",
+                      centroid = FALSE,
                       ...) {
   stopifnot(missing(y))
 
   x %>%
-    mesh_to_geometry(type = type) %>%
+    mesh_as_sfc(centroid = centroid) %>%
     plot(...)
 }
