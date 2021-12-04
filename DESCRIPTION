@@ -21,6 +21,7 @@ Imports:
     magrittr,
     purrr (>= 0.3.0),
     rlang (>= 0.3.0),
+    stars,
     sf,
     stringr (>= 1.4.0),
     tibble,
