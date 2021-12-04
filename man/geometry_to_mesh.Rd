@@ -2,7 +2,7 @@
 % Please edit documentation in R/sf.R
 \name{geometry_to_mesh}
 \alias{geometry_to_mesh}
-\title{Converting geometries to regional meshes}
+\title{Converting sfc geometries to regional meshes}
 \usage{
 geometry_to_mesh(geometry, size, .predicate = sf::st_intersects)
 }
@@ -17,5 +17,5 @@ geometry_to_mesh(geometry, size, .predicate = sf::st_intersects)
 A list of \code{mesh} class vectors.
 }
 \description{
-Converting geometries to regional meshes
+Converting sfc geometries to regional meshes
 }
