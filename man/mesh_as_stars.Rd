@@ -4,7 +4,7 @@
 \alias{mesh_as_stars}
 \title{Converting data frame containing regional meshes to stars}
 \usage{
-mesh_as_stars(x, mesh_column_name = NULL, ...)
+mesh_as_stars(x, mesh_column_name = NULL, coords = NULL, ...)
 }
 \arguments{
 \item{x}{A data frame.}
