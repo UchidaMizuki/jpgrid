@@ -68,4 +68,3 @@ grid_distance <- function(grid, grid_to,
       })
   }
 }
-
