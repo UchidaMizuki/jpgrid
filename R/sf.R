@@ -32,22 +32,25 @@ geometry_to_mesh <- function(geometry, size, ...) {
     geometry <- sf::st_as_sfc(geometry)
   }
 
-  mesh <- geometry %>%
-    sf::st_bbox() %>%
-    bbox_to_mesh(size = size)
-  mesh <- mesh_as_stars(mesh)
+  geometry %>%
+    purrr::map(function(x) {
+      mesh <- x %>%
+        sf::st_bbox() %>%
+        bbox_to_mesh(size = size) %>%
+        mesh_as_stars()
 
-  XY <- geometry %>%
-    sf::st_sf() %>%
-    stars::st_rasterize(mesh,
-                        ...) %>%
-    sf::st_as_sf(as_points = TRUE) %>%
-    sf::st_coordinates() %>%
-    tibble::as_tibble()
+      XY <- x %>%
+        sf::st_sfc() %>%
+        sf::st_as_sf() %>%
+        stars::st_rasterize(mesh, ...) %>%
+        sf::st_as_sf(as_points = TRUE) %>%
+        sf::st_coordinates() %>%
+        tibble::as_tibble()
 
-  XY_to_mesh(X = XY$X,
-             Y = XY$Y,
-             size = size)
+      XY_to_mesh(X = XY$X,
+                 Y = XY$Y,
+                 size = size)
+    })
 }
 
 #' Converting bbox to regional meshes
