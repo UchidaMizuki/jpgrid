@@ -1,16 +1,16 @@
-#' Convert regional meshes into rectangular meshes
+#' Convert regional grids into rectangular grids
 #'
-#' @inheritParams mesh
+#' @inheritParams grid
 #'
-#' @return A \code{mesh} vector.
+#' @return A \code{grid} vector.
 #'
 #' @export
-mesh_rectangle <- function(mesh) {
-  n_X <- field(mesh, "n_X")
-  n_Y <- field(mesh, "n_Y")
+grid_rectangle <- function(grid) {
+  n_X <- field(grid, "n_X")
+  n_Y <- field(grid, "n_Y")
   n_XY <- tidyr::expand_grid(n_X = min(n_X):max(n_X),
                              n_Y = min(n_Y):max(n_Y))
-  new_mesh(size = mesh_size(mesh),
+  new_grid(size = grid_size(grid),
            n_X = n_XY$n_X,
            n_Y = n_XY$n_Y)
 }

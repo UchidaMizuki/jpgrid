@@ -1,24 +1,24 @@
-#' Subdivide regional meshes
+#' Subdivide regional grides
 #'
-#' \code{mesh_subdivide} makes the regional meshes finer.
+#' \code{grid_subdivide} makes the regional grides finer.
 #'
-#' @inheritParams mesh
+#' @inheritParams grid
 #' @inheritParams size
 #'
-#' @return A list of \code{mesh} class vector.
+#' @return A list of \code{grid} class vector.
 #'
 #' @export
-mesh_subdivide <- function(mesh, size) {
-  stopifnot(is_mesh(mesh))
+grid_subdivide <- function(grid, size) {
+  stopifnot(is_grid(grid))
 
   size <- size_match(size)
-  ratio <- mesh_size(mesh) / size
+  ratio <- grid_size(grid) / size
 
   stopifnot(ratio %% 1L == 0L)
   ratio <- as.integer(ratio)
 
-  n_X <- field(mesh, "n_X")
-  n_Y <- field(mesh, "n_Y")
+  n_X <- field(grid, "n_X")
+  n_Y <- field(grid, "n_Y")
 
   purrr::map2(n_X, n_Y,
               function(n_X, n_Y) {
@@ -31,11 +31,11 @@ mesh_subdivide <- function(mesh, size) {
 
                   n_XY <- tidyr::expand_grid(n_X = n_X_min:n_X_max,
                                              n_Y = n_Y_min:n_Y_max)
-                  new_mesh(size = size,
+                  new_grid(size = size,
                            n_X = n_XY$n_X,
                            n_Y = n_XY$n_Y)
                 } else {
-                  new_mesh(size = size)
+                  new_grid(size = size)
                 }
               })
 }

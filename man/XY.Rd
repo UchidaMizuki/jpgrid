@@ -2,30 +2,30 @@
 % Please edit documentation in R/XY.R
 \name{XY}
 \alias{XY}
-\alias{XY_to_mesh}
-\alias{mesh_to_XY}
-\title{Conversion between mesh and coordinates (longitude and latitude)}
+\alias{XY_to_grid}
+\alias{grid_to_XY}
+\title{Conversion between grid and coordinates (longitude and latitude)}
 \usage{
-XY_to_mesh(X, Y, size)
+XY_to_grid(X, Y, size)
 
-mesh_to_XY(mesh, center = TRUE)
+grid_to_XY(grid, center = TRUE)
 }
 \arguments{
 \item{X}{A numeric vector of longitude.}
 
 \item{Y}{A numeric vector of latitude.}
 
-\item{size}{A mesh size.}
+\item{size}{A grid size.}
 
-\item{mesh}{A \code{mesh} class vector.}
+\item{grid}{A \code{grid} class vector.}
 
-\item{center}{Should the center point of the mesh be returned? Otherwise the end points will be returned. \code{TRUE} by default.}
+\item{center}{Should the center point of the grid be returned? Otherwise the end points will be returned. \code{TRUE} by default.}
 }
 \value{
-\code{XY_to_mesh} returns a \code{mesh} class vector.
+\code{XY_to_grid} returns a \code{grid} class vector.
 
-\code{mesh_to_XY} returns a \code{tbl_df}.
+\code{grid_to_XY} returns a \code{tbl_df}.
 }
 \description{
-Conversion between mesh and coordinates (longitude and latitude)
+Conversion between grid and coordinates (longitude and latitude)
 }

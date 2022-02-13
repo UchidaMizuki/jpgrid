@@ -18,15 +18,15 @@ size_match <- function(size) {
   size
 }
 
-mesh_size <- function(mesh) {
-  switch(class(mesh)[1L],
-         mesh_80km = 80000L,
-         mesh_10km = 10000L,
-         mesh_1km = 1000L,
-         mesh_500m = 500L,
-         mesh_250m = 250L,
-         mesh_125m = 125L,
-         mesh_100m = 100L)
+grid_size <- function(grid) {
+  switch(class(grid)[1L],
+         grid_80km = 80000L,
+         grid_10km = 10000L,
+         grid_1km = 1000L,
+         grid_500m = 500L,
+         grid_250m = 250L,
+         grid_125m = 125L,
+         grid_100m = 100L)
 }
 
 code_80km_to_number <- function(code) {

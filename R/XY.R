@@ -1,4 +1,4 @@
-#' Conversion between mesh and coordinates (longitude and latitude)
+#' Conversion between grid and coordinates (longitude and latitude)
 #'
 #' @name XY
 NULL
@@ -7,38 +7,38 @@ NULL
 #'
 #' @param X A numeric vector of longitude.
 #' @param Y A numeric vector of latitude.
-#' @param size A mesh size.
+#' @param size A grid size.
 #'
-#' @return \code{XY_to_mesh} returns a \code{mesh} class vector.
+#' @return \code{XY_to_grid} returns a \code{grid} class vector.
 #'
 #' @export
-XY_to_mesh <- function(X, Y, size) {
+XY_to_grid <- function(X, Y, size) {
   size <- size_match(size)
 
   length_X <- size / 80000L
   length_Y <- length_X / 1.5
 
-  new_mesh(size = size,
+  new_grid(size = size,
            n_X = (X - 100) %/% length_X,
            n_Y = Y %/% length_Y)
 }
 
 #' @rdname XY
 #'
-#' @param mesh A \code{mesh} class vector.
-#' @param center Should the center point of the mesh be returned? Otherwise the end points will be returned. \code{TRUE} by default.
+#' @param grid A \code{grid} class vector.
+#' @param center Should the center point of the grid be returned? Otherwise the end points will be returned. \code{TRUE} by default.
 #'
-#' @return \code{mesh_to_XY} returns a \code{tbl_df}.
+#' @return \code{grid_to_XY} returns a \code{tbl_df}.
 #'
 #' @export
-mesh_to_XY <- function(mesh, center = TRUE) {
-  stopifnot(is_mesh(mesh))
+grid_to_XY <- function(grid, center = TRUE) {
+  stopifnot(is_grid(grid))
 
-  length_X <- mesh_size(mesh) / 80000L
+  length_X <- grid_size(grid) / 80000L
   length_Y <- length_X / 1.5
 
-  n_X <- field(mesh, "n_X")
-  n_Y <- field(mesh, "n_Y")
+  n_X <- field(grid, "n_X")
+  n_Y <- field(grid, "n_Y")
 
   if (center) {
     tibble::tibble(X = 100 + length_X * (n_X + .5),

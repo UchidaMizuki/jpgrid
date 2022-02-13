@@ -1,37 +1,37 @@
-#' Draw line segments between regional meshes
+#' Draw line segments between regional grids
 #'
-#' If \code{mesh} and \code{mesh_to} are both vectors, the line between \code{mesh} and \code{mesh_to} is drawn (using Bresenham's line algorithm).
-#' If \code{mesh} is a list, The path lines for each element in the mesh will be drawn.
+#' If \code{grid} and \code{grid_to} are both vectors, the line between \code{grid} and \code{grid_to} is drawn (using Bresenham's line algorithm).
+#' If \code{grid} is a list, The path lines for each element in the grid will be drawn.
 #'
-#' @inheritParams mesh_to
-#' @param skip_na Should skip the \code{NA} mesh and connects the paths? \code{FALSE} by default.
+#' @inheritParams grid_to
+#' @param skip_na Should skip the \code{NA} grid and connects the paths? \code{FALSE} by default.
 #'
-#' @return A list of \code{mesh} class vectors.
+#' @return A list of \code{grid} class vectors.
 #'
 #' @export
-mesh_line <- function(mesh, mesh_to,
+grid_line <- function(grid, grid_to,
                       close = FALSE,
                       skip_na = FALSE) {
-  if (is_mesh(mesh)) {
-    stopifnot(is_mesh(mesh_to))
+  if (is_grid(grid)) {
+    stopifnot(is_grid(grid_to))
 
-    size <- mesh_size(mesh)
-    stopifnot(size == mesh_size(mesh_to))
+    size <- grid_size(grid)
+    stopifnot(size == grid_size(grid_to))
 
-    mesh <- tibble::tibble(mesh = mesh,
-                           mesh_to = mesh_to)
+    grid <- tibble::tibble(grid = grid,
+                           grid_to = grid_to)
 
-    line <- vec_unique(mesh)
+    line <- vec_unique(grid)
     line <- vec_slice(line,
-                      !is.na(line$mesh) &
-                        !is.na(line$mesh_to))
+                      !is.na(line$grid) &
+                        !is.na(line$grid_to))
 
     # Bresenham's line algorithm
-    x <- field(line$mesh, "n_X")
-    y <- field(line$mesh, "n_Y")
+    x <- field(line$grid, "n_X")
+    y <- field(line$grid, "n_Y")
 
-    x_to <- field(line$mesh_to, "n_X")
-    y_to <- field(line$mesh_to, "n_Y")
+    x_to <- field(line$grid_to, "n_X")
+    y_to <- field(line$grid_to, "n_Y")
 
     dx <- abs(x_to - x)
     dy <- abs(y_to - y)
@@ -43,7 +43,7 @@ mesh_line <- function(mesh, mesh_to,
     line$line <- list(x, y, x_to, y_to, dx, dy, err, sx, sy) %>%
       purrr::pmap(function(x, y, x_to, y_to, dx, dy, err, sx, sy) {
         if (is.na(x) || is.na(y) || is.na(x_to) || is.na(y_to)) {
-          new_mesh(size = size,
+          new_grid(size = size,
                    n_X = NA_integer_,
                    n_Y = NA_integer_)
         } else {
@@ -63,35 +63,35 @@ mesh_line <- function(mesh, mesh_to,
             xs <- c(xs, x)
             ys <- c(ys, y)
           }
-          new_mesh(size = size,
+          new_grid(size = size,
                    n_X = xs,
                    n_Y = ys)
         }
       })
 
-    mesh %>%
+    grid %>%
       dplyr::left_join(line,
-                       by = c("mesh", "mesh_to")) %>%
+                       by = c("grid", "grid_to")) %>%
       purrr::chuck("line")
   } else {
-    stopifnot(is.list(mesh),
-              missing(mesh_to))
+    stopifnot(is.list(grid),
+              missing(grid_to))
 
-    mesh %>%
-      purrr::modify(function(mesh) {
+    grid %>%
+      purrr::modify(function(grid) {
         if (skip_na) {
-          mesh <- mesh %>%
-            vec_slice(!is.na(mesh))
+          grid <- grid %>%
+            vec_slice(!is.na(grid))
         }
 
         if (close) {
-          mesh_to <- c(utils::tail(mesh, -1L), mesh[1L])
+          grid_to <- c(utils::tail(grid, -1L), grid[1L])
         } else {
-          mesh_to <- utils::tail(mesh, -1L)
-          mesh <- utils::head(mesh, -1L)
+          grid_to <- utils::tail(grid, -1L)
+          grid <- utils::head(grid, -1L)
         }
 
-        mesh_line(mesh, mesh_to) %>%
+        grid_line(grid, grid_to) %>%
           purrr::reduce(c)
       })
   }

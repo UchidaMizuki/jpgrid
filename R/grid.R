@@ -1,41 +1,42 @@
-# mesh --------------------------------------------------------------------
-#' Regional mesh vector
+# grid --------------------------------------------------------------------
+
+#' Regional grid vector
 #'
-#' A series of functions return \code{mesh} class for each mesh size.
-#' \code{mesh_auto} returns automatically determine mesh size by the largest mesh size.
+#' A series of functions return \code{grid} class for each grid size.
+#' \code{grid_auto} returns automatically determine grid size by the largest grid size.
 #'
-#' @name mesh_class
+#' @name grid_class
 #'
 #' @param x A list or vector.
-#' @param strict A logical scalar. Should the number of digits in the mesh code match a given number of digits?
+#' @param strict A logical scalar. Should the number of digits in the grid code match a given number of digits?
 #'
-#' @return A \code{mesh} class vector.
+#' @return A \code{grid} class vector.
 #'
 #' @examples
-#' mesh_80km("53394526313")
-#' mesh_80km("53394526313", strict = FALSE)
+#' grid_80km("53394526313")
+#' grid_80km("53394526313", strict = FALSE)
 #'
-#' mesh_auto(c("53394526313", "5339358633", "533945764"))
-#' mesh_auto(c("53394526313", "5339358633", "533945764"), strict = FALSE)
+#' grid_auto(c("53394526313", "5339358633", "533945764"))
+#' grid_auto(c("53394526313", "5339358633", "533945764"), strict = FALSE)
 NULL
 
-new_mesh <- function(size,
+new_grid <- function(size,
                      n_X = integer(),
                      n_Y = integer()) {
   new_rcrd(list_of(n_X = n_X,
                    n_Y = n_Y,
                    .ptype = integer()),
            class = switch(as.character(size),
-                          "80000" = c("mesh_80km", "mesh"),
-                          "10000" = c("mesh_10km", "mesh"),
-                          "1000" = c("mesh_1km", "mesh"),
-                          "500" = c("mesh_500m", "mesh"),
-                          "250" = c("mesh_250m", "mesh"),
-                          "125" = c("mesh_125m", "mesh"),
-                          "100" = c("mesh_100m", "mesh")))
+                          "80000" = c("grid_80km", "grid"),
+                          "10000" = c("grid_10km", "grid"),
+                          "1000" = c("grid_1km", "grid"),
+                          "500" = c("grid_500m", "grid"),
+                          "250" = c("grid_250m", "grid"),
+                          "125" = c("grid_125m", "grid"),
+                          "100" = c("grid_100m", "grid")))
 }
 
-code_to_mesh <- function(size,
+code_to_grid <- function(size,
 
                          code_X_80km = NA_integer_,
                          code_Y_80km = NA_integer_,
@@ -109,53 +110,53 @@ code_to_mesh <- function(size,
   n_Y <- dplyr::if_else(not_na_n,
                         n_Y,
                         NA_integer_)
-  new_mesh(size = size,
+  new_grid(size = size,
            n_X = n_X,
            n_Y = n_Y)
 }
 
-mesh_to_code <- function(mesh) {
-  mesh_to_code_impl(size = mesh_size(mesh),
-                    n_X = field(mesh, "n_X"),
-                    n_Y = field(mesh, "n_Y"))
+grid_to_code <- function(grid) {
+  grid_to_code_impl(size = grid_size(grid),
+                    n_X = field(grid, "n_X"),
+                    n_Y = field(grid, "n_Y"))
 }
 
-mesh_to_code_impl <- function(size, n_X, n_Y) {
+grid_to_code_impl <- function(size, n_X, n_Y) {
   if (size == 80000L) {
     list(code_X_80km = number_to_code_80km(n_X),
          code_Y_80km = number_to_code_80km(n_Y))
   } else if (size == 10000L) {
-    mesh_to_code_impl(n_X = n_X %/% 8L,
+    grid_to_code_impl(n_X = n_X %/% 8L,
                       n_Y = n_Y %/% 8L,
                       size = 80000L) %>%
       c(list(code_X_10km = n_X %% 8L,
              code_Y_10km = n_Y %% 8L))
   } else if (size == 1000L) {
-    mesh_to_code_impl(n_X = n_X %/% 10L,
+    grid_to_code_impl(n_X = n_X %/% 10L,
                       n_Y = n_Y %/% 10L,
                       size = 10000L) %>%
       c(list(code_X_1km = n_X %% 10L,
              code_Y_1km = n_Y %% 10L))
   } else if (size == 500L) {
-    mesh_to_code_impl(n_X = n_X %/% 2L,
+    grid_to_code_impl(n_X = n_X %/% 2L,
                       n_Y = n_Y %/% 2L,
                       size = 1000L) %>%
       c(list(code_500m = code_XY_to_2x2(code_X = n_X %% 2L,
                                         code_Y = n_Y %% 2L)))
   } else if (size == 250L) {
-    mesh_to_code_impl(n_X = n_X %/% 2L,
+    grid_to_code_impl(n_X = n_X %/% 2L,
                       n_Y = n_Y %/% 2L,
                       size = 500L) %>%
       c(list(code_250m = code_XY_to_2x2(code_X = n_X %% 2L,
                                         code_Y = n_Y %% 2L)))
   } else if (size == 125L) {
-    mesh_to_code_impl(n_X = n_X %/% 2L,
+    grid_to_code_impl(n_X = n_X %/% 2L,
                       n_Y = n_Y %/% 2L,
                       size = 250L) %>%
       c(list(code_125m = code_XY_to_2x2(code_X = n_X %% 2L,
                                         code_Y = n_Y %% 2L)))
   } else if (size == 100L) {
-    mesh_to_code_impl(n_X = n_X %/% 10L,
+    grid_to_code_impl(n_X = n_X %/% 10L,
                       n_Y = n_Y %/% 10L,
                       size = 1000L) %>%
       c(list(code_X_100m = n_X %% 10L,
@@ -164,74 +165,74 @@ mesh_to_code_impl <- function(size, n_X, n_Y) {
 }
 
 #' @export
-#' @rdname mesh_class
-mesh_80km <- function(x,
+#' @rdname grid_class
+grid_80km <- function(x,
                       strict = TRUE) {
-  mesh_impl(x,
+  grid_impl(x,
             strict = strict,
             size = 80000L)
 }
 
 #' @export
-#' @rdname mesh_class
-mesh_10km <- function(x,
+#' @rdname grid_class
+grid_10km <- function(x,
                       strict = TRUE) {
-  mesh_impl(x,
+  grid_impl(x,
             strict = strict,
             size = 10000L)
 }
 
 #' @export
-#' @rdname mesh_class
-mesh_1km <- function(x,
+#' @rdname grid_class
+grid_1km <- function(x,
                      strict = TRUE) {
-  mesh_impl(x,
+  grid_impl(x,
             strict = strict,
             size = 1000L)
 }
 
 #' @export
-#' @rdname mesh_class
-mesh_500m <- function(x,
+#' @rdname grid_class
+grid_500m <- function(x,
                       strict = TRUE) {
-  mesh_impl(x,
+  grid_impl(x,
             strict = strict,
             size = 500L)
 }
 
 #' @export
-#' @rdname mesh_class
-mesh_250m <- function(x,
+#' @rdname grid_class
+grid_250m <- function(x,
                       strict = TRUE) {
-  mesh_impl(x,
+  grid_impl(x,
             strict = strict,
             size = 250L)
 }
 
 #' @export
-#' @rdname mesh_class
-mesh_125m <- function(x,
+#' @rdname grid_class
+grid_125m <- function(x,
                       strict = TRUE) {
-  mesh_impl(x,
+  grid_impl(x,
             strict = strict,
             size = 125L)
 }
 
 #' @export
-#' @rdname mesh_class
-mesh_100m <- function(x,
+#' @rdname grid_class
+grid_100m <- function(x,
                       strict = TRUE) {
-  mesh_impl(x,
+  grid_impl(x,
             strict = strict,
             size = 100L)
 }
 
 #' @export
-#' @rdname mesh_class
-mesh_auto <- function(x,
+#' @rdname grid_class
+grid_auto <- function(x,
                       strict = TRUE) {
-  if (is_mesh(x)) {
-    size <- mesh_size(x)
+  if (is_grid(x)) {
+    size <- grid_size(x)
   } else {
     pattern <- stringr::str_c("^",
                               stringr::str_dup("(<\\-?\\d+>|\\d{2})", 2),
@@ -273,23 +274,23 @@ mesh_auto <- function(x,
                         "250" = "250m",
                         "125" = "125m",
                         "100" = "100m")
-    message(stringr::str_glue("Guessing mesh size as `{size_name}`"))
+    message(stringr::str_glue("Guessing grid size as `{size_name}`"))
   }
 
-  mesh_impl(x,
+  grid_impl(x,
             strict = strict,
             size = size)
 }
 
-mesh_impl <- function(x, strict, size) {
-  if (is_mesh(x)) {
+grid_impl <- function(x, strict, size) {
+  if (is_grid(x)) {
     size <- size_match(size)
-    ratio <- size / mesh_size(x)
+    ratio <- size / grid_size(x)
 
     stopifnot(ratio %% 1L == 0L)
     ratio <- as.integer(ratio)
 
-    new_mesh(size = size,
+    new_grid(size = size,
              n_X = field(x, "n_X") %/% ratio,
              n_Y = field(x, "n_Y") %/% ratio)
   } else {
@@ -338,29 +339,29 @@ mesh_impl <- function(x, strict, size) {
       tibble::as_tibble(.name_repair = ~ c("code", name))
     args <- args[-1]
 
-    exec(code_to_mesh,
+    exec(code_to_grid,
          size = size,
          !!!args)
   }
 }
 
 #' @export
-#' @rdname mesh_class
-is_mesh <- function(x) {
-  inherits(x, "mesh")
+#' @rdname grid_class
+is_grid <- function(x) {
+  inherits(x, "grid")
 }
 
 # printing ----------------------------------------------------------------
 #' @export
-format.mesh_80km <- function(x, ...) {
-  code <- mesh_to_code(x)
+format.grid_80km <- function(x, ...) {
+  code <- grid_to_code(x)
   stringr::str_c(code$code_Y_80km,
                  code$code_X_80km)
 }
 
 #' @export
-format.mesh_10km <- function(x, ...) {
-  code <- mesh_to_code(x)
+format.grid_10km <- function(x, ...) {
+  code <- grid_to_code(x)
   stringr::str_c(code$code_Y_80km,
                  code$code_X_80km,
 
@@ -369,8 +370,8 @@ format.mesh_10km <- function(x, ...) {
 }
 
 #' @export
-format.mesh_1km <- function(x, ...) {
-  code <- mesh_to_code(x)
+format.grid_1km <- function(x, ...) {
+  code <- grid_to_code(x)
   stringr::str_c(code$code_Y_80km,
                  code$code_X_80km,
 
@@ -382,8 +383,8 @@ format.mesh_1km <- function(x, ...) {
 }
 
 #' @export
-format.mesh_500m <- function(x, ...) {
-  code <- mesh_to_code(x)
+format.grid_500m <- function(x, ...) {
+  code <- grid_to_code(x)
   stringr::str_c(code$code_Y_80km,
                  code$code_X_80km,
 
@@ -397,8 +398,8 @@ format.mesh_500m <- function(x, ...) {
 }
 
 #' @export
-format.mesh_250m <- function(x, ...) {
-  code <- mesh_to_code(x)
+format.grid_250m <- function(x, ...) {
+  code <- grid_to_code(x)
   stringr::str_c(code$code_Y_80km,
                  code$code_X_80km,
 
@@ -413,8 +414,8 @@ format.mesh_250m <- function(x, ...) {
 }
 
 #' @export
-format.mesh_125m <- function(x, ...) {
-  code <- mesh_to_code(x)
+format.grid_125m <- function(x, ...) {
+  code <- grid_to_code(x)
   stringr::str_c(code$code_Y_80km,
                  code$code_X_80km,
 
@@ -430,8 +431,8 @@ format.mesh_125m <- function(x, ...) {
 }
 
 #' @export
-format.mesh_100m <- function(x, ...) {
-  code <- mesh_to_code(x)
+format.grid_100m <- function(x, ...) {
+  code <- grid_to_code(x)
   stringr::str_c(code$code_Y_80km,
                  code$code_X_80km,
 
@@ -446,19 +447,19 @@ format.mesh_100m <- function(x, ...) {
 }
 
 #' @export
-as.character.mesh <- function(x, ...) format(x)
+as.character.grid <- function(x, ...) format(x)
 
 #' @export
-vec_ptype_abbr.mesh_80km <- function(x) "msh80k"
+vec_ptype_abbr.grid_80km <- function(x) "grd80k"
 #' @export
-vec_ptype_abbr.mesh_10km <- function(x) "msh10k"
+vec_ptype_abbr.grid_10km <- function(x) "grd10k"
 #' @export
-vec_ptype_abbr.mesh_1km <- function(x) "msh1k"
+vec_ptype_abbr.grid_1km <- function(x) "grd1k"
 #' @export
-vec_ptype_abbr.mesh_500m <- function(x) "msh500"
+vec_ptype_abbr.grid_500m <- function(x) "grd500"
 #' @export
-vec_ptype_abbr.mesh_250m <- function(x) "msh250"
+vec_ptype_abbr.grid_250m <- function(x) "grd250"
 #' @export
-vec_ptype_abbr.mesh_125m <- function(x) "msh125"
+vec_ptype_abbr.grid_125m <- function(x) "grd125"
 #' @export
-vec_ptype_abbr.mesh_100m <- function(x) "msh100"
+vec_ptype_abbr.grid_100m <- function(x) "grd100"
