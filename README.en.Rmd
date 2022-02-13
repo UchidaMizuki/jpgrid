@@ -13,16 +13,16 @@ knitr::opts_chunk$set(
 )
 ```
 
-# japanmesh
+# jpgrid
 
 <!-- badges: start -->
-[![CRAN status](https://www.r-pkg.org/badges/version/japanmesh)](https://CRAN.R-project.org/package=japanmesh)
+[![CRAN status](https://www.r-pkg.org/badges/version/jpgrid)](https://CRAN.R-project.org/package=jpgrid)
 <!-- badges: end -->
 
-japanmesh is an R package for using the reference regional mesh (the 1st mesh to the 3rd mesh), the split regional mesh as defined by the JIS (Japan Industrial Standard) X 0410 '[regional mesh code](https://www.jisc.go.jp/app/jis/general/GnrJISNumberNameSearchList?show&jisStdNo=X0410)' and 1/10 subdivision of the 3rd mesh.
+jpgrid is an R package for using the reference regional mesh (the 1st mesh to the 3rd mesh), the split regional mesh as defined by the JIS (Japan Industrial Standard) X 0410 '[regional mesh code](https://www.jisc.go.jp/app/jis/general/GnrJISNumberNameSearchList?show&jisStdNo=X0410)' and 1/10 subdivision of the 3rd mesh.
 Regional mesh codes are square-like regional divisions set up for all regions of Japan based on longitude and latitude. For more information on regional meshes, please check [the Statistics Bureau of Japan page](https://www.stat.go.jp/data/mesh/pdf/gaiyo1.pdf).
 
-A summary of the regional mesh codes is shown below. In japanmesh, each regional mesh code is distinguished by the length of a piece of mesh, such as `mesh_80km`.
+A summary of the regional mesh codes is shown below. In jpgrid, each regional mesh code is distinguished by the length of a piece of mesh, such as `mesh_80km`.
 
 ```{r,echo=FALSE}
 df <- tibble::tibble(`Name` = c("1st mesh", "2nd mesh", "3rd mesh", "1/2 mesh", "1/4 mesh", "1/8 mesh", "1/10 subdivision of the 3rd mesh"),
@@ -31,8 +31,8 @@ df <- tibble::tibble(`Name` = c("1st mesh", "2nd mesh", "3rd mesh", "1/2 mesh", 
 knitr::kable(df)
 ```
 
-japanmesh has been developed to enable faster processing than the R package [jpmesh](https://github.com/uribo/jpmesh).
-The main differences between japanmesh and jpmesh are as follows
+jpgrid has been developed to enable faster processing than the R package [jpmesh](https://github.com/uribo/jpmesh).
+The main differences between jpgrid and jpmesh are as follows
 
 1. Explicitly given a mesh size (such as `mesh_80km`). 
 2. Non-land (ocean) meshes are supported.
@@ -40,22 +40,22 @@ The main differences between japanmesh and jpmesh are as follows
 
 ## Installation
 
-You can install japanmesh from CRAN.
+You can install jpgrid from CRAN.
 
 ``` r
-install.packages("japanmesh")
+install.packages("jpgrid")
 ```
 
 You can also install the development version from GitHub.
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("UchidaMizuki/japanmesh")
+devtools::install_github("UchidaMizuki/jpgrid")
 ```
 ## Usage
 
 ```{r,message=FALSE,warning=FALSE}
-library(japanmesh)
+library(jpgrid)
 
 library(tibble)
 library(dplyr)
@@ -70,7 +70,7 @@ Use functions such as `mesh_80km()`, `mesh_auto()`, etc. to generate regional me
 - The default (`strict = TRUE`) requires the mesh codes to have a given number of digits.
 
 ```{r}
-library(japanmesh)
+library(jpgrid)
 
 x <- c("53394526313", "5339358633", "533945764", "53394611", "523503", "5339", NA)
 
@@ -229,7 +229,7 @@ set.seed(1234)
 X <- runif(1e1, 139, 140)
 Y <- runif(1e1, 39, 40)
 
-microbenchmark::microbenchmark(`japanmesh::XY_to_mesh()` = XY_to_mesh(X, Y,
+microbenchmark::microbenchmark(`jpgrid::XY_to_mesh()` = XY_to_mesh(X, Y,
                                                                     size = "1km"),
                                `jpmesh::coords_to_mesh()` = jpmesh::coords_to_mesh(X, Y,
                                                                                  mesh_size = 1),
@@ -241,12 +241,12 @@ microbenchmark::microbenchmark(`japanmesh::XY_to_mesh()` = XY_to_mesh(X, Y,
 set.seed(1234)
 X <- runif(1e1, 139, 140)
 Y <- runif(1e1, 39, 40)
-mesh_japanmesh <- XY_to_mesh(X, Y,
+mesh_jpgrid <- XY_to_mesh(X, Y,
                              size = "1km")
 mesh_jpmesh <- jpmesh::coords_to_mesh(X, Y, 
                                       mesh_size = 1)
 
-microbenchmark::microbenchmark(`japanmesh::mesh_to_XY()` = mesh_to_XY(mesh_japanmesh),
+microbenchmark::microbenchmark(`jpgrid::mesh_to_XY()` = mesh_to_XY(mesh_jpgrid),
                                `jpmesh::mesh_to_coords()` = jpmesh::mesh_to_coords(mesh_jpmesh),
                                setup = set.seed(4321)) %>% 
   autoplot()
