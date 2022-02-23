@@ -1,11 +1,13 @@
-#' Distance between regional grids
+#' Distance between grid square codes
 #'
-#' If \code{grid} and \code{grid_to} are both vectors, the distance between \code{grid} and \code{grid_to} is calculated.
-#' If \code{grid} is a list, The path distance of each element is calculated.
+#' If `grid` and `grid_to` are both vectors, the distance between
+#' `grid` and `grid_to` is calculated.
+#' If `grid` is a list, The path distance of each element is calculated.
 #'
 #' @inheritParams grid_to
-#' @param type How is the NA grid treated when \code{grid} is a list? \code{"skip_na"} skips the \code{NA} grid and connects the paths.
-#' \code{"keep_na"} by default.
+#' @param type How is the NA grid treated when `grid` is a list?
+#' `"skip_na"` skips the `NA` grid and connects the paths.
+#' `"keep_na"` by default.
 #'
 #' @return A double vector.
 #'

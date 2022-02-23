@@ -1,4 +1,4 @@
-#' Conversion between grid and coordinates (longitude and latitude)
+#' Conversion between grid square codes and coordinates (longitude and latitude)
 #'
 #' @name XY
 NULL
@@ -9,7 +9,7 @@ NULL
 #' @param Y A numeric vector of latitude.
 #' @param size A grid size.
 #'
-#' @return \code{XY_to_grid} returns a \code{grid} class vector.
+#' @return `XY_to_grid` returns a `grid` vector.
 #'
 #' @export
 XY_to_grid <- function(X, Y, size) {
@@ -25,10 +25,11 @@ XY_to_grid <- function(X, Y, size) {
 
 #' @rdname XY
 #'
-#' @param grid A \code{grid} class vector.
-#' @param center Should the center point of the grid be returned? Otherwise the end points will be returned. \code{TRUE} by default.
+#' @param grid A `grid` class vector.
+#' @param center Should the center point of the grid be returned? Otherwise the
+#' end points will be returned. `TRUE` by default.
 #'
-#' @return \code{grid_to_XY} returns a \code{tbl_df}.
+#' @return `grid_to_XY` returns a `tbl_df`.
 #'
 #' @export
 grid_to_XY <- function(grid, center = TRUE) {

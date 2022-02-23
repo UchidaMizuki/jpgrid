@@ -1,11 +1,11 @@
-#' Subdivide regional grides
+#' Subdivide grid square codes
 #'
-#' \code{grid_subdivide} makes the regional grides finer.
+#' `grid_subdivide()` makes the grid square codes finer.
 #'
 #' @inheritParams grid
 #' @inheritParams size
 #'
-#' @return A list of \code{grid} class vector.
+#' @return A list of \code{grid} vector.
 #'
 #' @export
 grid_subdivide <- function(grid, size) {

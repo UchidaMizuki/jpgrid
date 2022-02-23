@@ -2,7 +2,7 @@
 % Please edit documentation in R/subdivide.R
 \name{grid_subdivide}
 \alias{grid_subdivide}
-\title{Subdivide regional grides}
+\title{Subdivide grid square codes}
 \usage{
 grid_subdivide(grid, size)
 }
@@ -12,8 +12,8 @@ grid_subdivide(grid, size)
 \item{size}{A grid size.}
 }
 \value{
-A list of \code{grid} class vector.
+A list of \code{grid} vector.
 }
 \description{
-\code{grid_subdivide} makes the regional grides finer.
+\code{grid_subdivide()} makes the grid square codes finer.
 }

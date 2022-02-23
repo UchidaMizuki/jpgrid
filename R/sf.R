@@ -1,30 +1,10 @@
-#' Converting sfc points to regional grids
+#' Converting sfc geometries to grid square codes
 #'
-#' @param point A \code{sfc_POINT} vector.
+#' @param geometry A `sfc` vector.
 #' @inheritParams size
+#' @param ... Passed on to [stars::st_rasterize()].
 #'
-#' @return A \code{grid} class vector.
-#'
-#' @export
-point_to_grid <- function(point, size) {
-  stopifnot(inherits(point, "sfc_POINT"))
-
-  point <- point %>%
-    sf::st_coordinates() %>%
-    tibble::as_tibble()
-
-  XY_to_grid(X = point$X,
-             Y = point$Y,
-             size = size)
-}
-
-#' Converting sfc geometries to regional grids
-#'
-#' @param geometry A \code{sfc} vector.
-#' @inheritParams size
-#' @param ... Passed on to \code{stars::st_rasterize()}.
-#'
-#' @return A list of \code{grid} class vectors.
+#' @return A list of `grid` vectors.
 #'
 #' @export
 geometry_to_grid <- function(geometry, size, ...) {
@@ -32,80 +12,85 @@ geometry_to_grid <- function(geometry, size, ...) {
     geometry <- sf::st_as_sfc(geometry)
   }
 
-  geometry %>%
-    purrr::map(function(x) {
-      grid <- x %>%
-        sf::st_bbox() %>%
-        bbox_to_grid(size = size) %>%
-        grid_as_stars()
+  if (inherits(geometry, "sfc_POINT")) {
+    XY <- geometry %>%
+      sf::st_coordinates() %>%
+      tibble::as_tibble()
 
-      XY <- x %>%
-        sf::st_sfc() %>%
-        sf::st_as_sf() %>%
-        stars::st_rasterize(grid, ...) %>%
-        sf::st_as_sf(as_points = TRUE) %>%
-        sf::st_coordinates() %>%
-        tibble::as_tibble()
-
-      XY_to_grid(X = XY$X,
-                 Y = XY$Y,
-                 size = size)
-    })
-}
-
-#' Converting bbox to regional grids
-#'
-#' @param bbox A \code{bbox} or a list of \code{bbox}.
-#' @inheritParams size
-#'
-#' @return A \code{grid} vector (when bbox is a \code{bbox}) or A list of \code{grid} vectors (when bbox is a list of \code{bbox}).
-#'
-#' @export
-bbox_to_grid <- function(bbox, size) {
-  if (is.list(bbox)) {
-    bbox %>%
-      purrr::map(function(bbox) {
-        bbox_to_grid(bbox, size)
-      })
+    XY_to_grid(X = XY$X,
+               Y = XY$Y,
+               size = size)
   } else {
-    bbox <- sf::st_bbox(bbox)
-    size <- size_match(size)
+    geometry %>%
+      purrr::map(function(x) {
+        grid <- x %>%
+          sf::st_bbox() %>%
+          bbox_to_grid(size = size) %>%
+          st_as_stars()
 
-    grid_min <- XY_to_grid(X = bbox[["xmin"]],
-                           Y = bbox[["ymin"]],
-                           size = size)
-    n_X_min <- field(grid_min, "n_X")
-    n_Y_min <- field(grid_min, "n_Y")
+        XY <- x %>%
+          sf::st_sfc() %>%
+          sf::st_as_sf() %>%
+          stars::st_rasterize(grid, ...) %>%
+          sf::st_as_sf(as_points = TRUE) %>%
+          sf::st_coordinates() %>%
+          tibble::as_tibble()
 
-    grid_max <- XY_to_grid(X = bbox[["xmax"]],
-                           Y = bbox[["ymax"]],
-                           size = size)
-    n_X_max <- field(grid_max, "n_X")
-    n_Y_max <- field(grid_max, "n_Y")
-
-    n_XY <- tidyr::expand_grid(n_X = n_X_min:n_X_max,
-                               n_Y = n_Y_min:n_Y_max)
-
-    new_grid(size = size,
-             n_X = n_XY$n_X,
-             n_Y = n_XY$n_Y)
+        XY_to_grid(X = XY$X,
+                   Y = XY$Y,
+                   size = size)
+      })
   }
 }
 
-#' Converting regional grids to sfc geometries
+#' Converting bbox to grid square codes
 #'
-#' @param x A \code{grid} vector.
-#' @param as_points Return the center points of the grids or not?
-#' @param crs Coordinate reference system.
+#' @param bbox A `bbox`.
+#' @inheritParams size
 #'
-#' @return A \code{sfc_POLYGON} vector (\code{as_points = FALSE}) or a \code{sfc_POINT} vector ((\code{as_points = TRUE})).
+#' @return A `grid` vector.
 #'
 #' @export
-grid_as_sfc <- function(x,
-                        as_points = FALSE,
-                        crs = sf::NA_crs_) {
-  stopifnot(is_grid(x))
+bbox_to_grid <- function(bbox, size) {
+  bbox <- sf::st_bbox(bbox)
+  size <- size_match(size)
 
+  grid_min <- XY_to_grid(X = bbox[["xmin"]],
+                         Y = bbox[["ymin"]],
+                         size = size)
+  n_X_min <- field(grid_min, "n_X")
+  n_Y_min <- field(grid_min, "n_Y")
+
+  grid_max <- XY_to_grid(X = bbox[["xmax"]],
+                         Y = bbox[["ymax"]],
+                         size = size)
+  n_X_max <- field(grid_max, "n_X")
+  n_Y_max <- field(grid_max, "n_Y")
+
+  n_XY <- tidyr::expand_grid(n_X = n_X_min:n_X_max,
+                             n_Y = n_Y_min:n_Y_max)
+
+  new_grid(size = size,
+           n_X = n_XY$n_X,
+           n_Y = n_XY$n_Y)
+}
+
+#' @importFrom sf st_bbox
+#' @export
+st_bbox.grid <- function(obj, ...) {
+  XY <- obj %>%
+    grid_to_XY(center = FALSE)
+  st_bbox(c(xmin = min(XY$X_min),
+            ymin = min(XY$Y_min),
+            xmax = max(XY$X_max),
+            ymax = max(XY$Y_max)), ...)
+}
+
+#' @importFrom sf st_as_sfc
+#' @export
+st_as_sfc.grid <- function(x,
+                           as_points = FALSE,
+                           crs = sf::NA_crs_, ...) {
   geometry <- tibble::tibble(grid = x) %>%
     vec_unique()
   geometry <- vec_slice(geometry ,
@@ -118,20 +103,20 @@ grid_as_sfc <- function(x,
       purrr::pmap(function(X_min, Y_min, X_max, Y_max) {
         if (is.na(X_min) || is.na(Y_min) || is.na(X_max) || is.na(Y_max)) {
           sf::st_polygon() %>%
-            sf::st_sfc()
+            sf::st_sfc(...)
         } else {
           sf::st_bbox(c(xmin = X_min,
                         ymin = Y_min,
                         xmax = X_max,
                         ymax = Y_max)) %>%
-            sf::st_as_sfc()
+            sf::st_as_sfc(...)
         }
       }) %>%
       purrr::reduce(c)
   } else {
     geometry$geometry <- grid_to_XY(geometry$grid,
                                     center = TRUE) %>%
-      sf::st_as_sf(coords = c("X", "Y")) %>%
+      sf::st_as_sf(coords = c("X", "Y"), ...) %>%
       sf::st_geometry()
   }
 
@@ -142,13 +127,13 @@ grid_as_sfc <- function(x,
     sf::st_set_crs(crs)
 }
 
-#' Converting data frame containing regional grids to sf
+#' Converting data frame containing grid square codes to sf
 #'
 #' @param x A data frame.
 #' @param as_points Return the center points of the grids or not?
 #' @param crs Coordinate reference system.
 #' @param grid_column_name A scalar character.
-#' @param ... passed on to \code{sf::st_as_sf()}.
+#' @param ... passed on to [sf::st_as_sf()].
 #'
 #' @return A \code{sf} object.
 #'
@@ -156,10 +141,10 @@ grid_as_sfc <- function(x,
 grid_as_sf <- function(x,
                        as_points = FALSE,
                        crs = sf::NA_crs_,
-                       grid_column_name = NULL,
-                       ...) {
+                       grid_column_name = NULL, ...) {
   if (is_grid(x)) {
     x <- tibble::tibble(grid = x)
+    grid_column_name <- "grid"
   }
   stopifnot(is.data.frame(x))
 
@@ -174,18 +159,17 @@ grid_as_sf <- function(x,
 
   x %>%
     sf::st_set_geometry(grid %>%
-                          grid_as_sfc(as_points = as_points,
-                                      crs = crs)) %>%
+                          st_as_sfc(as_points = as_points,
+                                    crs = crs)) %>%
     sf::st_as_sf(...)
 }
 
 #' @export
 plot.grid <- function(x, y,
-                      as_points = FALSE,
-                      ...) {
+                      as_points = FALSE, ...) {
   stopifnot(missing(y))
 
   x %>%
-    grid_as_sfc(as_points = as_points) %>%
+    st_as_sfc(as_points = as_points) %>%
     plot(...)
 }

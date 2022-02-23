@@ -1,12 +1,15 @@
-#' Draw line segments between regional grids
+#' Draw line segments between grid square codes
 #'
-#' If \code{grid} and \code{grid_to} are both vectors, the line between \code{grid} and \code{grid_to} is drawn (using Bresenham's line algorithm).
-#' If \code{grid} is a list, The path lines for each element in the grid will be drawn.
+#' If `grid` and `grid_to` are both vectors, the line between
+#' `grid` and `grid_to` is drawn (using Bresenham's line algorithm).
+#' If `grid` is a list, The path lines for each element in the grid will be
+#' drawn.
 #'
 #' @inheritParams grid_to
-#' @param skip_na Should skip the \code{NA} grid and connects the paths? \code{FALSE} by default.
+#' @param skip_na Should skip the `NA` grid and connects the paths? `FALSE` by
+#' default.
 #'
-#' @return A list of \code{grid} class vectors.
+#' @return A list of `grid` vectors.
 #'
 #' @export
 grid_line <- function(grid, grid_to,

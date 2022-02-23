@@ -2,7 +2,7 @@
 % Please edit documentation in R/rectangle.R
 \name{grid_rectangle}
 \alias{grid_rectangle}
-\title{Convert regional grids into rectangular grids}
+\title{Convert grid square codes into rectangular codes}
 \usage{
 grid_rectangle(grid)
 }
@@ -13,5 +13,5 @@ grid_rectangle(grid)
 A \code{grid} vector.
 }
 \description{
-Convert regional grids into rectangular grids
+Convert grid square codes into rectangular codes
 }

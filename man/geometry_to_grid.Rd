@@ -2,7 +2,7 @@
 % Please edit documentation in R/sf.R
 \name{geometry_to_grid}
 \alias{geometry_to_grid}
-\title{Converting sfc geometries to regional grids}
+\title{Converting sfc geometries to grid square codes}
 \usage{
 geometry_to_grid(geometry, size, ...)
 }
@@ -11,11 +11,11 @@ geometry_to_grid(geometry, size, ...)
 
 \item{size}{A grid size.}
 
-\item{...}{Passed on to \code{stars::st_rasterize()}.}
+\item{...}{Passed on to \code{\link[stars:st_rasterize]{stars::st_rasterize()}}.}
 }
 \value{
-A list of \code{grid} class vectors.
+A list of \code{grid} vectors.
 }
 \description{
-Converting sfc geometries to regional grids
+Converting sfc geometries to grid square codes
 }

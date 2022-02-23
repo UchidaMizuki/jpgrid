@@ -1,8 +1,8 @@
-#' Convert regional grids into rectangular grids
+#' Convert grid square codes into rectangular codes
 #'
 #' @inheritParams grid
 #'
-#' @return A \code{grid} vector.
+#' @return A `grid` vector.
 #'
 #' @export
 grid_rectangle <- function(grid) {

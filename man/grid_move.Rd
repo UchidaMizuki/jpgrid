@@ -2,7 +2,7 @@
 % Please edit documentation in R/move.R
 \name{grid_move}
 \alias{grid_move}
-\title{Moving on regional grids}
+\title{Moving on grid square codes}
 \usage{
 grid_move(grid, n_X, n_Y)
 }
@@ -14,8 +14,8 @@ grid_move(grid, n_X, n_Y)
 \item{n_Y}{Number of moving cells in the latitude direction.}
 }
 \value{
-A \code{grid} class vector.
+A \code{grid} vector.
 }
 \description{
-Moving on regional grids
+Moving on grid square codes
 }

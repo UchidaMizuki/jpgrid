@@ -1,4 +1,4 @@
 library(testthat)
-library(japanmesh)
+library(jpgrid)
 
-test_check("japanmesh")
+test_check("jpgrid")

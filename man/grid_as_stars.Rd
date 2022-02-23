@@ -15,9 +15,13 @@ grid_as_stars(
 \arguments{
 \item{x}{A data frame.}
 
+\item{coords}{The column names or indices that form the cube dimensions.}
+
+\item{crs}{Coordinate reference system.}
+
 \item{grid_column_name}{A scalar character.}
 
-\item{...}{Passed on to \code{stars::st_as_stars()}.}
+\item{...}{Passed on to \code{\link[stars:st_as_stars]{stars::st_as_stars()}}.}
 }
 \value{
 A \code{stars} object.

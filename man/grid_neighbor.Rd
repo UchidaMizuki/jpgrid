@@ -2,7 +2,7 @@
 % Please edit documentation in R/move.R
 \name{grid_neighbor}
 \alias{grid_neighbor}
-\title{Neighborhood regional grid}
+\title{Neighborhood grid square codes}
 \usage{
 grid_neighbor(grid, n = 1L, moore = TRUE, simplify = TRUE)
 }
@@ -11,13 +11,14 @@ grid_neighbor(grid, n = 1L, moore = TRUE, simplify = TRUE)
 
 \item{n}{A numeric vector of degrees.}
 
-\item{moore}{Moore neighborhood (\code{TRUE}) or Von Neumann neighborhood (\code{FALSE}).}
+\item{moore}{Moore neighborhood (\code{TRUE}) or Von Neumann neighborhood
+(\code{FALSE}).}
 
 \item{simplify}{Should simplify the format of the return?}
 }
 \value{
-A list of \code{grid} class vectors.
+A list of \code{grid} vectors.
 }
 \description{
-Neighborhood regional grid
+Neighborhood grid square codes
 }

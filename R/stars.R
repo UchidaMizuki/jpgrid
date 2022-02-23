@@ -1,8 +1,10 @@
 #' Converting data frame containing regional grids to stars
 #'
 #' @param x A data frame.
+#' @param coords The column names or indices that form the cube dimensions.
+#' @param crs Coordinate reference system.
 #' @param grid_column_name A scalar character.
-#' @param ... Passed on to \code{stars::st_as_stars()}.
+#' @param ... Passed on to [stars::st_as_stars()].
 #'
 #' @return A \code{stars} object.
 #'
@@ -14,7 +16,8 @@ grid_as_stars <- function(x,
                           ...) {
   if (is_grid(x)) {
     x <- tibble::tibble(grid = x,
-                        values = 0)
+                        values = NA_real_)
+    grid_column_name <- "grid"
   }
   stopifnot(is.data.frame(x))
 
@@ -48,8 +51,7 @@ grid_as_stars <- function(x,
 
   x <- stars::st_as_stars(x,
                           coords = c("X", "Y", coords),
-                          y_decreasing = FALSE,
-                          ...) %>%
+                          y_decreasing = FALSE, ...) %>%
     sf::st_set_crs(crs)
   dim_x <- dim(x)
   x %>%
@@ -57,4 +59,10 @@ grid_as_stars <- function(x,
                  drop = FALSE) %>%
     dplyr::slice("Y", 1L:(dim_x[["Y"]] - 1L),
                  drop = FALSE)
+}
+
+#' @importFrom stars st_as_stars
+#' @export
+st_as_stars.grid <- function(.x, ...) {
+  grid_as_stars(.x)
 }

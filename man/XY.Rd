@@ -4,7 +4,7 @@
 \alias{XY}
 \alias{XY_to_grid}
 \alias{grid_to_XY}
-\title{Conversion between grid and coordinates (longitude and latitude)}
+\title{Conversion between grid square codes and coordinates (longitude and latitude)}
 \usage{
 XY_to_grid(X, Y, size)
 
@@ -19,13 +19,14 @@ grid_to_XY(grid, center = TRUE)
 
 \item{grid}{A \code{grid} class vector.}
 
-\item{center}{Should the center point of the grid be returned? Otherwise the end points will be returned. \code{TRUE} by default.}
+\item{center}{Should the center point of the grid be returned? Otherwise the
+end points will be returned. \code{TRUE} by default.}
 }
 \value{
-\code{XY_to_grid} returns a \code{grid} class vector.
+\code{XY_to_grid} returns a \code{grid} vector.
 
 \code{grid_to_XY} returns a \code{tbl_df}.
 }
 \description{
-Conversion between grid and coordinates (longitude and latitude)
+Conversion between grid square codes and coordinates (longitude and latitude)
 }

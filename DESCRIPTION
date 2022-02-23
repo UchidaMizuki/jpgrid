@@ -1,17 +1,16 @@
 Type: Package
 Package: jpgrid
-Title: Functions for the Japanese Regional Mesh Codes ('JIS X 0410')
-Version: 0.1.1
+Title: Functions for the Grid Square Codes in Japan 
+Version: 0.2.0
 Authors@R: 
     person("Mizuki", "Uchida", , "uchidamizuki@vivaldi.net", role = c("aut", "cre"))
-Description: Functions for the Japanese regional mesh codes defined in 'JIS
-    X 0410'
-    (<https://www.jisc.go.jp/app/jis/general/GnrJISNumberNameSearchList?show&jisStdNo=X0410>).
-    Conversion between regional mesh codes and longitude/latitude, and
-    between mesh codes of different scales.
+Description: Provides functions for grid square codes in Japan
+    (https://www.stat.go.jp/english/data/mesh/index.html).
+    Generates the grid square codes from longitude/latitude, geometries, and 
+    the grid square codes of different scales, and vice versa.
 License: MIT + file LICENSE
-URL: https://github.com/UchidaMizuki/japanmesh
-BugReports: https://github.com/UchidaMizuki/japanmesh/issues
+URL: https://github.com/UchidaMizuki/jpgrid
+BugReports: https://github.com/UchidaMizuki/jpgrid/issues
 Depends: 
     R (>= 2.10)
 Imports: 

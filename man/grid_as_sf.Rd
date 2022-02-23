@@ -2,7 +2,7 @@
 % Please edit documentation in R/sf.R
 \name{grid_as_sf}
 \alias{grid_as_sf}
-\title{Converting data frame containing regional grids to sf}
+\title{Converting data frame containing grid square codes to sf}
 \usage{
 grid_as_sf(
   x,
@@ -21,11 +21,11 @@ grid_as_sf(
 
 \item{grid_column_name}{A scalar character.}
 
-\item{...}{passed on to \code{sf::st_as_sf()}.}
+\item{...}{passed on to \code{\link[sf:st_as_sf]{sf::st_as_sf()}}.}
 }
 \value{
 A \code{sf} object.
 }
 \description{
-Converting data frame containing regional grids to sf
+Converting data frame containing grid square codes to sf
 }

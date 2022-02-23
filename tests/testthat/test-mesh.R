@@ -1,88 +1,88 @@
-test_that("mesh_strict", {
+test_that("grid_strict", {
   x <- c("53394526313", 5339358633, "533945764", 53394611, "523503", 5339)
 
   # strict
-  mesh80km <- mesh_80km(x)
-  mesh10km <- mesh_10km(x)
-  mesh1km <- mesh_1km(x)
-  mesh500m <- mesh_500m(x)
-  mesh250m <- mesh_250m(x)
-  mesh125m <- mesh_125m(x)
-  mesh100m <- mesh_100m(x)
+  grid80km <- grid_80km(x)
+  grid10km <- grid_10km(x)
+  grid1km <- grid_1km(x)
+  grid500m <- grid_500m(x)
+  grid250m <- grid_250m(x)
+  grid125m <- grid_125m(x)
+  grid100m <- grid_100m(x)
 
-  expect_s3_class(mesh80km, "mesh_80km")
-  expect_s3_class(mesh10km, "mesh_10km")
-  expect_s3_class(mesh1km, "mesh_1km")
-  expect_s3_class(mesh500m, "mesh_500m")
-  expect_s3_class(mesh250m, "mesh_250m")
-  expect_s3_class(mesh125m, "mesh_125m")
-  expect_s3_class(mesh100m, "mesh_100m")
+  expect_s3_class(grid80km, "grid_80km")
+  expect_s3_class(grid10km, "grid_10km")
+  expect_s3_class(grid1km, "grid_1km")
+  expect_s3_class(grid500m, "grid_500m")
+  expect_s3_class(grid250m, "grid_250m")
+  expect_s3_class(grid125m, "grid_125m")
+  expect_s3_class(grid100m, "grid_100m")
 
-  expect_equal(as.character(mesh80km),
+  expect_equal(as.character(grid80km),
                stringr::str_extract(x, "^\\d{4}$"))
-  expect_equal(as.character(mesh10km),
+  expect_equal(as.character(grid10km),
                stringr::str_extract(x, "^\\d{6}$"))
-  expect_equal(as.character(mesh1km),
+  expect_equal(as.character(grid1km),
                stringr::str_extract(x, "^\\d{8}$"))
-  expect_equal(as.character(mesh500m),
+  expect_equal(as.character(grid500m),
                stringr::str_extract(x, "^\\d{9}$"))
-  expect_equal(as.character(mesh250m),
+  expect_equal(as.character(grid250m),
                stringr::str_extract(x, "^\\d{10}$"))
-  expect_equal(as.character(mesh125m),
+  expect_equal(as.character(grid125m),
                stringr::str_extract(x, "^\\d{11}$"))
-  expect_equal(as.character(mesh100m),
+  expect_equal(as.character(grid100m),
                stringr::str_extract(x, "^\\d{10}$"))
 })
 
-test_that("mesh_notstrict", {
+test_that("grid_notstrict", {
   x <- c("53394526313", 5339358633, "533945764", 53394611, "523503", 5339)
 
   # not strict
-  mesh80km <- mesh_80km(x, strict = F)
-  mesh10km <- mesh_10km(x, strict = F)
-  mesh1km <- mesh_1km(x, strict = F)
-  mesh500m <- mesh_500m(x, strict = F)
-  mesh250m <- mesh_250m(x, strict = F)
-  mesh125m <- mesh_125m(x, strict = F)
-  mesh100m <- mesh_100m(x, strict = F)
+  grid80km <- grid_80km(x, strict = F)
+  grid10km <- grid_10km(x, strict = F)
+  grid1km <- grid_1km(x, strict = F)
+  grid500m <- grid_500m(x, strict = F)
+  grid250m <- grid_250m(x, strict = F)
+  grid125m <- grid_125m(x, strict = F)
+  grid100m <- grid_100m(x, strict = F)
 
-  expect_s3_class(mesh80km, "mesh_80km")
-  expect_s3_class(mesh10km, "mesh_10km")
-  expect_s3_class(mesh1km, "mesh_1km")
-  expect_s3_class(mesh500m, "mesh_500m")
-  expect_s3_class(mesh250m, "mesh_250m")
-  expect_s3_class(mesh125m, "mesh_125m")
-  expect_s3_class(mesh100m, "mesh_100m")
+  expect_s3_class(grid80km, "grid_80km")
+  expect_s3_class(grid10km, "grid_10km")
+  expect_s3_class(grid1km, "grid_1km")
+  expect_s3_class(grid500m, "grid_500m")
+  expect_s3_class(grid250m, "grid_250m")
+  expect_s3_class(grid125m, "grid_125m")
+  expect_s3_class(grid100m, "grid_100m")
 
-  expect_equal(as.character(mesh80km),
+  expect_equal(as.character(grid80km),
                stringr::str_extract(x, "^\\d{4}"))
-  expect_equal(as.character(mesh10km),
+  expect_equal(as.character(grid10km),
                stringr::str_extract(x, "^\\d{6}"))
-  expect_equal(as.character(mesh1km),
+  expect_equal(as.character(grid1km),
                stringr::str_extract(x, "^\\d{8}"))
-  expect_equal(as.character(mesh500m),
+  expect_equal(as.character(grid500m),
                stringr::str_extract(x, "^\\d{9}"))
-  expect_equal(as.character(mesh250m),
+  expect_equal(as.character(grid250m),
                stringr::str_extract(x, "^\\d{10}"))
-  expect_equal(as.character(mesh125m),
+  expect_equal(as.character(grid125m),
                stringr::str_extract(x, "^\\d{11}"))
-  expect_equal(as.character(mesh100m),
+  expect_equal(as.character(grid100m),
                stringr::str_extract(x, "^\\d{10}"))
 })
 
-test_that("mesh_auto", {
+test_that("grid_auto", {
   x <- c("53394526313", 5339358633, "533945764", 53394611, "523503", 5339)
 
-  expect_s3_class(mesh_auto(x[1]), "mesh_125m")
-  expect_s3_class(mesh_auto(x[1:2]), "mesh_250m")
-  expect_s3_class(mesh_auto(x[1:3]), "mesh_500m")
-  expect_s3_class(mesh_auto(x[1:4]), "mesh_1km")
-  expect_s3_class(mesh_auto(x[1:5]), "mesh_10km")
-  expect_s3_class(mesh_auto(x[1:6]), "mesh_80km")
+  expect_s3_class(grid_auto(x[1]), "grid_125m")
+  expect_s3_class(grid_auto(x[1:2]), "grid_250m")
+  expect_s3_class(grid_auto(x[1:3]), "grid_500m")
+  expect_s3_class(grid_auto(x[1:4]), "grid_1km")
+  expect_s3_class(grid_auto(x[1:5]), "grid_10km")
+  expect_s3_class(grid_auto(x[1:6]), "grid_80km")
 })
 
-test_that("mesh_250m_or_100m", {
+test_that("grid_250m_or_100m", {
   x <- "5339452619"
-  expect_true(is.na(mesh_250m(x)))
-  expect_equal(as.character(mesh_100m(x)), x)
+  expect_true(is.na(grid_250m(x)))
+  expect_equal(as.character(grid_100m(x)), x)
 })

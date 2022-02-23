@@ -11,7 +11,7 @@
 \alias{grid_100m}
 \alias{grid_auto}
 \alias{is_grid}
-\title{Regional grid vector}
+\title{Grid square code vector}
 \usage{
 grid_80km(x, strict = TRUE)
 
@@ -34,14 +34,16 @@ is_grid(x)
 \arguments{
 \item{x}{A list or vector.}
 
-\item{strict}{A logical scalar. Should the number of digits in the grid code match a given number of digits?}
+\item{strict}{A logical scalar. Should the number of digits in the grid
+square code match a given number of digits?}
 }
 \value{
-A \code{grid} class vector.
+A \code{grid} vector.
 }
 \description{
 A series of functions return \code{grid} class for each grid size.
-\code{grid_auto} returns automatically determine grid size by the largest grid size.
+\code{grid_auto} returns automatically determine grid size by the largest
+grid size.
 }
 \examples{
 grid_80km("53394526313")

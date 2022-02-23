@@ -2,18 +2,18 @@
 % Please edit documentation in R/sf.R
 \name{bbox_to_grid}
 \alias{bbox_to_grid}
-\title{Converting bbox to regional grids}
+\title{Converting bbox to grid square codes}
 \usage{
 bbox_to_grid(bbox, size)
 }
 \arguments{
-\item{bbox}{A \code{bbox} or a list of \code{bbox}.}
+\item{bbox}{A \code{bbox}.}
 
 \item{size}{A grid size.}
 }
 \value{
-A \code{grid} vector (when bbox is a \code{bbox}) or A list of \code{grid} vectors (when bbox is a list of \code{bbox}).
+A \code{grid} vector.
 }
 \description{
-Converting bbox to regional grids
+Converting bbox to grid square codes
 }

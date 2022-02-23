@@ -1,16 +1,18 @@
 # grid --------------------------------------------------------------------
 
-#' Regional grid vector
+#' Grid square code vector
 #'
-#' A series of functions return \code{grid} class for each grid size.
-#' \code{grid_auto} returns automatically determine grid size by the largest grid size.
+#' A series of functions return `grid` class for each grid size.
+#' `grid_auto` returns automatically determine grid size by the largest
+#' grid size.
 #'
 #' @name grid_class
 #'
 #' @param x A list or vector.
-#' @param strict A logical scalar. Should the number of digits in the grid code match a given number of digits?
+#' @param strict A logical scalar. Should the number of digits in the grid
+#' square code match a given number of digits?
 #'
-#' @return A \code{grid} class vector.
+#' @return A `grid` vector.
 #'
 #' @examples
 #' grid_80km("53394526313")

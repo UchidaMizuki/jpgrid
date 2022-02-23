@@ -1,10 +1,10 @@
-#' Moving on regional grids
+#' Moving on grid square codes
 #'
 #' @inheritParams grid
 #' @param n_X Number of moving cells in the longitude direction.
 #' @param n_Y Number of moving cells in the latitude direction.
 #'
-#' @return A \code{grid} class vector.
+#' @return A `grid` vector.
 #'
 #' @export
 grid_move <- function(grid, n_X, n_Y) {
@@ -15,14 +15,15 @@ grid_move <- function(grid, n_X, n_Y) {
            n_Y = field(grid, "n_Y") + n_Y)
 }
 
-#' Neighborhood regional grid
+#' Neighborhood grid square codes
 #'
 #' @inheritParams grid
 #' @param n A numeric vector of degrees.
-#' @param moore Moore neighborhood (\code{TRUE}) or Von Neumann neighborhood (\code{FALSE}).
+#' @param moore Moore neighborhood (`TRUE`) or Von Neumann neighborhood
+#' (`FALSE`).
 #' @param simplify Should simplify the format of the return?
 #'
-#' @return A list of \code{grid} class vectors.
+#' @return A list of `grid` vectors.
 #'
 #' @export
 grid_neighbor <- function(grid,

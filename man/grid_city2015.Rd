@@ -3,7 +3,7 @@
 \docType{data}
 \name{grid_city2015}
 \alias{grid_city2015}
-\title{List of grid codes by municipality in 2015}
+\title{List of grid square codes by Japanese municipalities in 2015}
 \format{
 An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 461373 rows and 4 columns.
 }
@@ -14,6 +14,6 @@ An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) w
 grid_city2015
 }
 \description{
-List of grid codes by municipality in 2015
+List of grid square codes by Japanese municipalities in 2015
 }
 \keyword{datasets}

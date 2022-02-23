@@ -2,7 +2,7 @@
 % Please edit documentation in R/line.R
 \name{grid_line}
 \alias{grid_line}
-\title{Draw line segments between regional grids}
+\title{Draw line segments between grid square codes}
 \usage{
 grid_line(grid, grid_to, close = FALSE, skip_na = FALSE)
 }
@@ -13,12 +13,15 @@ grid_line(grid, grid_to, close = FALSE, skip_na = FALSE)
 
 \item{close}{Should the path of each element be closed when \code{grid} is a list?}
 
-\item{skip_na}{Should skip the \code{NA} grid and connects the paths? \code{FALSE} by default.}
+\item{skip_na}{Should skip the \code{NA} grid and connects the paths? \code{FALSE} by
+default.}
 }
 \value{
-A list of \code{grid} class vectors.
+A list of \code{grid} vectors.
 }
 \description{
-If \code{grid} and \code{grid_to} are both vectors, the line between \code{grid} and \code{grid_to} is drawn (using Bresenham's line algorithm).
-If \code{grid} is a list, The path lines for each element in the grid will be drawn.
+If \code{grid} and \code{grid_to} are both vectors, the line between
+\code{grid} and \code{grid_to} is drawn (using Bresenham's line algorithm).
+If \code{grid} is a list, The path lines for each element in the grid will be
+drawn.
 }
