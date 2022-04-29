@@ -22,7 +22,7 @@ knitr::opts_chunk$set(
 jpgrid is an R package for using the reference regional mesh (the 1st mesh to the 3rd mesh), the split regional mesh as defined by the JIS (Japan Industrial Standard) X 0410 '[regional mesh code](https://www.jisc.go.jp/app/jis/general/GnrJISNumberNameSearchList?show&jisStdNo=X0410)' and 1/10 subdivision of the 3rd mesh.
 Regional mesh codes are square-like regional divisions set up for all regions of Japan based on longitude and latitude. For more information on regional meshes, please check [the Statistics Bureau of Japan page](https://www.stat.go.jp/data/mesh/pdf/gaiyo1.pdf).
 
-A summary of the regional mesh codes is shown below. In jpgrid, each regional mesh code is distinguished by the length of a piece of mesh, such as `mesh_80km`.
+A summary of the regional mesh codes is shown below. In jpgrid, each regional mesh code is distinguished by the length of a piece of mesh, such as `grid_80km`.
 
 ```{r,echo=FALSE}
 df <- tibble::tibble(`Name` = c("1st mesh", "2nd mesh", "3rd mesh", "1/2 mesh", "1/4 mesh", "1/8 mesh", "1/10 subdivision of the 3rd mesh"),
@@ -34,7 +34,7 @@ knitr::kable(df)
 jpgrid has been developed to enable faster processing than the R package [jpmesh](https://github.com/uribo/jpmesh).
 The main differences between jpgrid and jpmesh are as follows
 
-1. Explicitly given a mesh size (such as `mesh_80km`). 
+1. Explicitly given a mesh size (such as `grid_80km`). 
 2. Non-land (ocean) meshes are supported.
 3. It can extract nth-order neighboring meshes and perform complex operations such as extracting meshes and calculating the distance of (line) paths between meshes.
 
@@ -64,9 +64,9 @@ library(ggplot2)
 
 ### Generation of regional mesh codes from character strings or numbers
 
-Use functions such as `mesh_80km()`, `mesh_auto()`, etc. to generate regional mesh codes from strings or numbers.
+Use functions such as `grid_80km()`, `grid_auto()`, etc. to generate regional mesh codes from strings or numbers.
 
-- The `mesh_auto()` function automatically determines the mesh size.
+- The `grid_auto()` function automatically determines the mesh size.
 - The default (`strict = TRUE`) requires the mesh codes to have a given number of digits.
 
 ```{r}
@@ -74,110 +74,110 @@ library(jpgrid)
 
 x <- c("53394526313", "5339358633", "533945764", "53394611", "523503", "5339", NA)
 
-mesh_80km(x)
-mesh_125m(x)
-mesh_auto(x)
+grid_80km(x)
+grid_125m(x)
+grid_auto(x)
 
-mesh_80km(x, strict = FALSE)
-mesh_125m(x, strict = FALSE)
-mesh_auto(x, strict = FALSE)
+grid_80km(x, strict = FALSE)
+grid_125m(x, strict = FALSE)
+grid_auto(x, strict = FALSE)
 ```
 
 ### Converting the mesh size of regional mesh codes
 
-Use functions such as `mesh_80km()` to coarsen the mesh size of regional mesh codes.
-The `mesh_subdivide()` function can be used to subdivide regional mesh codes.
+Use functions such as `grid_80km()` to coarsen the mesh size of regional mesh codes.
+The `grid_subdivide()` function can be used to subdivide regional mesh codes.
 
-- `mesh_subdivide()` outputs a list of mesh codes whose elements are contained in the original meshes.
+- `grid_subdivide()` outputs a list of mesh codes whose elements are contained in the original meshes.
 - The conversion between 500m mesh and 100m mesh is supported.
 
 ```{r}
-mesh500m <- mesh_500m("533945764")
+grid500m <- grid_500m("533945764")
 
-mesh_1km(mesh500m)
+grid_1km(grid500m)
 
-mesh100m <- mesh_subdivide(mesh500m,
+grid100m <- grid_subdivide(grid500m,
                            size = "100m")
-mesh100m
+grid100m
 
-tibble(mesh100m = mesh100m[[1]]) %>% 
-  sf::st_set_geometry(mesh_to_polygon(.$mesh100m)) %>% 
+tibble(grid100m = grid100m[[1]]) %>% 
+  sf::st_set_geometry(sf::st_as_sfc(.$grid100m)) %>% 
   ggplot() +
   geom_sf() +
-  geom_sf_text(aes(label = mesh100m))
+  geom_sf_text(aes(label = grid100m))
 ```
 
 ### Conversion from longitude/latitude to regional mesh codes
 
-The `XY_to_mesh()` function converts longitude and latitude to regional mesh codes.
+The `XY_to_grid()` function converts longitude and latitude to regional mesh codes.
 
 ```{r}
 tibble(X = c(139.7008, 135.4375), # longitude
        Y = c(35.68906, 34.70833)) %>% # latitude
-  mutate(mesh100m = XY_to_mesh(X, Y, size = "100m"),
-         mesh125m = XY_to_mesh(X, Y, size = "125m")) %>% 
+  mutate(grid100m = XY_to_grid(X, Y, size = "100m"),
+         mesh125m = XY_to_grid(X, Y, size = "125m")) %>% 
   knitr::kable()
 ```
 
 ### Conversion from regional mesh codes to longitude/latitude
 
-The `mesh_to_XY()` function converts regional mesh codes to longitude and latitude.
+The `grid_to_XY()` function converts regional mesh codes to longitude and latitude.
 
 ```{r}
-tibble(mesh = mesh_100m(c("5339452660", "5235034590"))) %>% 
-  mutate(mesh_to_XY(mesh)) %>% 
+tibble(mesh = grid_100m(c("5339452660", "5235034590"))) %>% 
+  mutate(grid_to_XY(mesh)) %>% 
   knitr::kable()
 ```
 
 ### Calculation of adjacent mesh codes
 
-The `mesh_neighbor()` function calculates the neighboring meshes.
+The `grid_neighbor()` function calculates the neighboring meshes.
 
 - nth order neighboring meshes can be calculated by specifying `n`.
 - Can be calculated in a Neumann neighborhood with `moore = FALSE`.
 
 ```{r}
-neighbor <- mesh_10km("644142") %>% 
-  mesh_neighbor(n = c(0:2),
+neighbor <- grid_10km("644142") %>% 
+  grid_neighbor(n = c(0:2),
                 simplify = FALSE)
 
 neighbor[[1]] %>% 
-  sf::st_set_geometry(mesh_to_polygon(.$mesh_neighbor)) %>% 
+  sf::st_set_geometry(sf::st_as_sfc(.$grid_neighbor)) %>% 
   
   ggplot(aes(fill = as.factor(n))) +
   geom_sf() +
-  geom_sf_text(aes(label = mesh_neighbor))
+  geom_sf_text(aes(label = grid_neighbor))
 ```
 
 ```{r}
-neighbor_neumann <- mesh_10km("644142") %>% 
-  mesh_neighbor(n = c(0:2),
+neighbor_neumann <- grid_10km("644142") %>% 
+  grid_neighbor(n = c(0:2),
                 simplify = F,
                 moore = F)
 
 neighbor_neumann[[1]] %>% 
-  sf::st_set_geometry(mesh_to_polygon(.$mesh_neighbor)) %>% 
+  sf::st_set_geometry(sf::st_as_sfc(.$grid_neighbor)) %>% 
   
   ggplot(aes(fill = as.factor(n))) +
   geom_sf() +
-  geom_sf_text(aes(label = mesh_neighbor))
+  geom_sf_text(aes(label = grid_neighbor))
 ```
 
 ### Draw line segments between meshes
 
-The `mesh_line()` function extracts meshes that lie on the line segments between meshes.
+The `grid_line()` function extracts meshes that lie on the line segments between meshes.
 
 ```{r}
-mesh_from <- mesh_80km(c("6441", "5339"))
-mesh_to <- mesh_80km(c("5237", "5235"))
+grid_from <- grid_80km(c("6441", "5339"))
+grid_to <- grid_80km(c("5237", "5235"))
 
-line <- mesh_line(mesh_from, mesh_to)
+line <- grid_line(grid_from, grid_to)
 
-tibble::tibble(mesh = line[[1]]) %>% 
-  sf::st_set_geometry(mesh_to_polygon(.$mesh)) %>% 
+tibble::tibble(grid = line[[1]]) %>% 
+  sf::st_set_geometry(sf::st_as_sfc(.$grid)) %>% 
   ggplot() +
   geom_sf() +
-  geom_sf_text(aes(label = mesh))
+  geom_sf_text(aes(label = grid))
 ```
 
 It can handle the case of passing through multiple meshes by giving a `list` of meshes.
@@ -186,38 +186,38 @@ It can handle the case of passing through multiple meshes by giving a `list` of 
 - `skip_na = TRUE` to skip `NA`.
 
 ```{r}
-mesh_1 <- mesh_80km(c("6441", "5339", NA, "5250"))
-mesh_2 <- mesh_80km(c("6439", "5211", "4013", "6635"))
+grid_1 <- grid_80km(c("6441", "5339", NA, "5250"))
+grid_2 <- grid_80km(c("6439", "5211", "4013", "6635"))
 
-line <- mesh_line(list(mesh_1, mesh_2), 
+line <- grid_line(list(grid_1, grid_2), 
                   close = TRUE,
                   skip_na = TRUE)
 
-tibble::tibble(mesh = line[[1]]) %>% 
-  sf::st_set_geometry(mesh_to_polygon(.$mesh)) %>% 
+tibble::tibble(grid = line[[1]]) %>% 
+  sf::st_set_geometry(sf::st_as_sfc(.$grid)) %>% 
   ggplot() +
   geom_sf() +
-  geom_sf_text(aes(label = mesh))
+  geom_sf_text(aes(label = grid))
 ```
 
 ### Calculation of distance between meshes
 
-The `mesh_distance()` function calculates the distance between meshes (great circle distance).
+The `grid_distance()` function calculates the distance between meshes (great circle distance).
 
-- As with `mesh_line()`, the path distance can be calculated by `list` of meshes.
+- As with `grid_line()`, the path distance can be calculated by `list` of meshes.
 
 ```{r}
-mesh_from <- mesh_80km(c("6441", "5339"))
-mesh_to <- mesh_80km(c("5237", "5235"))
+grid_from <- grid_80km(c("6441", "5339"))
+grid_to <- grid_80km(c("5237", "5235"))
 
-distance <- mesh_distance(mesh_from, mesh_to)
+distance <- grid_distance(grid_from, grid_to)
 
 print(distance)
 ```
 
 ### Others
-- The `mesh_move()` function can be used to calculate regional meshes in the east-west and north-south directions.
-- The `mesh_to_polygon()` and `mesh_to_point()` functions can output `sfc` geometry.
+- `grid_move()` function can be used to calculate regional meshes in the east-west and north-south directions.
+- `sf::st_as_sfc` function can output `sfc` geometry.
 - For meshes outside the range of the 80 km mesh, where the digits are negative or exceed three digits, the relevant code is displayed as `<-1>` or `<123>` to clearly distinguish them from existing meshes.
 
 ## Comparison of processing speed with jpmesh package
@@ -229,10 +229,10 @@ set.seed(1234)
 X <- runif(1e1, 139, 140)
 Y <- runif(1e1, 39, 40)
 
-microbenchmark::microbenchmark(`jpgrid::XY_to_mesh()` = XY_to_mesh(X, Y,
+microbenchmark::microbenchmark(`jpgrid::XY_to_grid()` = XY_to_grid(X, Y,
                                                                     size = "1km"),
                                `jpmesh::coords_to_mesh()` = jpmesh::coords_to_mesh(X, Y,
-                                                                                 mesh_size = 1),
+                                                                                 grid_size = 1),
                                setup = set.seed(4321)) %>% 
   autoplot()
 ```
@@ -241,13 +241,13 @@ microbenchmark::microbenchmark(`jpgrid::XY_to_mesh()` = XY_to_mesh(X, Y,
 set.seed(1234)
 X <- runif(1e1, 139, 140)
 Y <- runif(1e1, 39, 40)
-mesh_jpgrid <- XY_to_mesh(X, Y,
+grid_jpgrid <- XY_to_grid(X, Y,
                              size = "1km")
-mesh_jpmesh <- jpmesh::coords_to_mesh(X, Y, 
-                                      mesh_size = 1)
+grid_jpmesh <- jpmesh::coords_to_mesh(X, Y, 
+                                      grid_size = 1)
 
-microbenchmark::microbenchmark(`jpgrid::mesh_to_XY()` = mesh_to_XY(mesh_jpgrid),
-                               `jpmesh::mesh_to_coords()` = jpmesh::mesh_to_coords(mesh_jpmesh),
+microbenchmark::microbenchmark(`jpgrid::grid_to_XY()` = grid_to_XY(grid_jpgrid),
+                               `jpmesh::mesh_to_coords()` = jpmesh::mesh_to_coords(grid_jpmesh),
                                setup = set.seed(4321)) %>% 
   autoplot()
 ```

@@ -1,3 +1,10 @@
+# version 0.2.0
+- Change package name from `japanmesh` to `jpgrid` to match the English name, 
+"Grid Square Codes".
+- Replace `mesh` with `grid` in the function names.
+- Remove `mesh_to_polygon()` and `mesh_to_point()` and add `sf::st_as_sfc()` 
+method.
+
 # version 0.1.1
 ## New Features
 - `mesh_zoomin()` is soft-deprecated and replaced by `mesh_subdivide()`.
