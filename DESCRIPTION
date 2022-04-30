@@ -5,7 +5,7 @@ Version: 0.2.0
 Authors@R: 
     person("Mizuki", "Uchida", , "uchidamizuki@vivaldi.net", role = c("aut", "cre"))
 Description: Provides functions for grid square codes in Japan
-    (https://www.stat.go.jp/english/data/mesh/index.html).
+    (<https://www.stat.go.jp/english/data/mesh/index.html>).
     Generates the grid square codes from longitude/latitude, geometries, and 
     the grid square codes of different scales, and vice versa.
 License: MIT + file LICENSE
@@ -16,7 +16,6 @@ Depends:
 Imports: 
     dplyr (>= 0.8.0),
     geosphere,
-    lifecycle (>= 0.1.0),
     magrittr,
     purrr (>= 0.3.0),
     rlang (>= 0.3.0),
