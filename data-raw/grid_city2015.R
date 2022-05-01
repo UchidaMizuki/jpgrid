@@ -1,7 +1,7 @@
 
 pkgload::load_all()
 
-url_grid_city2015 <- "http://www.stat.go.jp/data/mesh/"
+url_grid_city2015 <- "https://www.stat.go.jp/data/mesh/"
 url_grid_city2015 <- stringr::str_c(url_grid_city2015,
                                     rvest::read_html(stringr::str_c(url_grid_city2015, "m_itiran.html")) %>%
                                       rvest::html_elements("#section > article:nth-child(2) > ul > li > a") %>%
