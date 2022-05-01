@@ -8,7 +8,7 @@
 An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 461373 rows and 4 columns.
 }
 \source{
-\url{http://www.stat.go.jp/data/mesh/m_itiran.html}
+\url{https://www.stat.go.jp/data/mesh/m_itiran.html}
 }
 \usage{
 grid_city2015
