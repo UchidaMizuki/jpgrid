@@ -13,7 +13,7 @@ grid_as_sf(
 )
 }
 \arguments{
-\item{x}{A data frame.}
+\item{x}{A data frame or a \code{grid}.}
 
 \item{as_points}{Return the center points of the grids or not?}
 
