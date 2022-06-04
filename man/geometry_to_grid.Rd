@@ -4,12 +4,15 @@
 \alias{geometry_to_grid}
 \title{Converting sfc geometries to grid square codes}
 \usage{
-geometry_to_grid(geometry, size, ...)
+geometry_to_grid(geometry, size, options = "ALL_TOUCHED=TRUE", ...)
 }
 \arguments{
 \item{geometry}{A \code{sfc} vector.}
 
 \item{size}{A grid size.}
+
+\item{options}{Options vector for GDALRasterize passed on to
+\code{\link[stars:st_rasterize]{stars::st_rasterize()}}.}
 
 \item{...}{Passed on to \code{\link[stars:st_rasterize]{stars::st_rasterize()}}.}
 }

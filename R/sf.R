@@ -2,12 +2,15 @@
 #'
 #' @param geometry A `sfc` vector.
 #' @inheritParams size
+#' @param options Options vector for GDALRasterize passed on to
+#' [stars::st_rasterize()].
 #' @param ... Passed on to [stars::st_rasterize()].
 #'
 #' @return A list of `grid` vectors.
 #'
 #' @export
-geometry_to_grid <- function(geometry, size, ...) {
+geometry_to_grid <- function(geometry, size,
+                             options = "ALL_TOUCHED=TRUE", ...) {
   if (!inherits(geometry, "sfc")) {
     geometry <- sf::st_as_sfc(geometry)
   }
@@ -31,7 +34,8 @@ geometry_to_grid <- function(geometry, size, ...) {
         XY <- x %>%
           sf::st_sfc() %>%
           sf::st_as_sf() %>%
-          stars::st_rasterize(grid, ...) %>%
+          stars::st_rasterize(grid,
+                              options = options, ...) %>%
           sf::st_as_sf(as_points = TRUE) %>%
           sf::st_coordinates() %>%
           tibble::as_tibble()
@@ -129,7 +133,7 @@ st_as_sfc.grid <- function(x,
 
 #' Converting data frame containing grid square codes to sf
 #'
-#' @param x A data frame.
+#' @param x A data frame or a `grid`.
 #' @param as_points Return the center points of the grids or not?
 #' @param crs Coordinate reference system.
 #' @param grid_column_name A scalar character.
