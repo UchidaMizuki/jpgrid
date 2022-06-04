@@ -5,7 +5,7 @@
 #' @inheritParams grid
 #' @inheritParams size
 #'
-#' @return A list of \code{grid} vector.
+#' @return A list of `grid` vector.
 #'
 #' @export
 grid_subdivide <- function(grid, size) {
