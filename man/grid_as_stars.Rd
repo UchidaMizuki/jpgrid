@@ -13,7 +13,7 @@ grid_as_stars(
 )
 }
 \arguments{
-\item{x}{A data frame.}
+\item{x}{A data frame or a \code{grid}.}
 
 \item{coords}{The column names or indices that form the cube dimensions.}
 

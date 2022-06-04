@@ -1,6 +1,6 @@
 #' Converting data frame containing regional grids to stars
 #'
-#' @param x A data frame.
+#' @param x A data frame or a `grid`.
 #' @param coords The column names or indices that form the cube dimensions.
 #' @param crs Coordinate reference system.
 #' @param grid_column_name A scalar character.
@@ -12,8 +12,7 @@
 grid_as_stars <- function(x,
                           coords = NULL,
                           crs = sf::NA_crs_,
-                          grid_column_name = NULL,
-                          ...) {
+                          grid_column_name = NULL, ...) {
   if (is_grid(x)) {
     x <- tibble::tibble(grid = x,
                         values = NA_real_)
