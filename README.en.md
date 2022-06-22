@@ -11,15 +11,15 @@ status](https://www.r-pkg.org/badges/version/jpgrid)](https://CRAN.R-project.org
 
 jpgrid is an R package for using the reference regional mesh (the 1st
 mesh to the 3rd mesh), the split regional mesh as defined by the JIS
-(Japan Industrial Standard) X 0410 ‘[regional mesh
-code](https://www.jisc.go.jp/app/jis/general/GnrJISNumberNameSearchList?show&jisStdNo=X0410)’
-and 1/10 subdivision of the 3rd mesh. Regional mesh codes are
-square-like regional divisions set up for all regions of Japan based on
-longitude and latitude. For more information on regional meshes, please
-check [the Statistics Bureau of Japan
+(Japan Industrial Standard) X 0410 ’ [Grid Square
+Code](https://www.jisc.go.jp/app/jis/general/GnrJISNumberNameSearchList?show&jisStdNo=X0410)’
+and 1/10 subdivision of the 3rd mesh. Grid Square Codes are square-like
+regional divisions set up for all regions of Japan based on longitude
+and latitude. For more information on regional meshes, please check [the
+Statistics Bureau of Japan
 page](https://www.stat.go.jp/data/mesh/pdf/gaiyo1.pdf).
 
-A summary of the regional mesh codes is shown below. In jpgrid, each
+A summary of the Grid Square Codes is shown below. In jpgrid, each
 regional mesh code is distinguished by the length of a piece of mesh,
 such as `grid_80km`.
 
@@ -68,10 +68,10 @@ library(dplyr)
 library(ggplot2)
 ```
 
-### Generation of regional mesh codes from character strings or numbers
+### Generation of Grid Square Codes from character strings or numbers
 
 Use functions such as `grid_80km()`, `grid_auto()`, etc. to generate
-regional mesh codes from strings or numbers.
+Grid Square Codes from strings or numbers.
 
 -   The `grid_auto()` function automatically determines the mesh size.
 -   The default (`strict = TRUE`) requires the mesh codes to have a
@@ -107,11 +107,11 @@ grid_auto(x, strict = FALSE)
 #> [1] 5339 5339 5339 5339 5235 5339 <NA>
 ```
 
-### Converting the mesh size of regional mesh codes
+### Converting the mesh size of Grid Square Codes
 
-Use functions such as `grid_80km()` to coarsen the mesh size of regional
-mesh codes. The `grid_subdivide()` function can be used to subdivide
-regional mesh codes.
+Use functions such as `grid_80km()` to coarsen the mesh size of Grid
+Square Codes. The `grid_subdivide()` function can be used to subdivide
+Grid Square Codes.
 
 -   `grid_subdivide()` outputs a list of mesh codes whose elements are
     contained in the original meshes.
@@ -145,10 +145,10 @@ tibble(grid100m = grid100m[[1]]) %>%
 
 <img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
 
-### Conversion from longitude/latitude to regional mesh codes
+### Conversion from longitude/latitude to Grid Square Codes
 
-The `XY_to_grid()` function converts longitude and latitude to regional
-mesh codes.
+The `XY_to_grid()` function converts longitude and latitude to Grid
+Square Codes.
 
 ``` r
 tibble(X = c(139.7008, 135.4375), # longitude
@@ -163,10 +163,10 @@ tibble(X = c(139.7008, 135.4375), # longitude
 | 139.7008 | 35.68906 | 5339452660 | 53394526313 |
 | 135.4375 | 34.70833 | 5235034499 | 52350344444 |
 
-### Conversion from regional mesh codes to longitude/latitude
+### Conversion from Grid Square Codes to longitude/latitude
 
-The `grid_to_XY()` function converts regional mesh codes to longitude
-and latitude.
+The `grid_to_XY()` function converts Grid Square Codes to longitude and
+latitude.
 
 ``` r
 tibble(mesh = grid_100m(c("5339452660", "5235034590"))) %>% 

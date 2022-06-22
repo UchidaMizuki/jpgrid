@@ -12,14 +12,14 @@ status](https://www.r-pkg.org/badges/version/jpgrid)](https://CRAN.R-project.org
 *[The English version of the README is
 here.](https://github.com/UchidaMizuki/jpgrid/blob/main/README.en.md)*
 
-jpgridは，日本産業規格JIS X
-0410[地域メッシュコード](https://www.jisc.go.jp/app/jis/general/GnrJISNumberNameSearchList?show&jisStdNo=X0410)
-で定められた基準地域メッシュ (1次～3次)
+jpgridは，日本産業規格JIS X 0410
+[地域メッシュコード](https://www.jisc.go.jp/app/jis/general/GnrJISNumberNameSearchList?show&jisStdNo=X0410)
+（Grid Square Code）で定められた基準地域メッシュ (1次～3次)
 と分割地域メッシュ，および3次メッシュ1/10細分区画を利用するためのRパッケージです．
 地域メッシュコードは，経度・緯度に基づいて，日本全国の地域に設定された正方形に近い地域区分です．
 地域メッシュコードの詳細については，[統計局ページ](https://www.stat.go.jp/data/mesh/pdf/gaiyo1.pdf)を確認してください．
 
-地域メッシュコードの概要を以下に示します．jpgridでは，`mesh_80km`のように，メッシュの一片の長さで各地域メッシュコードを区別します．
+地域メッシュコードの概要を以下に示します．jpgridでは，`grid_80km`のように，メッシュの一片の長さで各地域メッシュコードを区別します．
 
 | 名称                        | 一片の長さ | 桁数 |
 |:----------------------------|:-----------|-----:|
