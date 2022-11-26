@@ -233,58 +233,60 @@ grid_100m <- function(x,
 #' @rdname grid_class
 grid_auto <- function(x,
                       strict = TRUE) {
-  if (is_grid(x)) {
-    size <- grid_size(x)
-  } else {
-    pattern <- stringr::str_c("^",
-                              stringr::str_dup("(<\\-?\\d+>|\\d{2})", 2),
-                              "(\\d*)")
-    code_others <- x %>%
-      stringr::str_match(pattern) %>%
-      tibble::as_tibble(.name_repair = ~ c("code", "code_Y_80km", "code_X_80km", "code_others")) %>%
-      tidyr::drop_na(code_others) %>%
-      purrr::chuck("code_others")
-
-    digit <- min(stringr::str_length(code_others))
-
-    if (digit %in% 0L:1L) {
-      size <- 80000L
-    } else if (digit %in% 2L:3L) {
-      size <- 10000L
-    } else if (digit == 4L) {
-      size <- 1000L
-    } else if (digit == 5L) {
-      size <- 500L
-    } else if (digit == 6L) {
-      is_size_250m <- code_others %>%
-        stringr::str_extract("\\d{6}") %>%
-        stringr::str_ends("[1-4]{2}")
-      if (all(is_size_250m)) {
-        size <- 250L
-      } else {
-        size <- 100L
-      }
-    } else if (digit >= 7L) {
-      size <- 125L
-    }
-
-    size_name <- switch(as.character(size),
-                        "80000" = "80km",
-                        "10000" = "10km",
-                        "1000" = "1km",
-                        "500" = "500m",
-                        "250" = "250m",
-                        "125" = "125m",
-                        "100" = "100m")
-    message(stringr::str_glue("Guessing grid size as `{size_name}`"))
-  }
-
   grid_impl(x,
             strict = strict,
-            size = size)
+            size = NULL)
 }
 
 grid_impl <- function(x, strict, size) {
+  if (is.null(size)) {
+    if (is_grid(x)) {
+      size <- grid_size(x)
+    } else {
+      pattern <- stringr::str_c("^",
+                                stringr::str_dup("(<\\-?\\d+>|\\d{2})", 2),
+                                "(\\d*)")
+      code_others <- x %>%
+        stringr::str_match(pattern) %>%
+        tibble::as_tibble(.name_repair = ~ c("code", "code_Y_80km", "code_X_80km", "code_others")) %>%
+        tidyr::drop_na(code_others) %>%
+        purrr::chuck("code_others")
+
+      digit <- min(stringr::str_length(code_others))
+
+      if (digit %in% 0L:1L) {
+        size <- 80000L
+      } else if (digit %in% 2L:3L) {
+        size <- 10000L
+      } else if (digit == 4L) {
+        size <- 1000L
+      } else if (digit == 5L) {
+        size <- 500L
+      } else if (digit == 6L) {
+        is_size_250m <- code_others %>%
+          stringr::str_extract("\\d{6}") %>%
+          stringr::str_ends("[1-4]{2}")
+        if (all(is_size_250m)) {
+          size <- 250L
+        } else {
+          size <- 100L
+        }
+      } else if (digit >= 7L) {
+        size <- 125L
+      }
+
+      size_name <- switch(as.character(size),
+                          "80000" = "80km",
+                          "10000" = "10km",
+                          "1000" = "1km",
+                          "500" = "500m",
+                          "250" = "250m",
+                          "125" = "125m",
+                          "100" = "100m")
+      message(stringr::str_glue("Guessing grid size as `{size_name}`"))
+    }
+  }
+
   if (is_grid(x)) {
     size <- size_match(size)
     ratio <- size / grid_size(x)

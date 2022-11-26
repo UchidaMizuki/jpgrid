@@ -131,37 +131,15 @@ st_as_sfc.grid <- function(x,
     sf::st_set_crs(crs)
 }
 
-#' Converting data frame containing grid square codes to sf
-#'
-#' @param x A data frame or a `grid`.
-#' @param as_points Return the center points of the grids or not?
-#' @param crs Coordinate reference system.
-#' @param grid_column_name A scalar character.
-#' @param ... passed on to [sf::st_as_sf()].
-#'
-#' @return A \code{sf} object.
-#'
+#' @importFrom sf st_as_sf
 #' @export
-grid_as_sf <- function(x,
-                       as_points = FALSE,
-                       crs = sf::NA_crs_,
-                       grid_column_name = NULL, ...) {
-  if (is_grid(x)) {
-    x <- tibble::tibble(grid = x)
-    grid_column_name <- "grid"
-  }
-  stopifnot(is.data.frame(x))
-
-  if (is.null(grid_column_name)) {
-    i <- x %>%
-      purrr::map_lgl(is_grid)
-    grid_column_name <- names(x) %>%
-      vec_slice(i) %>%
-      vec_slice(1L)
-  }
-  grid <- x[[grid_column_name]]
+st_as_sf.tbl_grid <- function(x,
+                              as_points = FALSE,
+                              crs = sf::NA_crs_, ...) {
+  grid <- x[[grid_column(x)]]
 
   x %>%
+    tibble::as_tibble() %>%
     sf::st_set_geometry(grid %>%
                           st_as_sfc(as_points = as_points,
                                     crs = crs)) %>%

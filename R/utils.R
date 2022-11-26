@@ -69,3 +69,7 @@ code_2x2_to_Y <- function(code_2x2) {
   dplyr::case_when(code_2x2 %in% c(1L, 2L) ~ 0L,
                    code_2x2 %in% c(3L, 4L) ~ 1L)
 }
+
+grid_column <- function(x) {
+  row.names(attr(x, "sticky_cols"))
+}
