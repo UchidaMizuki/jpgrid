@@ -149,9 +149,22 @@ st_as_sf.tbl_grid <- function(x,
 #' @export
 plot.grid <- function(x, y,
                       as_points = FALSE, ...) {
-  stopifnot(missing(y))
+  if (!missing(y)) {
+    warn("`y` is ignored")
+  }
 
   x %>%
     st_as_sfc(as_points = as_points) %>%
     plot(...)
+}
+
+#' @export
+plot.tbl_grid <- function(x, y,
+                          as_points = FALSE, ...) {
+  if (!missing(y)) {
+    warn("`y` is ignored")
+  }
+
+  plot(x[[grid_column(x)]],
+       as_points = as_points, ...)
 }
