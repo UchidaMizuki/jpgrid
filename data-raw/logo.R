@@ -44,13 +44,13 @@ sticker(plot_grid_city2015,
         s_y = 1,
 
         h_fill = fill_logo,
-        h_color = "transparent",
+        h_color = "transparent") +
 
-        spotlight = TRUE,
-        l_x = 1,
-        l_y = 1,
-        l_width = 6,
-        l_height = 6) +
+        # spotlight = TRUE,
+        # l_x = 1,
+        # l_y = 1,
+        # l_width = 6,
+        # l_height = 6) +
   geom_url(url = "jpgrid",
            x = 0.975,
            y = 0.225,
