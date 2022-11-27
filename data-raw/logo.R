@@ -5,11 +5,9 @@ pkgload::load_all()
 
 theme_set(theme_void())
 
-font_logo_en <- "Poppins"
-font_logo_ja <- "Noto Sans JP"
+font_logo <- "Poppins"
 
-sysfonts::font_add_google(font_logo_en)
-sysfonts::font_add_google(font_logo_ja)
+sysfonts::font_add_google(font_logo)
 
 # logo --------------------------------------------------------------------
 
@@ -54,8 +52,9 @@ sticker(plot_grid_city2015,
         l_width = 6,
         l_height = 6) +
   geom_url(url = "jpgrid",
-           y = 0.2,
-           family = font_logo_en,
+           x = 0.975,
+           y = 0.225,
+           family = font_logo,
            fontface = "bold.italic",
            size = 22,
            color = color_logo) +
