@@ -5,7 +5,7 @@
 \alias{grid_city2015}
 \title{List of grid square codes by Japanese municipalities in 2015}
 \format{
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 461373 rows and 4 columns.
+An object of class \code{tbl_grid} (inherits from \code{sticky_tbl_df}, \code{tbl_df}, \code{tbl}, \code{data.frame}) with 462915 rows and 4 columns.
 }
 \source{
 \url{https://www.stat.go.jp/data/mesh/m_itiran.html}
