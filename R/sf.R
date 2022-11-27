@@ -90,6 +90,12 @@ st_bbox.grid <- function(obj, ...) {
             ymax = max(XY$Y_max)), ...)
 }
 
+#' @export
+st_bbox.tbl_grid <- function(obj, ...) {
+  obj <- obj[[grid_column(obj)]]
+  st_bbox(obj)
+}
+
 #' @importFrom sf st_as_sfc
 #' @export
 st_as_sfc.grid <- function(x,
