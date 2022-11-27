@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# jpgrid
+# jpgrid <a href="https://uchidamizuki.github.io/jpgrid/"><img src="man/figures/logo.png" align="right" height="139" /></a>
 
 <!-- badges: start -->
 
@@ -69,8 +69,8 @@ library(ggplot2)
 
 文字列・数値から地域メッシュコードを生成するためには`grid_80km()`，`grid_auto()`などの関数を使用します．
 
--   `grid_auto()`関数はメッシュサイズを自動的に決定します．
--   デフォルト（`strict = TRUE`）では，メッシュコードの桁数が所定の桁数であることを要求します．
+- `grid_auto()`関数はメッシュサイズを自動的に決定します．
+- デフォルト（`strict = TRUE`）では，メッシュコードの桁数が所定の桁数であることを要求します．
 
 ``` r
 library(jpgrid)
@@ -107,8 +107,8 @@ grid_auto(x, strict = FALSE)
 地域メッシュコードのメッシュサイズを粗くする場合には，`grid_80km()`などの関数を使用します．
 また，`grid_subdivide()`関数により，地域メッシュコードの細分化を行います．
 
--   `grid_subdivide()`は元のメッシュに含まれるメッシュを要素にもつリストを出力します．
--   500 mメッシュ・100 mメッシュ間の変換に対応しています．
+- `grid_subdivide()`は元のメッシュに含まれるメッシュを要素にもつリストを出力します．
+- 500 mメッシュ・100 mメッシュ間の変換に対応しています．
 
 ``` r
 grid500m <- grid_500m("533945764")
@@ -133,7 +133,8 @@ tibble(grid100m = grid100m[[1]]) %>%
   ggplot() +
   geom_sf() +
   geom_sf_text(aes(label = grid100m))
-#> Don't know how to automatically pick scale for object of type grid_100m/grid/vctrs_rcrd/vctrs_vctr. Defaulting to continuous.
+#> Don't know how to automatically pick scale for object of type
+#> <grid_100m/grid/vctrs_rcrd/vctrs_vctr>. Defaulting to continuous.
 ```
 
 <img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
@@ -174,8 +175,8 @@ tibble(grid = grid_100m(c("5339452660", "5235034590"))) %>%
 
 `grid_neighbor()`関数は，隣接するメッシュを算出します．
 
--   `n`を指定することでn次隣接メッシュの算出が可能
--   `moore = FALSE`でノイマン近傍での算出が可能
+- `n`を指定することでn次隣接メッシュの算出が可能
+- `moore = FALSE`でノイマン近傍での算出が可能
 
 ``` r
 neighbor <- grid_10km("644142") %>% 
@@ -188,7 +189,8 @@ neighbor[[1]] %>%
   ggplot(aes(fill = as.factor(n))) +
   geom_sf() +
   geom_sf_text(aes(label = grid_neighbor))
-#> Don't know how to automatically pick scale for object of type grid_10km/grid/vctrs_rcrd/vctrs_vctr. Defaulting to continuous.
+#> Don't know how to automatically pick scale for object of type
+#> <grid_10km/grid/vctrs_rcrd/vctrs_vctr>. Defaulting to continuous.
 ```
 
 <img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
@@ -205,7 +207,8 @@ neighbor_neumann[[1]] %>%
   ggplot(aes(fill = as.factor(n))) +
   geom_sf() +
   geom_sf_text(aes(label = grid_neighbor))
-#> Don't know how to automatically pick scale for object of type grid_10km/grid/vctrs_rcrd/vctrs_vctr. Defaulting to continuous.
+#> Don't know how to automatically pick scale for object of type
+#> <grid_10km/grid/vctrs_rcrd/vctrs_vctr>. Defaulting to continuous.
 ```
 
 <img src="man/figures/README-unnamed-chunk-9-1.png" width="100%" />
@@ -225,15 +228,16 @@ tibble::tibble(grid = line[[1]]) %>%
   ggplot() +
   geom_sf() +
   geom_sf_text(aes(label = grid))
-#> Don't know how to automatically pick scale for object of type grid_80km/grid/vctrs_rcrd/vctrs_vctr. Defaulting to continuous.
+#> Don't know how to automatically pick scale for object of type
+#> <grid_80km/grid/vctrs_rcrd/vctrs_vctr>. Defaulting to continuous.
 ```
 
 <img src="man/figures/README-unnamed-chunk-10-1.png" width="100%" />
 
 メッシュの`list`を与えることで複数メッシュを通る場合に対応可能です．
 
--   `close = TRUE`で線分を閉じます．
--   `skip_na = TRUE`で`NA`をスキップします．
+- `close = TRUE`で線分を閉じます．
+- `skip_na = TRUE`で`NA`をスキップします．
 
 ``` r
 grid_1 <- grid_80km(c("6441", "5339", NA, "5250"))
@@ -248,7 +252,8 @@ tibble::tibble(grid = line[[1]]) %>%
   ggplot() +
   geom_sf() +
   geom_sf_text(aes(label = grid))
-#> Don't know how to automatically pick scale for object of type grid_80km/grid/vctrs_rcrd/vctrs_vctr. Defaulting to continuous.
+#> Don't know how to automatically pick scale for object of type
+#> <grid_80km/grid/vctrs_rcrd/vctrs_vctr>. Defaulting to continuous.
 ```
 
 <img src="man/figures/README-unnamed-chunk-11-1.png" width="100%" />
@@ -257,7 +262,7 @@ tibble::tibble(grid = line[[1]]) %>%
 
 `grid_distance()`関数は，メッシュ間距離（大円距離）を算出します．
 
--   `grid_line()`と同様にメッシュの`list`で経路距離を算出可能です．
+- `grid_line()`と同様にメッシュの`list`で経路距離を算出可能です．
 
 ``` r
 grid_from <- grid_80km(c("6441", "5339"))
@@ -272,9 +277,9 @@ print(distance)
 
 ### その他
 
--   `grid_move()`関数により，東西南北方向の地域メッシュコードを算出可能です．
--   `sf::st_as_sfc`関数により`sfc`ジオメトリを出力可能です．
--   80kmメッシュの桁が負や三桁以上になる範囲外のメッシュについては，当該コードを`<-1>`，`<123>`のように表示し，既存メッシュと明確に区別できるようにしています．
+- `grid_move()`関数により，東西南北方向の地域メッシュコードを算出可能です．
+- `sf::st_as_sfc`関数により`sfc`ジオメトリを出力可能です．
+- 80kmメッシュの桁が負や三桁以上になる範囲外のメッシュについては，当該コードを`<-1>`，`<123>`のように表示し，既存メッシュと明確に区別できるようにしています．
 
 ## jpmeshとの処理速度の比較
 

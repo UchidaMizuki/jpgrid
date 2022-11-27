@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# jpgrid
+# jpgrid <a href="https://uchidamizuki.github.io/jpgrid/"><img src="man/figures/logo.png" align="right" height="139" /></a>
 
 <!-- badges: start -->
 
@@ -73,9 +73,9 @@ library(ggplot2)
 Use functions such as `grid_80km()`, `grid_auto()`, etc. to generate
 Grid Square Codes from strings or numbers.
 
--   The `grid_auto()` function automatically determines the mesh size.
--   The default (`strict = TRUE`) requires the mesh codes to have a
-    given number of digits.
+- The `grid_auto()` function automatically determines the mesh size.
+- The default (`strict = TRUE`) requires the mesh codes to have a given
+  number of digits.
 
 ``` r
 library(jpgrid)
@@ -113,9 +113,9 @@ Use functions such as `grid_80km()` to coarsen the mesh size of Grid
 Square Codes. The `grid_subdivide()` function can be used to subdivide
 Grid Square Codes.
 
--   `grid_subdivide()` outputs a list of mesh codes whose elements are
-    contained in the original meshes.
--   The conversion between 500m mesh and 100m mesh is supported.
+- `grid_subdivide()` outputs a list of mesh codes whose elements are
+  contained in the original meshes.
+- The conversion between 500m mesh and 100m mesh is supported.
 
 ``` r
 grid500m <- grid_500m("533945764")
@@ -140,7 +140,8 @@ tibble(grid100m = grid100m[[1]]) %>%
   ggplot() +
   geom_sf() +
   geom_sf_text(aes(label = grid100m))
-#> Don't know how to automatically pick scale for object of type grid_100m/grid/vctrs_rcrd/vctrs_vctr. Defaulting to continuous.
+#> Don't know how to automatically pick scale for object of type
+#> <grid_100m/grid/vctrs_rcrd/vctrs_vctr>. Defaulting to continuous.
 ```
 
 <img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
@@ -183,8 +184,8 @@ tibble(mesh = grid_100m(c("5339452660", "5235034590"))) %>%
 
 The `grid_neighbor()` function calculates the neighboring meshes.
 
--   nth order neighboring meshes can be calculated by specifying `n`.
--   Can be calculated in a Neumann neighborhood with `moore = FALSE`.
+- nth order neighboring meshes can be calculated by specifying `n`.
+- Can be calculated in a Neumann neighborhood with `moore = FALSE`.
 
 ``` r
 neighbor <- grid_10km("644142") %>% 
@@ -197,7 +198,8 @@ neighbor[[1]] %>%
   ggplot(aes(fill = as.factor(n))) +
   geom_sf() +
   geom_sf_text(aes(label = grid_neighbor))
-#> Don't know how to automatically pick scale for object of type grid_10km/grid/vctrs_rcrd/vctrs_vctr. Defaulting to continuous.
+#> Don't know how to automatically pick scale for object of type
+#> <grid_10km/grid/vctrs_rcrd/vctrs_vctr>. Defaulting to continuous.
 ```
 
 <img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
@@ -214,7 +216,8 @@ neighbor_neumann[[1]] %>%
   ggplot(aes(fill = as.factor(n))) +
   geom_sf() +
   geom_sf_text(aes(label = grid_neighbor))
-#> Don't know how to automatically pick scale for object of type grid_10km/grid/vctrs_rcrd/vctrs_vctr. Defaulting to continuous.
+#> Don't know how to automatically pick scale for object of type
+#> <grid_10km/grid/vctrs_rcrd/vctrs_vctr>. Defaulting to continuous.
 ```
 
 <img src="man/figures/README-unnamed-chunk-9-1.png" width="100%" />
@@ -235,7 +238,8 @@ tibble::tibble(grid = line[[1]]) %>%
   ggplot() +
   geom_sf() +
   geom_sf_text(aes(label = grid))
-#> Don't know how to automatically pick scale for object of type grid_80km/grid/vctrs_rcrd/vctrs_vctr. Defaulting to continuous.
+#> Don't know how to automatically pick scale for object of type
+#> <grid_80km/grid/vctrs_rcrd/vctrs_vctr>. Defaulting to continuous.
 ```
 
 <img src="man/figures/README-unnamed-chunk-10-1.png" width="100%" />
@@ -243,8 +247,8 @@ tibble::tibble(grid = line[[1]]) %>%
 It can handle the case of passing through multiple meshes by giving a
 `list` of meshes.
 
--   Close the line segment with `close = TRUE`.
--   `skip_na = TRUE` to skip `NA`.
+- Close the line segment with `close = TRUE`.
+- `skip_na = TRUE` to skip `NA`.
 
 ``` r
 grid_1 <- grid_80km(c("6441", "5339", NA, "5250"))
@@ -259,7 +263,8 @@ tibble::tibble(grid = line[[1]]) %>%
   ggplot() +
   geom_sf() +
   geom_sf_text(aes(label = grid))
-#> Don't know how to automatically pick scale for object of type grid_80km/grid/vctrs_rcrd/vctrs_vctr. Defaulting to continuous.
+#> Don't know how to automatically pick scale for object of type
+#> <grid_80km/grid/vctrs_rcrd/vctrs_vctr>. Defaulting to continuous.
 ```
 
 <img src="man/figures/README-unnamed-chunk-11-1.png" width="100%" />
@@ -269,8 +274,8 @@ tibble::tibble(grid = line[[1]]) %>%
 The `grid_distance()` function calculates the distance between meshes
 (great circle distance).
 
--   As with `grid_line()`, the path distance can be calculated by `list`
-    of meshes.
+- As with `grid_line()`, the path distance can be calculated by `list`
+  of meshes.
 
 ``` r
 grid_from <- grid_80km(c("6441", "5339"))
@@ -285,12 +290,12 @@ print(distance)
 
 ### Others
 
--   `grid_move()` function can be used to calculate regional meshes in
-    the east-west and north-south directions.
--   `sf::st_as_sfc` function can output `sfc` geometry.
--   For meshes outside the range of the 80 km mesh, where the digits are
-    negative or exceed three digits, the relevant code is displayed as
-    `<-1>` or `<123>` to clearly distinguish them from existing meshes.
+- `grid_move()` function can be used to calculate regional meshes in the
+  east-west and north-south directions.
+- `sf::st_as_sfc` function can output `sfc` geometry.
+- For meshes outside the range of the 80 km mesh, where the digits are
+  negative or exceed three digits, the relevant code is displayed as
+  `<-1>` or `<123>` to clearly distinguish them from existing meshes.
 
 ## Comparison of processing speed with jpmesh package
 
