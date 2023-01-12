@@ -1,3 +1,18 @@
+#' Convert a data frame into a tbl_grid object
+#'
+#' The `tbl_grid` object is a data frame with `grid` objects in the columns.
+#' `as_tbl_grid` converts a data frame into a tbl_grid object.
+#'
+#' @param x An object to be converted into an object class `tbl_grid`.
+#' @param var A variable to specify the grid object. By default, the first
+#' column of the grid object is taken.
+#' @param size 	A grid size.
+#' @param strict A logical scalar. Should the number of digits in the grid
+#' square code match a given number of digits?
+#' @param ... Additional arguments passed to [stickyr::new_sticky_tibble()]
+#'
+#' @return A `tbl_grid` object.
+#'
 #' @export
 as_tbl_grid <- function(x,
                         var = NULL,
@@ -22,7 +37,7 @@ as_tbl_grid <- function(x,
                                                size = size)))
 
   stickyr::new_sticky_tibble(out,
-                             cols = !!var,
+                             cols = !!var, ...,
                              class = "tbl_grid",
                              class_grouped_df = "tbl_grid",
                              class_rowwise_df = "tbl_grid")
