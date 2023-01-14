@@ -1,7 +1,7 @@
 Type: Package
 Package: jpgrid
 Title: Functions for the Grid Square Codes in Japan 
-Version: 0.2.0.9000
+Version: 0.2.1
 Authors@R: 
     person("Mizuki", "Uchida", , "uchidamizuki@vivaldi.net", role = c("aut", "cre"))
 Description: Provides functions for grid square codes in Japan
@@ -28,7 +28,7 @@ Imports:
     units,
     utils,
     vctrs,
-    stickyr (>= 0.1.0.9000),
+    stickyr (>= 0.1.1),
     lifecycle,
     pillar,
     tidyselect

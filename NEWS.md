@@ -1,3 +1,9 @@
+# version 0.2.1
+- Add `as_tbl_grid()`.
+- Add `st_as_sf()`, `st_bbox()`, `st_as_stars()` and `plot()` for `tbl_grid`. 
+- Add `grid_circle()`.
+- Rename `grid_rectangle()` to `grid_bbox()`.
+
 # version 0.2.0
 - Change package name from `japanmesh` to `jpgrid` to match the English name, 
 "Grid Square Codes".
