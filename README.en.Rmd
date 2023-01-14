@@ -102,8 +102,9 @@ grid100m <- grid_subdivide(grid500m,
                            size = "100m")
 grid100m
 
-tibble(grid100m = grid100m[[1]]) %>% 
-  sf::st_set_geometry(sf::st_as_sfc(.$grid100m)) %>% 
+tibble(grid100m = grid100m[[1]]) |> 
+  as_tbl_grid() |> 
+  sf::st_as_sf() |> 
   ggplot() +
   geom_sf() +
   geom_sf_text(aes(label = grid100m))
@@ -139,12 +140,13 @@ The `grid_neighbor()` function calculates the neighboring meshes.
 - Can be calculated in a Neumann neighborhood with `moore = FALSE`.
 
 ```{r}
-neighbor <- grid_10km("644142") %>% 
+neighbor <- grid_10km("644142") |> 
   grid_neighbor(n = c(0:2),
                 simplify = FALSE)
 
-neighbor[[1]] %>% 
-  sf::st_set_geometry(sf::st_as_sfc(.$grid_neighbor)) %>% 
+neighbor[[1]] |> 
+  as_tbl_grid() |> 
+  sf::st_as_sf() |> 
   
   ggplot(aes(fill = as.factor(n))) +
   geom_sf() +
@@ -152,14 +154,14 @@ neighbor[[1]] %>%
 ```
 
 ```{r}
-neighbor_neumann <- grid_10km("644142") %>% 
+neighbor_neumann <- grid_10km("644142") |> 
   grid_neighbor(n = c(0:2),
                 simplify = F,
                 moore = F)
 
-neighbor_neumann[[1]] %>% 
-  sf::st_set_geometry(sf::st_as_sfc(.$grid_neighbor)) %>% 
-  
+neighbor_neumann[[1]] |> 
+  as_tbl_grid() |> 
+  sf::st_as_sf() |> 
   ggplot(aes(fill = as.factor(n))) +
   geom_sf() +
   geom_sf_text(aes(label = grid_neighbor))
@@ -175,8 +177,9 @@ grid_to <- grid_80km(c("5237", "5235"))
 
 line <- grid_line(grid_from, grid_to)
 
-tibble::tibble(grid = line[[1]]) %>% 
-  sf::st_set_geometry(sf::st_as_sfc(.$grid)) %>% 
+tibble::tibble(grid = line[[1]]) |> 
+  as_tbl_grid() |> 
+  sf::st_as_sf() |> 
   ggplot() +
   geom_sf() +
   geom_sf_text(aes(label = grid))
@@ -196,7 +199,8 @@ line <- grid_line(list(grid_1, grid_2),
                   skip_na = TRUE)
 
 tibble::tibble(grid = line[[1]]) %>% 
-  sf::st_set_geometry(sf::st_as_sfc(.$grid)) %>% 
+  as_tbl_grid() |> 
+  sf::st_as_sf() |> 
   ggplot() +
   geom_sf() +
   geom_sf_text(aes(label = grid))

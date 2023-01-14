@@ -128,8 +128,9 @@ grid100m
 #> [19] 5339457688 5339457698 5339457659 5339457669 5339457679 5339457689
 #> [25] 5339457699
 
-tibble(grid100m = grid100m[[1]]) %>% 
-  sf::st_set_geometry(sf::st_as_sfc(.$grid100m)) %>% 
+tibble(grid100m = grid100m[[1]]) |> 
+  as_tbl_grid() |> 
+  sf::st_as_sf() |> 
   ggplot() +
   geom_sf() +
   geom_sf_text(aes(label = grid100m))
@@ -145,9 +146,9 @@ tibble(grid100m = grid100m[[1]]) %>%
 
 ``` r
 tibble(X = c(139.7008, 135.4375), # 経度
-       Y = c(35.68906, 34.70833)) %>% # 緯度
+       Y = c(35.68906, 34.70833)) |>  # 緯度
   mutate(grid100m = XY_to_grid(X, Y, size = "100m"),
-         grid125m = XY_to_grid(X, Y, size = "125m")) %>% 
+         grid125m = XY_to_grid(X, Y, size = "125m")) |> 
   knitr::kable()
 ```
 
@@ -161,8 +162,8 @@ tibble(X = c(139.7008, 135.4375), # 経度
 `grid_to_XY()`関数は，地域メッシュコードを経度・緯度に変換します．
 
 ``` r
-tibble(grid = grid_100m(c("5339452660", "5235034590"))) %>% 
-  mutate(grid_to_XY(grid)) %>% 
+tibble(grid = grid_100m(c("5339452660", "5235034590"))) |> 
+  mutate(grid_to_XY(grid)) |> 
   knitr::kable()
 ```
 
@@ -179,12 +180,13 @@ tibble(grid = grid_100m(c("5339452660", "5235034590"))) %>%
 - `moore = FALSE`でノイマン近傍での算出が可能
 
 ``` r
-neighbor <- grid_10km("644142") %>% 
+neighbor <- grid_10km("644142") |> 
   grid_neighbor(n = c(0:2),
                 simplify = FALSE)
 
-neighbor[[1]] %>% 
-  sf::st_set_geometry(sf::st_as_sfc(.$grid_neighbor)) %>% 
+neighbor[[1]] |> 
+  as_tbl_grid() |> 
+  sf::st_as_sf() |> 
   
   ggplot(aes(fill = as.factor(n))) +
   geom_sf() +
@@ -196,14 +198,14 @@ neighbor[[1]] %>%
 <img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
 
 ``` r
-neighbor_neumann <- grid_10km("644142") %>% 
+neighbor_neumann <- grid_10km("644142") |> 
   grid_neighbor(n = c(0:2),
                 simplify = F,
                 moore = F)
 
-neighbor_neumann[[1]] %>% 
-  sf::st_set_geometry(sf::st_as_sfc(.$grid_neighbor)) %>% 
-  
+neighbor_neumann[[1]] |> 
+  as_tbl_grid() |> 
+  sf::st_as_sf() |> 
   ggplot(aes(fill = as.factor(n))) +
   geom_sf() +
   geom_sf_text(aes(label = grid_neighbor))
@@ -223,8 +225,9 @@ grid_to <- grid_80km(c("5237", "5235"))
 
 line <- grid_line(grid_from, grid_to)
 
-tibble::tibble(grid = line[[1]]) %>% 
-  sf::st_set_geometry(sf::st_as_sfc(.$grid)) %>% 
+tibble::tibble(grid = line[[1]]) |> 
+  as_tbl_grid() |> 
+  sf::st_as_sf() |> 
   ggplot() +
   geom_sf() +
   geom_sf_text(aes(label = grid))
@@ -248,7 +251,8 @@ line <- grid_line(list(grid_1, grid_2),
                   skip_na = TRUE)
 
 tibble::tibble(grid = line[[1]]) %>% 
-  sf::st_set_geometry(sf::st_as_sfc(.$grid)) %>% 
+  as_tbl_grid() |> 
+  sf::st_as_sf() |> 
   ggplot() +
   geom_sf() +
   geom_sf_text(aes(label = grid))
