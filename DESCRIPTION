@@ -26,7 +26,6 @@ Imports:
     tidyr (>= 1.0.0),
     units,
     vctrs,
-    stickyr (>= 0.1.1),
     lifecycle,
     pillar,
     tidyselect,

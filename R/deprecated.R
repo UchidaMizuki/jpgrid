@@ -116,6 +116,114 @@ grid_auto <- function(x,
             what = "grid_auto")
 }
 
+#' Converting sfc geometries to grid square codes
+#'
+#' `r lifecycle::badge("deprecated")`
+#'
+#' @param geometry A `sfc` vector.
+#' @param size A grid size.
+#' @param options Options vector for GDALRasterize passed on to
+#' [stars::st_rasterize()].
+#' @param ... Passed on to [stars::st_rasterize()].
+#'
+#' @return A list of `grid` vectors.
+#'
+#' @export
+geometry_to_grid <- function(geometry, size,
+                             options = "ALL_TOUCHED=TRUE", ...) {
+  lifecycle::deprecate_warn("0.4.0", "geometry_to_grid()", "grid_from_geometry()")
+
+  grid_from_geometry(geometry = geometry,
+                     size = size,
+                     options = options, ...)
+}
+
+#' Converting bbox to grid square codes
+#'
+#' `r lifecycle::badge("deprecated")`
+#'
+#' @param bbox A `bbox`.
+#' @param size A grid size.
+#'
+#' @return A `grid` vector.
+#'
+#' @export
+bbox_to_grid <- function(bbox, size) {
+  lifecycle::deprecate_warn("0.4.0", "bbox_to_grid()", "grid_from_bbox()")
+
+  grid_from_bbox(bbox = bbox,
+                 size = size)
+}
+
+#' Convert a data frame into a tbl_grid object
+#'
+#' `r lifecycle::badge("deprecated")`
+#'
+#' The `tbl_grid` object is a data frame with `grid` objects in the columns.
+#' `as_tbl_grid` converts a data frame into a tbl_grid object.
+#'
+#' @param x An object to be converted into an object class `tbl_grid`.
+#' @param var A variable to specify the grid object. By default, the first
+#' column of the grid object is taken.
+#' @param size 	A grid size.
+#' @param strict A logical scalar. Should the number of digits in the grid
+#' square code match a given number of digits?
+#' @param ... Additional arguments passed to [stickyr::new_sticky_tibble()]
+#'
+#' @return A `tbl_grid` object.
+#'
+#' @export
+as_tbl_grid <- function(x,
+                        var = NULL,
+                        size = NULL,
+                        strict = TRUE, ...) {
+  lifecycle::deprecate_warn("0.4.0", "as_tbl_grid()", "grid_as_sf()")
+
+  if (quo_is_null(enquo(var))) {
+    are_grid <- purrr::map_lgl(x, is_grid)
+
+    if (any(are_grid)) {
+      var <- names(x)[[which(are_grid)[[1L]]]]
+    } else {
+      abort("`x` must have a column of `grid` class.")
+    }
+  } else {
+    var <- tidyselect::vars_pull(names(x), {{ var }})
+  }
+
+  out <- x |>
+    dplyr::mutate(dplyr::across(dplyr::all_of(var),
+                                purrr::partial(grid_parse,
+                                               strict = strict,
+                                               size = size)))
+
+  tibble::new_tibble(out,
+                     attrs = list(grid_col = var),
+                     class = "tbl_grid")
+}
+
+grid_column <- function(x) {
+  row.names(attr(x, "grid_col"))
+}
+
+#' Conversion between grid square codes and coordinates (longitude and latitude)
+#'
+#' `r lifecycle::badge("deprecated")`
+#'
+#' @param X A numeric vector of longitude.
+#' @param Y A numeric vector of latitude.
+#' @param size A grid size.
+#'
+#' @return `XY_to_grid` returns a `grid` vector.
+#'
+#' @export
+XY_to_grid <- function(X, Y, size) {
+  lifecycle::deprecate_warn("0.4.0", "XY_to_grid()", "grid_from_XY()")
+  grid_from_bbox(X = X,
+                 Y = Y,
+                 size = size)
+}
+
 #' Converting data frame containing grid square codes to sf
 #'
 #' @param x A data frame or a `grid`.

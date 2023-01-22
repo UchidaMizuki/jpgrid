@@ -9,8 +9,8 @@
 #' @return A list of `grid` vectors.
 #'
 #' @export
-geometry_to_grid <- function(geometry, size,
-                             options = "ALL_TOUCHED=TRUE", ...) {
+grid_from_geometry <- function(geometry, size,
+                               options = "ALL_TOUCHED=TRUE", ...) {
   if (!inherits(geometry, "sfc")) {
     geometry <- sf::st_as_sfc(geometry)
   }
@@ -55,7 +55,7 @@ geometry_to_grid <- function(geometry, size,
 #' @return A `grid` vector.
 #'
 #' @export
-bbox_to_grid <- function(bbox, size) {
+grid_from_bbox <- function(bbox, size) {
   bbox <- sf::st_bbox(bbox)
   size <- size_match(size)
 
