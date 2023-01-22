@@ -451,19 +451,41 @@ format.grid_100m <- function(x, ...) {
 }
 
 #' @export
-as.character.grid <- function(x, ...) format(x)
+as.character.grid <- function(x, ...) {
+  format(x, ...)
+}
 
 #' @export
-vec_ptype_abbr.grid_80km <- function(x) "grd80k"
+vec_ptype_abbr.grid_80km <- function(x) {
+  "grd80k"
+}
+
 #' @export
-vec_ptype_abbr.grid_10km <- function(x) "grd10k"
+vec_ptype_abbr.grid_10km <- function(x) {
+  "grd10k"
+}
+
 #' @export
-vec_ptype_abbr.grid_1km <- function(x) "grd1k"
+vec_ptype_abbr.grid_1km <- function(x) {
+  "grd1k"
+}
+
 #' @export
-vec_ptype_abbr.grid_500m <- function(x) "grd500"
+vec_ptype_abbr.grid_500m <- function(x) {
+  "grd500"
+}
+
 #' @export
-vec_ptype_abbr.grid_250m <- function(x) "grd250"
+vec_ptype_abbr.grid_250m <- function(x) {
+  "grd250"
+}
+
 #' @export
-vec_ptype_abbr.grid_125m <- function(x) "grd125"
+vec_ptype_abbr.grid_125m <- function(x) {
+  "grd125"
+}
+
 #' @export
-vec_ptype_abbr.grid_100m <- function(x) "grd100"
+vec_ptype_abbr.grid_100m <- function(x) {
+  "grd100"
+}
