@@ -32,7 +32,7 @@ as_tbl_grid <- function(x,
 
   out <- x |>
     dplyr::mutate(dplyr::across(dplyr::all_of(var),
-                                purrr::partial(grid_impl,
+                                purrr::partial(grid_parse,
                                                strict = strict,
                                                size = size)))
 

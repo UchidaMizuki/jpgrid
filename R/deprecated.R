@@ -1,3 +1,121 @@
+#' Grid square code vector
+#'
+#' `r lifecycle::badge("deprecated")`
+#'
+#' A series of functions return `grid` class for each grid size.
+#' `grid_auto` returns automatically determine grid size by the largest
+#' grid size.
+#'
+#' @name grid_class
+#'
+#' @param x A list or vector.
+#' @param strict A logical scalar. Should the number of digits in the grid
+#' square code match a given number of digits?
+#'
+#' @return A `grid` vector.
+#'
+#' @examples
+#' grid_80km("53394526313")
+#' grid_80km("53394526313", strict = FALSE)
+#'
+#' grid_auto(c("53394526313", "5339358633", "533945764"))
+#' grid_auto(c("53394526313", "5339358633", "533945764"), strict = FALSE)
+NULL
+
+grid_impl <- function(x, strict, size, what) {
+  lifecycle::deprecate_warn("0.4.0", stringr::str_c(what, "()"),
+                            details = "Please use `grid_parse()` or `grid_convert()`")
+
+  if (is_grid(x)) {
+    grid_convert(x,
+                 size = size)
+  } else {
+    grid_parse(x,
+               size = size,
+               strict = strict)
+  }
+}
+
+#' @export
+#' @rdname grid_class
+grid_80km <- function(x,
+                      strict = TRUE) {
+  grid_impl(x,
+            strict = strict,
+            size = 80000L,
+            what = "grid_80km")
+}
+
+#' @export
+#' @rdname grid_class
+grid_10km <- function(x,
+                      strict = TRUE) {
+  grid_impl(x,
+            strict = strict,
+            size = 10000L,
+            what = "grid_10km")
+}
+
+#' @export
+#' @rdname grid_class
+grid_1km <- function(x,
+                     strict = TRUE) {
+  grid_impl(x,
+            strict = strict,
+            size = 1000L,
+            what = "grid_1km")
+}
+
+#' @export
+#' @rdname grid_class
+grid_500m <- function(x,
+                      strict = TRUE) {
+  grid_impl(x,
+            strict = strict,
+            size = 500L,
+            what = "grid_500m")
+}
+
+#' @export
+#' @rdname grid_class
+grid_250m <- function(x,
+                      strict = TRUE) {
+  grid_impl(x,
+            strict = strict,
+            size = 250L,
+            what = "grid_250m")
+}
+
+#' @export
+#' @rdname grid_class
+grid_125m <- function(x,
+                      strict = TRUE) {
+  grid_impl(x,
+            strict = strict,
+            size = 125L,
+            what = "grid_125m")
+}
+
+#' @export
+#' @rdname grid_class
+grid_100m <- function(x,
+                      strict = TRUE) {
+  grid_impl(x,
+            strict = strict,
+            size = 100L,
+            what = "grid_100m")
+}
+
+#' @export
+#' @rdname grid_class
+grid_auto <- function(x,
+                      strict = TRUE) {
+  grid_impl(x,
+            strict = strict,
+            size = NULL,
+            what = "grid_auto")
+}
+
 #' Converting data frame containing grid square codes to sf
 #'
 #' @param x A data frame or a `grid`.
