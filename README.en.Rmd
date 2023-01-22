@@ -116,9 +116,9 @@ The `XY_to_grid()` function converts longitude and latitude to Grid Square Codes
 
 ```{r}
 tibble(X = c(139.7008, 135.4375), # longitude
-       Y = c(35.68906, 34.70833)) %>% # latitude
+       Y = c(35.68906, 34.70833)) |> # latitude
   mutate(grid100m = XY_to_grid(X, Y, size = "100m"),
-         mesh125m = XY_to_grid(X, Y, size = "125m")) %>% 
+         mesh125m = XY_to_grid(X, Y, size = "125m")) |> 
   knitr::kable()
 ```
 
@@ -127,8 +127,8 @@ tibble(X = c(139.7008, 135.4375), # longitude
 The `grid_to_XY()` function converts Grid Square Codes to longitude and latitude.
 
 ```{r}
-tibble(mesh = grid_100m(c("5339452660", "5235034590"))) %>% 
-  mutate(grid_to_XY(mesh)) %>% 
+tibble(mesh = grid_100m(c("5339452660", "5235034590"))) |> 
+  mutate(grid_to_XY(mesh)) |> 
   knitr::kable()
 ```
 
@@ -198,7 +198,7 @@ line <- grid_line(list(grid_1, grid_2),
                   close = TRUE,
                   skip_na = TRUE)
 
-tibble::tibble(grid = line[[1]]) %>% 
+tibble::tibble(grid = line[[1]]) |> 
   as_tbl_grid() |> 
   sf::st_as_sf() |> 
   ggplot() +
@@ -239,7 +239,7 @@ microbenchmark::microbenchmark(`jpgrid::XY_to_grid()` = XY_to_grid(X, Y,
                                                                     size = "1km"),
                                `jpmesh::coords_to_mesh()` = jpmesh::coords_to_mesh(X, Y,
                                                                                  grid_size = 1),
-                               setup = set.seed(4321)) %>% 
+                               setup = set.seed(4321)) |> 
   autoplot()
 ```
 
@@ -254,6 +254,6 @@ grid_jpmesh <- jpmesh::coords_to_mesh(X, Y,
 
 microbenchmark::microbenchmark(`jpgrid::grid_to_XY()` = grid_to_XY(grid_jpgrid),
                                `jpmesh::mesh_to_coords()` = jpmesh::mesh_to_coords(grid_jpmesh),
-                               setup = set.seed(4321)) %>% 
+                               setup = set.seed(4321)) |> 
   autoplot()
 ```

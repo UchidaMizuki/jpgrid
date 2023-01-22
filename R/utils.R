@@ -1,7 +1,7 @@
 size_match <- function(size) {
   if (inherits(size, "units")) {
-    size <- size %>%
-      units::set_units("m") %>%
+    size <- size |>
+      units::set_units("m") |>
       units::drop_units()
   } else if (is.character(size)) {
     size <- switch(size,
@@ -30,8 +30,8 @@ grid_size <- function(grid) {
 }
 
 code_80km_to_number <- function(code) {
-  code %>%
-    stringr::str_extract("(?<=^<?)\\-?\\d+(?=>?$)") %>%
+  code |>
+    stringr::str_extract("(?<=^<?)\\-?\\d+(?=>?$)") |>
     as.integer()
 }
 
@@ -43,7 +43,7 @@ code_to_number <- function(code, number_min, number_max) {
 }
 
 number_to_code_80km <- function(number) {
-  code <- number %>%
+  code <- number |>
     stringr::str_pad(2L,
                      side = "left",
                      pad = "0")

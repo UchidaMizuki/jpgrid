@@ -33,7 +33,7 @@ grid_neighbor <- function(grid,
   stopifnot(n >= 0L,
             n %% 1L == 0L)
 
-  n_XY <- n %>%
+  n_XY <- n |>
     purrr::map_dfr(function(n) {
       n_XY <- tidyr::expand_grid(n = n,
                                  n_X = -n:n,
@@ -43,26 +43,26 @@ grid_neighbor <- function(grid,
                   (moore | (abs(n_XY$n_X) + abs(n_XY$n_Y)) == n))
     })
 
-  neighbor <- tibble::tibble(grid = grid) %>%
-    vec_unique() %>%
+  neighbor <- tibble::tibble(grid = grid) |>
+    vec_unique() |>
     tidyr::expand_grid(n_XY)
-  neighbor$grid_neighbor <- neighbor$grid %>%
+  neighbor$grid_neighbor <- neighbor$grid |>
     grid_move(n_X = neighbor$n_X,
               n_Y = neighbor$n_Y)
-  neighbor <- neighbor %>%
+  neighbor <- neighbor |>
     dplyr::group_nest(grid,
                       .key = "neighbor")
 
   if (simplify) {
-    neighbor$neighbor <- neighbor$neighbor %>%
+    neighbor$neighbor <- neighbor$neighbor |>
       purrr::map(function(neighbor) {
-        neighbor %>%
+        neighbor |>
           purrr::chuck("grid_neighbor")
       })
   }
 
-  tibble::tibble(grid = grid) %>%
+  tibble::tibble(grid = grid) |>
     dplyr::left_join(neighbor,
-                     by = "grid") %>%
+                     by = "grid") |>
     purrr::chuck("neighbor")
 }

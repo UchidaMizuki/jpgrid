@@ -2,7 +2,7 @@
 #' @export
 st_as_stars.grid <- function(.x, ...) {
   tibble::tibble(grid = .x,
-                 values = NA_real_) %>%
+                 values = NA_real_) |>
     as_tbl_grid() |>
     st_as_stars(...)
 }
@@ -28,19 +28,19 @@ st_as_stars.tbl_grid <- function(.x,
 
   coords <- coords[coords != grid_col]
   .x <- tidyr::expand_grid(grid,
-                           vctrs::vec_unique(.x[coords])) %>%
+                           vctrs::vec_unique(.x[coords])) |>
     dplyr::left_join(.x,
                      by = c(grid_col, coords))
   .x <- .x[names(.x) != grid_col]
 
   .x <- stars::st_as_stars(.x,
                            coords = c("X", "Y", coords),
-                           y_decreasing = FALSE, ...) %>%
+                           y_decreasing = FALSE, ...) |>
     sf::st_set_crs(crs)
   dim_x <- dim(.x)
-  .x %>%
+  .x |>
     dplyr::slice("X", 1L:(dim_x[["X"]] - 1L),
-                 drop = FALSE) %>%
+                 drop = FALSE) |>
     dplyr::slice("Y", 1L:(dim_x[["Y"]] - 1L),
                  drop = FALSE)
 }

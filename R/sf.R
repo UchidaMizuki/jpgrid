@@ -16,28 +16,28 @@ geometry_to_grid <- function(geometry, size,
   }
 
   if (inherits(geometry, "sfc_POINT")) {
-    XY <- geometry %>%
-      sf::st_coordinates() %>%
+    XY <- geometry |>
+      sf::st_coordinates() |>
       tibble::as_tibble()
 
     XY_to_grid(X = XY$X,
                Y = XY$Y,
                size = size)
   } else {
-    geometry %>%
+    geometry |>
       purrr::map(function(x) {
-        grid <- x %>%
-          sf::st_bbox() %>%
-          bbox_to_grid(size = size) %>%
+        grid <- x |>
+          sf::st_bbox() |>
+          bbox_to_grid(size = size) |>
           st_as_stars()
 
-        XY <- x %>%
-          sf::st_sfc() %>%
-          sf::st_as_sf() %>%
+        XY <- x |>
+          sf::st_sfc() |>
+          sf::st_as_sf() |>
           stars::st_rasterize(grid,
-                              options = options, ...) %>%
-          sf::st_as_sf(as_points = TRUE) %>%
-          sf::st_coordinates() %>%
+                              options = options, ...) |>
+          sf::st_as_sf(as_points = TRUE) |>
+          sf::st_coordinates() |>
           tibble::as_tibble()
 
         XY_to_grid(X = XY$X,
@@ -82,7 +82,7 @@ bbox_to_grid <- function(bbox, size) {
 #' @importFrom sf st_bbox
 #' @export
 st_bbox.grid <- function(obj, ...) {
-  XY <- obj %>%
+  XY <- obj |>
     grid_to_XY(center = FALSE)
   st_bbox(c(xmin = min(XY$X_min),
             ymin = min(XY$Y_min),
@@ -101,7 +101,7 @@ st_bbox.tbl_grid <- function(obj, ...) {
 st_as_sfc.grid <- function(x,
                            as_points = FALSE,
                            crs = sf::NA_crs_, ...) {
-  geometry <- tibble::tibble(grid = x) %>%
+  geometry <- tibble::tibble(grid = x) |>
     vec_unique()
   geometry <- vec_slice(geometry ,
                         !is.na(geometry$grid))
@@ -109,31 +109,31 @@ st_as_sfc.grid <- function(x,
   if (!as_points) {
     XY <- grid_to_XY(geometry$grid,
                      center = FALSE)
-    geometry$geometry <- list(XY$X_min, XY$Y_min, XY$X_max, XY$Y_max) %>%
+    geometry$geometry <- list(XY$X_min, XY$Y_min, XY$X_max, XY$Y_max) |>
       purrr::pmap(function(X_min, Y_min, X_max, Y_max) {
         if (is.na(X_min) || is.na(Y_min) || is.na(X_max) || is.na(Y_max)) {
-          sf::st_polygon() %>%
+          sf::st_polygon() |>
             sf::st_sfc(...)
         } else {
           sf::st_bbox(c(xmin = X_min,
                         ymin = Y_min,
                         xmax = X_max,
-                        ymax = Y_max)) %>%
+                        ymax = Y_max)) |>
             sf::st_as_sfc(...)
         }
-      }) %>%
+      }) |>
       purrr::reduce(c)
   } else {
     geometry$geometry <- grid_to_XY(geometry$grid,
-                                    center = TRUE) %>%
-      sf::st_as_sf(coords = c("X", "Y"), ...) %>%
+                                    center = TRUE) |>
+      sf::st_as_sf(coords = c("X", "Y"), ...) |>
       sf::st_geometry()
   }
 
-  tibble::tibble(grid = x) %>%
+  tibble::tibble(grid = x) |>
     dplyr::left_join(geometry,
-                     by = "grid") %>%
-    purrr::chuck("geometry") %>%
+                     by = "grid") |>
+    purrr::chuck("geometry") |>
     sf::st_set_crs(crs)
 }
 
@@ -144,11 +144,11 @@ st_as_sf.tbl_grid <- function(x,
                               crs = sf::NA_crs_, ...) {
   grid <- x[[grid_column(x)]]
 
-  x %>%
-    tibble::as_tibble() %>%
-    sf::st_set_geometry(grid %>%
+  x |>
+    tibble::as_tibble() |>
+    sf::st_set_geometry(grid |>
                           st_as_sfc(as_points = as_points,
-                                    crs = crs)) %>%
+                                    crs = crs)) |>
     sf::st_as_sf(...)
 }
 
@@ -159,8 +159,8 @@ plot.grid <- function(x, y,
     warn("`y` is ignored")
   }
 
-  x %>%
-    st_as_sfc(as_points = as_points) %>%
+  x |>
+    st_as_sfc(as_points = as_points) |>
     plot(...)
 }
 

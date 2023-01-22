@@ -63,6 +63,8 @@ library(jpgrid)
 library(tibble)
 library(dplyr)
 library(ggplot2)
+
+JGD2011 <- 6668
 ```
 
 ### 文字列・数値からの地域メッシュコードの生成
@@ -250,7 +252,7 @@ line <- grid_line(list(grid_1, grid_2),
                   close = TRUE,
                   skip_na = TRUE)
 
-tibble::tibble(grid = line[[1]]) %>% 
+tibble::tibble(grid = line[[1]]) |> 
   as_tbl_grid() |> 
   sf::st_as_sf() |> 
   ggplot() +

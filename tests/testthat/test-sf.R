@@ -2,7 +2,7 @@ test_that("polygon_to_grid", {
   polygon <- sf::st_polygon(list(rbind(c(139.55625, 35.62083333333334),
                                        c(139.58125, 35.62916666666666),
                                        c(139.56875, 35.64583333333333),
-                                       c(139.55625, 35.62083333333334)))) %>%
+                                       c(139.55625, 35.62083333333334)))) |>
     sf::st_sfc()
   polygon <- rep(polygon, 3L)
 
@@ -15,8 +15,8 @@ test_that("point_to_grid", {
   point <- sf::st_multipoint(rbind(c(139.55625, 35.62083333333334),
                                    c(139.58125, 35.62916666666666),
                                    c(139.56875, 35.64583333333333),
-                                   c(139.55625, 35.62083333333334))) %>%
-    sf::st_sfc() %>%
+                                   c(139.55625, 35.62083333333334))) |>
+    sf::st_sfc() |>
     sf::st_cast("POINT")
 
   grid <- geometry_to_grid(point,
@@ -25,7 +25,7 @@ test_that("point_to_grid", {
 })
 
 test_that("st_as_sfc", {
-  grid10km <- c("53394526313", 5339358633, "533945764", 53394611, "523503", 5339) %>%
+  grid10km <- c("53394526313", 5339358633, "533945764", 53394611, "523503", 5339) |>
     grid_10km()
 
   expect_s3_class(st_as_sfc(grid10km, as_points = TRUE), "sfc_POINT")
@@ -49,12 +49,12 @@ test_that("bbox_to_grid", {
 })
 
 test_that("st_as_sf-2", {
-  grid10km_1 <- c("53394526313", 5339358633, "533945764", 53394611, "523503", 5339) %>%
+  grid10km_1 <- c("53394526313", 5339358633, "533945764", 53394611, "523503", 5339) |>
     grid_10km(strict = FALSE)
   grid10km_2 <- rev(grid10km_1)
 
   sf <- tibble::tibble(grid1 = grid10km_1,
-                       grid2 = grid10km_2) %>%
+                       grid2 = grid10km_2) |>
     sf::st_as_sf()
   expect_s3_class(sf, "sf")
 })

@@ -4,7 +4,6 @@
 #'
 #' @import vctrs
 #' @import rlang
-#' @importFrom magrittr %>%
 #' @importFrom pillar tbl_sum
 #'
 #' @name jpgrid

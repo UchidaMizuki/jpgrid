@@ -43,7 +43,7 @@ grid_line <- function(grid, grid_to,
     sx <- dplyr::if_else(x < x_to, 1L, -1L)
     sy <- dplyr::if_else(y < y_to, 1L, -1L)
 
-    line$line <- list(x, y, x_to, y_to, dx, dy, err, sx, sy) %>%
+    line$line <- list(x, y, x_to, y_to, dx, dy, err, sx, sy) |>
       purrr::pmap(function(x, y, x_to, y_to, dx, dy, err, sx, sy) {
         if (is.na(x) || is.na(y) || is.na(x_to) || is.na(y_to)) {
           new_grid(size = size,
@@ -72,18 +72,18 @@ grid_line <- function(grid, grid_to,
         }
       })
 
-    grid %>%
+    grid |>
       dplyr::left_join(line,
-                       by = c("grid", "grid_to")) %>%
+                       by = c("grid", "grid_to")) |>
       purrr::chuck("line")
   } else {
     stopifnot(is.list(grid),
               missing(grid_to))
 
-    grid %>%
+    grid |>
       purrr::modify(function(grid) {
         if (skip_na) {
-          grid <- grid %>%
+          grid <- grid |>
             vec_slice(!is.na(grid))
         }
 
@@ -94,7 +94,7 @@ grid_line <- function(grid, grid_to,
           grid <- utils::head(grid, -1L)
         }
 
-        grid_line(grid, grid_to) %>%
+        grid_line(grid, grid_to) |>
           purrr::reduce(c)
       })
   }

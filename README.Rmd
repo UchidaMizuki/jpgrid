@@ -203,7 +203,7 @@ line <- grid_line(list(grid_1, grid_2),
                   close = TRUE,
                   skip_na = TRUE)
 
-tibble::tibble(grid = line[[1]]) %>% 
+tibble::tibble(grid = line[[1]]) |> 
   as_tbl_grid() |> 
   sf::st_as_sf() |> 
   ggplot() +

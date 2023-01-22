@@ -154,9 +154,9 @@ Square Codes.
 
 ``` r
 tibble(X = c(139.7008, 135.4375), # longitude
-       Y = c(35.68906, 34.70833)) %>% # latitude
+       Y = c(35.68906, 34.70833)) |> # latitude
   mutate(grid100m = XY_to_grid(X, Y, size = "100m"),
-         mesh125m = XY_to_grid(X, Y, size = "125m")) %>% 
+         mesh125m = XY_to_grid(X, Y, size = "125m")) |> 
   knitr::kable()
 ```
 
@@ -171,8 +171,8 @@ The `grid_to_XY()` function converts Grid Square Codes to longitude and
 latitude.
 
 ``` r
-tibble(mesh = grid_100m(c("5339452660", "5235034590"))) %>% 
-  mutate(grid_to_XY(mesh)) %>% 
+tibble(mesh = grid_100m(c("5339452660", "5235034590"))) |> 
+  mutate(grid_to_XY(mesh)) |> 
   knitr::kable()
 ```
 
@@ -261,7 +261,7 @@ line <- grid_line(list(grid_1, grid_2),
                   close = TRUE,
                   skip_na = TRUE)
 
-tibble::tibble(grid = line[[1]]) %>% 
+tibble::tibble(grid = line[[1]]) |> 
   as_tbl_grid() |> 
   sf::st_as_sf() |> 
   ggplot() +

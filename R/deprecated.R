@@ -23,18 +23,18 @@ grid_as_sf <- function(x,
   stopifnot(is.data.frame(x))
 
   if (is.null(grid_column_name)) {
-    i <- x %>%
+    i <- x |>
       purrr::map_lgl(is_grid)
-    grid_column_name <- names(x) %>%
-      vec_slice(i) %>%
+    grid_column_name <- names(x) |>
+      vec_slice(i) |>
       vec_slice(1L)
   }
   grid <- x[[grid_column_name]]
 
-  x %>%
-    sf::st_set_geometry(grid %>%
+  x |>
+    sf::st_set_geometry(grid |>
                           st_as_sfc(as_points = as_points,
-                                    crs = crs)) %>%
+                                    crs = crs)) |>
     sf::st_as_sf(...)
 }
 
@@ -64,10 +64,10 @@ grid_as_stars <- function(x,
   stopifnot(is.data.frame(x))
 
   if (is.null(grid_column_name)) {
-    i <- x %>%
+    i <- x |>
       purrr::map_lgl(is_grid)
-    grid_column_name <- names(x) %>%
-      vec_slice(i) %>%
+    grid_column_name <- names(x) |>
+      vec_slice(i) |>
       vec_slice(1L)
   }
   grid <- x[[grid_column_name]]
@@ -86,19 +86,19 @@ grid_as_stars <- function(x,
 
   coords <- coords[coords != grid_column_name]
   x <- tidyr::expand_grid(grid,
-                          vctrs::vec_unique(x[coords])) %>%
+                          vctrs::vec_unique(x[coords])) |>
     dplyr::left_join(x,
                      by = c(grid_column_name, coords))
   x <- x[names(x) != grid_column_name]
 
   x <- stars::st_as_stars(x,
                           coords = c("X", "Y", coords),
-                          y_decreasing = FALSE, ...) %>%
+                          y_decreasing = FALSE, ...) |>
     sf::st_set_crs(crs)
   dim_x <- dim(x)
-  x %>%
+  x |>
     dplyr::slice("X", 1L:(dim_x[["X"]] - 1L),
-                 drop = FALSE) %>%
+                 drop = FALSE) |>
     dplyr::slice("Y", 1L:(dim_x[["Y"]] - 1L),
                  drop = FALSE)
 }

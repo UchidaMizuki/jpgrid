@@ -30,7 +30,7 @@ as_tbl_grid <- function(x,
     var <- tidyselect::vars_pull(names(x), {{ var }})
   }
 
-  out <- x %>%
+  out <- x |>
     dplyr::mutate(dplyr::across(dplyr::all_of(var),
                                 purrr::partial(grid_impl,
                                                strict = strict,

@@ -130,37 +130,37 @@ grid_to_code_impl <- function(size, n_X, n_Y) {
   } else if (size == 10000L) {
     grid_to_code_impl(n_X = n_X %/% 8L,
                       n_Y = n_Y %/% 8L,
-                      size = 80000L) %>%
+                      size = 80000L) |>
       c(list(code_X_10km = n_X %% 8L,
              code_Y_10km = n_Y %% 8L))
   } else if (size == 1000L) {
     grid_to_code_impl(n_X = n_X %/% 10L,
                       n_Y = n_Y %/% 10L,
-                      size = 10000L) %>%
+                      size = 10000L) |>
       c(list(code_X_1km = n_X %% 10L,
              code_Y_1km = n_Y %% 10L))
   } else if (size == 500L) {
     grid_to_code_impl(n_X = n_X %/% 2L,
                       n_Y = n_Y %/% 2L,
-                      size = 1000L) %>%
+                      size = 1000L) |>
       c(list(code_500m = code_XY_to_2x2(code_X = n_X %% 2L,
                                         code_Y = n_Y %% 2L)))
   } else if (size == 250L) {
     grid_to_code_impl(n_X = n_X %/% 2L,
                       n_Y = n_Y %/% 2L,
-                      size = 500L) %>%
+                      size = 500L) |>
       c(list(code_250m = code_XY_to_2x2(code_X = n_X %% 2L,
                                         code_Y = n_Y %% 2L)))
   } else if (size == 125L) {
     grid_to_code_impl(n_X = n_X %/% 2L,
                       n_Y = n_Y %/% 2L,
-                      size = 250L) %>%
+                      size = 250L) |>
       c(list(code_125m = code_XY_to_2x2(code_X = n_X %% 2L,
                                         code_Y = n_Y %% 2L)))
   } else if (size == 100L) {
     grid_to_code_impl(n_X = n_X %/% 10L,
                       n_Y = n_Y %/% 10L,
-                      size = 1000L) %>%
+                      size = 1000L) |>
       c(list(code_X_100m = n_X %% 10L,
              code_Y_100m = n_Y %% 10L))
   }
@@ -246,10 +246,10 @@ grid_impl <- function(x, strict, size) {
       pattern <- stringr::str_c("^",
                                 stringr::str_dup("(<\\-?\\d+>|\\d{2})", 2),
                                 "(\\d*)")
-      code_others <- x %>%
-        stringr::str_match(pattern) %>%
-        tibble::as_tibble(.name_repair = ~ c("code", "code_Y_80km", "code_X_80km", "code_others")) %>%
-        tidyr::drop_na(code_others) %>%
+      code_others <- x |>
+        stringr::str_match(pattern) |>
+        tibble::as_tibble(.name_repair = ~ c("code", "code_Y_80km", "code_X_80km", "code_others")) |>
+        tidyr::drop_na(code_others) |>
         purrr::chuck("code_others")
 
       digit <- min(stringr::str_length(code_others))
@@ -263,8 +263,8 @@ grid_impl <- function(x, strict, size) {
       } else if (digit == 5L) {
         size <- 500L
       } else if (digit == 6L) {
-        is_size_250m <- code_others %>%
-          stringr::str_extract("\\d{6}") %>%
+        is_size_250m <- code_others |>
+          stringr::str_extract("\\d{6}") |>
           stringr::str_ends("[1-4]{2}")
         if (all(is_size_250m)) {
           size <- 250L
@@ -338,8 +338,8 @@ grid_impl <- function(x, strict, size) {
     pattern <- stringr::str_c(pattern_80km,
                               stringr::str_dup("(\\d)", digit),
                               strict)
-    args <- x %>%
-      stringr::str_match(pattern) %>%
+    args <- x |>
+      stringr::str_match(pattern) |>
       tibble::as_tibble(.name_repair = ~ c("code", name))
     args <- args[-1]
 

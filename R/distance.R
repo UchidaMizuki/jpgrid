@@ -39,22 +39,22 @@ grid_distance <- function(grid, grid_to,
     Y_to <- length_Y * (distance$n_Y_to + .5)
 
     distance$distance <- geosphere::distGeo(p1 = cbind(0, Y),
-                                            p2 = cbind(diff_X, Y_to)) %>%
+                                            p2 = cbind(diff_X, Y_to)) |>
       units::set_units("m")
 
-    grid %>%
+    grid |>
       dplyr::left_join(distance,
-                       by = c("diff_n_X", "n_Y", "n_Y_to")) %>%
+                       by = c("diff_n_X", "n_Y", "n_Y_to")) |>
       purrr::chuck("distance")
   } else {
     stopifnot(is.list(grid),
               missing(grid_to))
     arg_match(type, c("keep_na", "ignore_na", "skip_na"))
 
-    grid %>%
+    grid |>
       purrr::modify(function(grid) {
         if (type == "skip_na") {
-          grid <- grid %>%
+          grid <- grid |>
             vec_slice(!is.na(grid))
         }
 
@@ -65,7 +65,7 @@ grid_distance <- function(grid, grid_to,
           grid <- utils::head(grid, -1L)
         }
 
-        grid_distance(grid, grid_to) %>%
+        grid_distance(grid, grid_to) |>
           sum(na.rm = type == "ignore_na")
       })
   }
