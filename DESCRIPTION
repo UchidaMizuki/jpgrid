@@ -25,12 +25,12 @@ Imports:
     tibble,
     tidyr (>= 1.0.0),
     units,
-    utils,
     vctrs,
     stickyr (>= 0.1.1),
     lifecycle,
     pillar,
-    tidyselect
+    tidyselect,
+    cli
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
