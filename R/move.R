@@ -1,6 +1,6 @@
 #' Moving on grid square codes
 #'
-#' @inheritParams grid
+#' @param grid A `grid` vector.
 #' @param n_X Number of moving cells in the longitude direction.
 #' @param n_Y Number of moving cells in the latitude direction.
 #'
@@ -17,7 +17,7 @@ grid_move <- function(grid, n_X, n_Y) {
 
 #' Neighborhood grid square codes
 #'
-#' @inheritParams grid
+#' @param grid A `grid` vector.
 #' @param n A numeric vector of degrees.
 #' @param moore Moore neighborhood (`TRUE`) or Von Neumann neighborhood
 #' (`FALSE`).

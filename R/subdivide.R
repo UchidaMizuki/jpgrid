@@ -2,8 +2,8 @@
 #'
 #' `grid_subdivide()` makes the grid square codes finer.
 #'
-#' @inheritParams grid
-#' @inheritParams size
+#' @param grid A `grid` vector.
+#' @param size A grid size.
 #'
 #' @return A list of `grid` vector.
 #'

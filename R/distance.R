@@ -4,7 +4,9 @@
 #' `grid` and `grid_to` is calculated.
 #' If `grid` is a list, The path distance of each element is calculated.
 #'
-#' @inheritParams grid_to
+#' @param grid A `grid` vector or a list of `grid` vector.
+#' @param grid_to A `grid` vector.
+#' @param close Should the path of each element be closed when `grid` is a list?
 #' @param type How is the NA grid treated when `grid` is a list?
 #' `"skip_na"` skips the `NA` grid and connects the paths.
 #' `"keep_na"` by default.

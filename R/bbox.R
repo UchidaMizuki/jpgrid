@@ -1,6 +1,6 @@
 #' Convert grid square codes into bounding codes
 #'
-#' @inheritParams grid
+#' @param grid A `grid` vector.
 #'
 #' @return A `grid` vector.
 #'

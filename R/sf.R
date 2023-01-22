@@ -1,7 +1,7 @@
 #' Converting sfc geometries to grid square codes
 #'
 #' @param geometry A `sfc` vector.
-#' @inheritParams size
+#' @param size A grid size.
 #' @param options Options vector for GDALRasterize passed on to
 #' [stars::st_rasterize()].
 #' @param ... Passed on to [stars::st_rasterize()].
@@ -50,7 +50,7 @@ geometry_to_grid <- function(geometry, size,
 #' Converting bbox to grid square codes
 #'
 #' @param bbox A `bbox`.
-#' @inheritParams size
+#' @param size A grid size.
 #'
 #' @return A `grid` vector.
 #'

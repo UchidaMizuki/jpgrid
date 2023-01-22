@@ -5,7 +5,9 @@
 #' If `grid` is a list, The path lines for each element in the grid will be
 #' drawn.
 #'
-#' @inheritParams grid_to
+#' @param grid A `grid` vector or a list of `grid` vector.
+#' @param grid_to A `grid` vector.
+#' @param close Should the path of each element be closed when `grid` is a list?
 #' @param skip_na Should skip the `NA` grid and connects the paths? `FALSE` by
 #' default.
 #'
