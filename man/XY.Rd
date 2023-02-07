@@ -2,28 +2,28 @@
 % Please edit documentation in R/XY.R
 \name{XY}
 \alias{XY}
-\alias{grid_from_bbox}
+\alias{grid_from_XY}
 \alias{grid_to_XY}
 \title{Conversion between grid square codes and coordinates (longitude and latitude)}
 \usage{
-grid_from_bbox(bbox, size)
+grid_from_XY(X, Y, size)
 
 grid_to_XY(grid, center = TRUE)
 }
 \arguments{
+\item{X}{A numeric vector of longitude.}
+
+\item{Y}{A numeric vector of latitude.}
+
 \item{size}{A grid size.}
 
 \item{grid}{A \code{grid} class vector.}
 
 \item{center}{Should the center point of the grid be returned? Otherwise the
 end points will be returned. \code{TRUE} by default.}
-
-\item{X}{A numeric vector of longitude.}
-
-\item{Y}{A numeric vector of latitude.}
 }
 \value{
-\code{grid_from_bbox} returns a \code{grid} vector.
+\code{grid_from_XY} returns a \code{grid} vector.
 
 \code{grid_to_XY} returns a \code{tbl_df}.
 }

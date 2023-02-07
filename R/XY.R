@@ -9,10 +9,10 @@ NULL
 #' @param Y A numeric vector of latitude.
 #' @param size A grid size.
 #'
-#' @return `grid_from_bbox` returns a `grid` vector.
+#' @return `grid_from_XY` returns a `grid` vector.
 #'
 #' @export
-grid_from_bbox <- function(X, Y, size) {
+grid_from_XY <- function(X, Y, size) {
   size <- size_match(size)
 
   length_X <- size / 80000L

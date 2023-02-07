@@ -28,7 +28,7 @@ grid_from_geometry <- function(geometry, size,
       purrr::map(function(x) {
         grid <- x |>
           sf::st_bbox() |>
-          bbox_to_grid(size = size) |>
+          grid_from_bbox(size = size) |>
           st_as_stars()
 
         XY <- x |>
@@ -40,9 +40,9 @@ grid_from_geometry <- function(geometry, size,
           sf::st_coordinates() |>
           tibble::as_tibble()
 
-        XY_to_grid(X = XY$X,
-                   Y = XY$Y,
-                   size = size)
+        grid_from_XY(X = XY$X,
+                     Y = XY$Y,
+                     size = size)
       })
   }
 }
@@ -164,13 +164,39 @@ plot.grid <- function(x, y,
     plot(...)
 }
 
+#' Converting data frame containing grid square codes to sf
+#'
+#' @param x A data frame or a `grid`.
+#' @param as_points Return the center points of the grids or not?
+#' @param crs Coordinate reference system.
+#' @param grid_column_name A scalar character.
+#' @param ... passed on to [sf::st_as_sf()].
+#'
+#' @return A \code{sf} object.
+#'
 #' @export
-plot.tbl_grid <- function(x, y,
-                          as_points = FALSE, ...) {
-  if (!missing(y)) {
-    warn("`y` is ignored")
+grid_as_sf <- function(x,
+                       as_points = FALSE,
+                       crs = sf::NA_crs_,
+                       grid_column_name = NULL, ...) {
+  if (is_grid(x)) {
+    x <- tibble::tibble(grid = x)
+    grid_column_name <- "grid"
   }
+  stopifnot(is.data.frame(x))
 
-  plot(x[[grid_column(x)]],
-       as_points = as_points, ...)
+  if (is.null(grid_column_name)) {
+    i <- x |>
+      purrr::map_lgl(is_grid)
+    grid_column_name <- names(x) |>
+      vec_slice(i) |>
+      vec_slice(1L)
+  }
+  grid <- x[[grid_column_name]]
+
+  x |>
+    sf::st_set_geometry(grid |>
+                          st_as_sfc(as_points = as_points,
+                                    crs = crs)) |>
+    sf::st_as_sf(...)
 }
