@@ -11,7 +11,7 @@
 grid_subdivide <- function(grid, size) {
   stopifnot(is_grid(grid))
 
-  size <- size_match(size)
+  size <- grid_size_match(size)
   ratio <- grid_size(grid) / size
 
   stopifnot(ratio %% 1L == 0L)

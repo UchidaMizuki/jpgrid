@@ -1,4 +1,4 @@
-size_match <- function(size) {
+grid_size_match <- function(size) {
   if (inherits(size, "units")) {
     size <- size |>
       units::set_units("m") |>

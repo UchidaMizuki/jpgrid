@@ -11,7 +11,7 @@ test_that("XY_reconversion", {
   x <- c(53394526313, 5339358633, 533945764, 53394611, 523503, 5339)
 
   for (size in c("80km", "10km", "1km", "500m", "250m", "125m", "100m")) {
-    size <- size_match(size)
+    size <- grid_size_match(size)
 
     grid <- grid_parse(x,
                        size = size,
@@ -29,7 +29,7 @@ test_that("XY_reconversion_notcenter", {
   eps <- .Machine$double.eps ^ 0.5
 
   for (size in c("80km", "10km", "1km", "500m", "250m", "125m", "100m")) {
-    size <- size_match(size)
+    size <- grid_size_match(size)
 
     grid <- grid_parse(x,
                        size = size,

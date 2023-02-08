@@ -57,7 +57,7 @@ grid_from_geometry <- function(geometry, size,
 #' @export
 grid_from_bbox <- function(bbox, size) {
   bbox <- sf::st_bbox(bbox)
-  size <- size_match(size)
+  size <- grid_size_match(size)
 
   grid_min <- XY_to_grid(X = bbox[["xmin"]],
                          Y = bbox[["ymin"]],

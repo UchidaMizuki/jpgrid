@@ -61,7 +61,7 @@ grid_parse <- function(x,
 
     cli::cli_inform("Guessing, size = {.val {grid_size_name}}")
   } else {
-    size <- size_match(size)
+    size <- grid_size_match(size)
   }
 
   pattern_80km <- stringr::str_c("^",

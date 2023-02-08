@@ -13,7 +13,7 @@
 #'
 #' @export
 grid_convert <- function(grid, size) {
-  size <- size_match(size)
+  size <- grid_size_match(size)
   ratio <- size / grid_size(grid)
 
   stopifnot(ratio %% 1L == 0L)

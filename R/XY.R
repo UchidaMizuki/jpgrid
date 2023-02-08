@@ -13,7 +13,7 @@ NULL
 #'
 #' @export
 grid_from_XY <- function(X, Y, size) {
-  size <- size_match(size)
+  size <- grid_size_match(size)
 
   length_X <- size / 80000L
   length_Y <- length_X / 1.5
