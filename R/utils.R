@@ -11,10 +11,15 @@ grid_size_match <- function(size) {
                    `500m` = 500L,
                    `250m` = 250L,
                    `125m` = 125L,
-                   `100m` = 100L)
+                   `100m` = 100L,
+                   NA_integer_)
   }
 
-  stopifnot(size %in% c(80000L, 10000L, 1000L, 500L, 250L, 125L, 100L))
+  if (!size %in% c(80000L, 10000L, 1000L, 500L, 250L, 125L, 100L)) {
+    sizes <- cli_vec(c("80km", "10km", "1km", "500m", "250m", "125m", "100m"),
+                     style = list("vec-last" = " or "))
+    cli_abort("{.arg size} must {.val {sizes}}")
+  }
   size
 }
 

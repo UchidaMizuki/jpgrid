@@ -4,7 +4,7 @@
 \alias{grid_line}
 \title{Draw line segments between grid square codes}
 \usage{
-grid_line(grid, grid_to, close = FALSE, skip_na = FALSE)
+grid_line(grid, grid_to = NULL, close = FALSE, skip_na = FALSE)
 }
 \arguments{
 \item{grid}{A \code{grid} vector or a list of \code{grid} vector.}

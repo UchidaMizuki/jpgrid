@@ -13,10 +13,17 @@
 #'
 #' @export
 grid_convert <- function(grid, size) {
+  if (!is_grid(grid)) {
+    cli_abort("{.arg grid} must be a vector with type {.cls grid}.")
+  }
+
   size <- grid_size_match(size)
   ratio <- size / grid_size(grid)
 
-  stopifnot(ratio %% 1L == 0L)
+  if (!is_integerish(ratio)) {
+    cli_abort(c("{.arg grid} must be able to convert one-to-one.",
+                "i" = "You can use {.fn grid_subdivide}."))
+  }
   ratio <- as.integer(ratio)
 
   new_grid(size = size,

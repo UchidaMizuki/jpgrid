@@ -146,13 +146,19 @@ grid_to_code_impl <- function(size, n_X, n_Y) {
 
 #' Test if the object is a grid
 #'
-#' @param x An object
+#' @param x An object.
+#' @param size A grid size.
 #'
 #' @return `TRUE` if the object inherits from the `grid` class.
 #'
 #' @export
-is_grid <- function(x) {
-  inherits(x, "grid")
+is_grid <- function(x,
+                    size = NULL) {
+  if (is.null(size)) {
+    inherits(x, "grid")
+  } else {
+    grid_size(x) == grid_size_match(size)
+  }
 }
 
 # printing ----------------------------------------------------------------

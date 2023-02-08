@@ -14,14 +14,19 @@
 #' @return A list of `grid` vectors.
 #'
 #' @export
-grid_line <- function(grid, grid_to,
+grid_line <- function(grid,
+                      grid_to = NULL,
                       close = FALSE,
                       skip_na = FALSE) {
   if (is_grid(grid)) {
-    stopifnot(is_grid(grid_to))
+    if (!is_grid(grid_to)) {
+      cli_abort("{.arg grid_to} must be a vector with type {.cls grid}.")
+    }
 
     size <- grid_size(grid)
-    stopifnot(size == grid_size(grid_to))
+    if (size != grid_size(grid_to)) {
+      cli_abort("The size of {.arg grid} and {.arg grid_to} must be the same.")
+    }
 
     grid <- tibble::tibble(grid = grid,
                            grid_to = grid_to)
@@ -46,7 +51,7 @@ grid_line <- function(grid, grid_to,
     sy <- dplyr::if_else(y < y_to, 1L, -1L)
 
     line$line <- list(x, y, x_to, y_to, dx, dy, err, sx, sy) |>
-      purrr::pmap(function(x, y, x_to, y_to, dx, dy, err, sx, sy) {
+      purrr::pmap(\(x, y, x_to, y_to, dx, dy, err, sx, sy) {
         if (is.na(x) || is.na(y) || is.na(x_to) || is.na(y_to)) {
           new_grid(size = size,
                    n_X = NA_integer_,
@@ -79,11 +84,15 @@ grid_line <- function(grid, grid_to,
                        by = c("grid", "grid_to")) |>
       purrr::chuck("line")
   } else {
-    stopifnot(is.list(grid),
-              missing(grid_to))
+    if (!is.list(grid)) {
+      cli_abort("{.arg grid} must be a {.cls list}.")
+    }
+    if (!is.null(grid_to)) {
+      cli_abort("If {.arg grid} is a {.cls list}, {.arg grid_to} must be {.var NULL}.")
+    }
 
     grid |>
-      purrr::modify(function(grid) {
+      purrr::modify(\(grid) {
         if (skip_na) {
           grid <- grid |>
             vec_slice(!is.na(grid))
@@ -97,7 +106,7 @@ grid_line <- function(grid, grid_to,
         }
 
         grid_line(grid, grid_to) |>
-          purrr::reduce(c)
+          purrr::list_c()
       })
   }
 }

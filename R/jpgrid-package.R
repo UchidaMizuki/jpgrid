@@ -4,6 +4,7 @@
 #'
 #' @import vctrs
 #' @import rlang
+#' @importFrom cli cli_abort cli_inform cli_vec
 #' @importFrom pillar tbl_sum
 #'
 #' @name jpgrid

@@ -41,12 +41,11 @@ grid_city2015 <- tibble(pref_name_ja = html_grid_city2015 |>
   rename(city_code = `都道府県市区町村コード`,
          city_name_ja = `市区町村名`,
          grid = `基準メッシュ・コード`) |>
-  mutate(grid = grid_1km(grid)) |>
+  mutate(grid = grid_parse(grid,
+                           size = "1km")) |>
   left_join(pref_name,
             by = "pref_code") |>
-  relocate(pref_code, city_code, pref_name, pref_name_ja, city_name_ja, grid) |>
-  as_tbl_grid(grid,
-              size = "1km")
+  relocate(pref_code, city_code, pref_name, pref_name_ja, city_name_ja, grid)
 
 usethis::use_data(grid_city2015,
                   overwrite = TRUE)

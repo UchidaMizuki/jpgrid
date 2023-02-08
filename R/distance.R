@@ -14,14 +14,19 @@
 #' @return A double vector.
 #'
 #' @export
-grid_distance <- function(grid, grid_to,
+grid_distance <- function(grid,
+                          grid_to = NULL,
                           close = FALSE,
-                          type = "keep_na") {
+                          type = c("keep_na", "ignore_na", "skip_na")) {
   if (is_grid(grid)) {
-    stopifnot(is_grid(grid_to))
+    if (!is_grid(grid_to)) {
+      cli_abort("{.arg grid_to} must be a vector with type {.cls grid}.")
+    }
 
     size <- grid_size(grid)
-    stopifnot(size == grid_size(grid_to))
+    if (size != grid_size(grid_to)) {
+      cli_abort("The size of {.arg grid} and {.arg grid_to} must be the same.")
+    }
 
     grid <- tibble::tibble(diff_n_X = field(grid_to, "n_X") - field(grid, "n_X"),
                            n_Y = field(grid, "n_Y"),
@@ -49,12 +54,16 @@ grid_distance <- function(grid, grid_to,
                        by = c("diff_n_X", "n_Y", "n_Y_to")) |>
       purrr::chuck("distance")
   } else {
-    stopifnot(is.list(grid),
-              missing(grid_to))
-    arg_match(type, c("keep_na", "ignore_na", "skip_na"))
+    if (!is.list(grid)) {
+      cli_abort("{.arg grid} must be a {.cls list}.")
+    }
+    if (!is.null(grid_to)) {
+      cli_abort("If {.arg grid} is a {.cls list}, {.arg grid_to} must be {.var NULL}.")
+    }
+    type <- arg_match(type, c("keep_na", "ignore_na", "skip_na"))
 
     grid |>
-      purrr::modify(function(grid) {
+      purrr::modify(\(grid) {
         if (type == "skip_na") {
           grid <- grid |>
             vec_slice(!is.na(grid))

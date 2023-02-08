@@ -59,7 +59,7 @@ grid_parse <- function(x,
                              `125` = "125m",
                              `100` = "100m")
 
-    cli::cli_inform("Guessing, size = {.val {grid_size_name}}")
+    cli_inform("Guessing, size = {.val {grid_size_name}}")
   } else {
     size <- grid_size_match(size)
   }

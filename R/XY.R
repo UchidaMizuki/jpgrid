@@ -33,7 +33,9 @@ grid_from_XY <- function(X, Y, size) {
 #'
 #' @export
 grid_to_XY <- function(grid, center = TRUE) {
-  stopifnot(is_grid(grid))
+  if (!is_grid(grid)) {
+    cli_abort("{.arg grid} must be a vector with type {.cls grid}.")
+  }
 
   length_X <- grid_size(grid) / 80000L
   length_Y <- length_X / 1.5

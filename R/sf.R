@@ -20,9 +20,9 @@ grid_from_geometry <- function(geometry, size,
       sf::st_coordinates() |>
       tibble::as_tibble()
 
-    XY_to_grid(X = XY$X,
-               Y = XY$Y,
-               size = size)
+    grid_from_XY(X = XY$X,
+                 Y = XY$Y,
+                 size = size)
   } else {
     geometry |>
       purrr::map(function(x) {
@@ -59,15 +59,15 @@ grid_from_bbox <- function(bbox, size) {
   bbox <- sf::st_bbox(bbox)
   size <- grid_size_match(size)
 
-  grid_min <- XY_to_grid(X = bbox[["xmin"]],
-                         Y = bbox[["ymin"]],
-                         size = size)
+  grid_min <- grid_from_XY(X = bbox[["xmin"]],
+                           Y = bbox[["ymin"]],
+                           size = size)
   n_X_min <- field(grid_min, "n_X")
   n_Y_min <- field(grid_min, "n_Y")
 
-  grid_max <- XY_to_grid(X = bbox[["xmax"]],
-                         Y = bbox[["ymax"]],
-                         size = size)
+  grid_max <- grid_from_XY(X = bbox[["xmax"]],
+                           Y = bbox[["ymax"]],
+                           size = size)
   n_X_max <- field(grid_max, "n_X")
   n_Y_max <- field(grid_max, "n_Y")
 
@@ -122,7 +122,7 @@ st_as_sfc.grid <- function(x,
             sf::st_as_sfc(...)
         }
       }) |>
-      purrr::reduce(c)
+      purrr::list_c()
   } else {
     geometry$geometry <- grid_to_XY(geometry$grid,
                                     center = TRUE) |>
@@ -135,21 +135,6 @@ st_as_sfc.grid <- function(x,
                      by = "grid") |>
     purrr::chuck("geometry") |>
     sf::st_set_crs(crs)
-}
-
-#' @importFrom sf st_as_sf
-#' @export
-st_as_sf.tbl_grid <- function(x,
-                              as_points = FALSE,
-                              crs = sf::NA_crs_, ...) {
-  grid <- x[[grid_column(x)]]
-
-  x |>
-    tibble::as_tibble() |>
-    sf::st_set_geometry(grid |>
-                          st_as_sfc(as_points = as_points,
-                                    crs = crs)) |>
-    sf::st_as_sf(...)
 }
 
 #' @export
@@ -182,8 +167,9 @@ grid_as_sf <- function(x,
   if (is_grid(x)) {
     x <- tibble::tibble(grid = x)
     grid_column_name <- "grid"
+  } else if (!is.data.frame(x)) {
+    cli_abort("{.arg x} must be a {.cls grid} or a data frame.")
   }
-  stopifnot(is.data.frame(x))
 
   if (is.null(grid_column_name)) {
     i <- x |>

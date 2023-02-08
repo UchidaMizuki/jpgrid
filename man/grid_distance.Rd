@@ -4,7 +4,12 @@
 \alias{grid_distance}
 \title{Distance between grid square codes}
 \usage{
-grid_distance(grid, grid_to, close = FALSE, type = "keep_na")
+grid_distance(
+  grid,
+  grid_to = NULL,
+  close = FALSE,
+  type = c("keep_na", "ignore_na", "skip_na")
+)
 }
 \arguments{
 \item{grid}{A \code{grid} vector or a list of \code{grid} vector.}

@@ -25,8 +25,9 @@ grid_as_stars <- function(x,
     x <- tibble::tibble(grid = x,
                         values = NA_real_)
     grid_column_name <- "grid"
+  } else if (!is.data.frame(x)) {
+    cli_abort("{.arg x} must be a {.cls grid} or a data frame.")
   }
-  stopifnot(is.data.frame(x))
 
   if (is.null(grid_column_name)) {
     i <- x |>

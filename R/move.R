@@ -8,7 +8,9 @@
 #'
 #' @export
 grid_move <- function(grid, n_X, n_Y) {
-  stopifnot(is_grid(grid))
+  if (!is_grid(grid)) {
+    cli_abort("{.arg grid} must be a vector with type {.cls grid}.")
+  }
 
   new_grid(size = grid_size(grid),
            n_X = field(grid, "n_X") + n_X,
@@ -30,8 +32,9 @@ grid_neighbor <- function(grid,
                           n = 1L,
                           moore = TRUE,
                           simplify = TRUE) {
-  stopifnot(n >= 0L,
-            n %% 1L == 0L)
+  if (!all(n >= 0 & is_integerish(n))) {
+    cli_abort("{.arg n} must be a {.cls integer} vector greater than or equal to 0.")
+  }
 
   n_XY <- n |>
     purrr::map_dfr(function(n) {

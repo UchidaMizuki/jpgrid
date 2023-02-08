@@ -224,6 +224,21 @@ XY_to_grid <- function(X, Y, size) {
                size = size)
 }
 
+#' @importFrom sf st_as_sf
+#' @export
+st_as_sf.tbl_grid <- function(x,
+                              as_points = FALSE,
+                              crs = sf::NA_crs_, ...) {
+  grid <- x[[grid_column(x)]]
+
+  x |>
+    tibble::as_tibble() |>
+    sf::st_set_geometry(grid |>
+                          st_as_sfc(as_points = as_points,
+                                    crs = crs)) |>
+    sf::st_as_sf(...)
+}
+
 #' @export
 st_as_stars.tbl_grid <- function(.x,
                                  coords = NULL,

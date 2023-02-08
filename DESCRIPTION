@@ -17,7 +17,7 @@ Depends:
 Imports: 
     dplyr (>= 0.8.0),
     geosphere,
-    purrr (>= 0.3.0),
+    purrr (>= 1.0.0),
     rlang (>= 0.3.0),
     stars,
     sf,

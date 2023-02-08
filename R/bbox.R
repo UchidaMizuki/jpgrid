@@ -6,6 +6,10 @@
 #'
 #' @export
 grid_bbox <- function(grid) {
+  if (!is_grid(grid)) {
+    cli_abort("{.arg grid} must be a vector with type {.cls grid}.")
+  }
+
   n_X <- field(grid, "n_X")
   n_Y <- field(grid, "n_Y")
   n_XY <- tidyr::expand_grid(n_X = min(n_X):max(n_X),

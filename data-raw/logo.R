@@ -19,7 +19,8 @@ color_logo <- "snow"
 JGD2011 <- 6668
 
 plot_grid_city2015 <- grid_city2015 |>
-  mutate(grid = grid_80km(grid)) |>
+  mutate(grid = grid_convert(grid,
+                             size = "80km")) |>
   distinct(grid) |>
   st_as_sf(crs = JGD2011) |>
 
@@ -45,12 +46,6 @@ sticker(plot_grid_city2015,
 
         h_fill = fill_logo,
         h_color = "transparent") +
-
-        # spotlight = TRUE,
-        # l_x = 1,
-        # l_y = 1,
-        # l_width = 6,
-        # l_height = 6) +
   geom_url(url = "jpgrid",
            x = 0.975,
            y = 0.225,
