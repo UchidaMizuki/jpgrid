@@ -1,3 +1,18 @@
+#' Parse grid square codes
+#'
+#' @param x A character vector of grid square codes.
+#' @param size A grid size.
+#' @param strict A logical scalar. Should the number of digits in the grid
+#' square code match a given number of digits? By default, `TRUE`.
+#'
+#' @examples
+#' grid_parse("53394526313")
+#' grid_parse("53394526313",
+#'            size = "80km")
+#' grid_parse("53394526313",
+#'            size = "80km",
+#'            strict = FALSE)
+#'
 #' @export
 grid_parse <- function(x,
                        size = NULL,

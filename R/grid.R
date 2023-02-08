@@ -144,6 +144,12 @@ grid_to_code_impl <- function(size, n_X, n_Y) {
   }
 }
 
+#' Test if the object is a grid
+#'
+#' @param x An object
+#'
+#' @return `TRUE` if the object inherits from the `grid` class.
+#'
 #' @export
 is_grid <- function(x) {
   inherits(x, "grid")
