@@ -4,12 +4,12 @@
 \alias{grid_parse}
 \title{Parse grid square codes}
 \usage{
-grid_parse(x, size = NULL, strict = TRUE)
+grid_parse(x, grid_size = NULL, strict = TRUE)
 }
 \arguments{
 \item{x}{A character vector of grid square codes.}
 
-\item{size}{A grid size.}
+\item{grid_size}{A grid size.}
 
 \item{strict}{A logical scalar. Should the number of digits in the grid
 square code match a given number of digits? By default, \code{TRUE}.}
@@ -19,10 +19,8 @@ Parse grid square codes
 }
 \examples{
 grid_parse("53394526313")
-grid_parse("53394526313",
-           size = "80km")
-grid_parse("53394526313",
-           size = "80km",
+grid_parse("53394526313", "80km")
+grid_parse("53394526313", "80km",
            strict = FALSE)
 
 }

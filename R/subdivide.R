@@ -3,18 +3,18 @@
 #' `grid_subdivide()` makes the grid square codes finer.
 #'
 #' @param grid A `grid` vector.
-#' @param size A grid size.
+#' @param grid_size A grid size.
 #'
 #' @return A list of `grid` vector.
 #'
 #' @export
-grid_subdivide <- function(grid, size) {
+grid_subdivide <- function(grid, grid_size) {
   if (!is_grid(grid)) {
     cli_abort("{.arg grid} must be a vector with type {.cls grid}.")
   }
 
-  size <- grid_size_match(size)
-  ratio <- grid_size(grid) / size
+  grid_size <- grid_size_match(grid_size)
+  ratio <- grid_size(grid) / grid_size
 
   if (!is_integerish(ratio)) {
     cli_abort("{.arg grid} can't be subdivided.")
@@ -35,11 +35,11 @@ grid_subdivide <- function(grid, size) {
 
                   n_XY <- tidyr::expand_grid(n_X = n_X_min:n_X_max,
                                              n_Y = n_Y_min:n_Y_max)
-                  new_grid(size = size,
+                  new_grid(grid_size = grid_size,
                            n_X = n_XY$n_X,
                            n_Y = n_XY$n_Y)
                 } else {
-                  new_grid(size = size)
+                  new_grid(grid_size = grid_size)
                 }
               })
 }

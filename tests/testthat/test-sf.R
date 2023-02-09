@@ -6,8 +6,7 @@ test_that("polygon_to_grid", {
     sf::st_sfc()
   polygon <- rep(polygon, 3L)
 
-  grid <- grid_from_geom(polygon,
-                         size = "500m")
+  grid <- grid_from_geom(polygon, "500m")
   expect_s3_class(grid[[1L]], "grid")
 })
 
@@ -20,13 +19,12 @@ test_that("point_to_grid", {
     sf::st_cast("POINT")
 
   grid <- grid_from_geom(point,
-                         size = "1km")
+                         grid_size = "1km")
   expect_s3_class(grid[[1L]], "grid")
 })
 
 test_that("st_as_sfc", {
-  grid_10km <- c("53394526313", 5339358633, "533945764", 53394611, "523503", 5339) |>
-    grid_parse(size = "10km")
+  grid_10km <- grid_parse(c("53394526313", 5339358633, "533945764", 53394611, "523503", 5339), "10km")
 
   expect_s3_class(st_as_sfc(grid_10km, as_points = TRUE), "sfc_POINT")
   expect_s3_class(st_as_sfc(grid_10km), "sfc_POLYGON")
@@ -38,20 +36,18 @@ test_that("bbox_to_grid", {
                         xmax = 139.84375,
                         ymax = 35.72916666666667))
 
-  grid <- grid_from_bbox(bbox,
-                         size = "1km")
+  grid <- grid_from_bbox(bbox, "1km")
   expect_equal(vctrs::vec_size(grid), 12L)
 
   # grid <- bbox_to_grid(list(bbox, bbox),
-  #                      size = "1km")
+  #                      grid_size = "1km")
   # expect_true(is.list(grid))
   # expect_equal(vctrs::vec_size(grid[[1L]]), 12L)
 })
 
 test_that("st_as_sf-2", {
-  grid_10km_1 <- c("53394526313", 5339358633, "533945764", 53394611, "523503", 5339) |>
-    grid_parse(size = "10km",
-               strict = FALSE)
+  grid_10km_1 <- grid_parse(c("53394526313", 5339358633, "533945764", 53394611, "523503", 5339), "10km",
+                            strict = FALSE)
   grid_10km_2 <- rev(grid_10km_1)
 
   sf <- tibble::tibble(grid1 = grid_10km_1,
@@ -61,18 +57,16 @@ test_that("st_as_sf-2", {
 })
 
 test_that("st_bbox", {
-  grid <- grid_parse(c("533945263", "533935863", "533945764"),
-                     size = "500m")
+  grid <- grid_parse(c("533945263", "533935863", "533945764"), "500m")
   bbox <- st_bbox(grid)
-  grid_bbox <- grid_from_bbox(bbox, size = "500m")
+  grid_bbox <- grid_from_bbox(bbox, "500m")
 
   expect_s3_class(bbox, "bbox")
   expect_true(all(vec_in(grid, grid_bbox)))
 })
 
 test_that("grid_as_sf", {
-  grid <- grid_parse(c("533945263", "533935863", "533945764"),
-                     size = "500m")
+  grid <- grid_parse(c("533945263", "533935863", "533945764"), "500m")
   df_grid <- grid_as_sf(grid)
 
   expect_s3_class(df_grid, "sf")

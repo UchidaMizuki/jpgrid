@@ -17,16 +17,16 @@
 #' @return A `grid` vector.
 NULL
 
-grid_impl <- function(x, strict, size, what) {
+grid_impl <- function(x, strict, grid_size, what) {
   lifecycle::deprecate_warn("0.4.0", stringr::str_c(what, "()"),
                             details = "Please use `grid_parse()` or `grid_convert()`")
 
   if (is_grid(x)) {
     grid_convert(x,
-                 size = size)
+                 grid_size = grid_size)
   } else {
     grid_parse(x,
-               size = size,
+               grid_size = grid_size,
                strict = strict)
   }
 }
@@ -37,7 +37,7 @@ grid_80km <- function(x,
                       strict = TRUE) {
   grid_impl(x,
             strict = strict,
-            size = 80000L,
+            grid_size = 80000L,
             what = "grid_80km")
 }
 
@@ -47,7 +47,7 @@ grid_10km <- function(x,
                       strict = TRUE) {
   grid_impl(x,
             strict = strict,
-            size = 10000L,
+            grid_size = 10000L,
             what = "grid_10km")
 }
 
@@ -57,7 +57,7 @@ grid_1km <- function(x,
                      strict = TRUE) {
   grid_impl(x,
             strict = strict,
-            size = 1000L,
+            grid_size = 1000L,
             what = "grid_1km")
 }
 
@@ -67,7 +67,7 @@ grid_500m <- function(x,
                       strict = TRUE) {
   grid_impl(x,
             strict = strict,
-            size = 500L,
+            grid_size = 500L,
             what = "grid_500m")
 }
 
@@ -77,7 +77,7 @@ grid_250m <- function(x,
                       strict = TRUE) {
   grid_impl(x,
             strict = strict,
-            size = 250L,
+            grid_size = 250L,
             what = "grid_250m")
 }
 
@@ -87,7 +87,7 @@ grid_125m <- function(x,
                       strict = TRUE) {
   grid_impl(x,
             strict = strict,
-            size = 125L,
+            grid_size = 125L,
             what = "grid_125m")
 }
 
@@ -97,7 +97,7 @@ grid_100m <- function(x,
                       strict = TRUE) {
   grid_impl(x,
             strict = strict,
-            size = 100L,
+            grid_size = 100L,
             what = "grid_100m")
 }
 
@@ -107,7 +107,7 @@ grid_auto <- function(x,
                       strict = TRUE) {
   grid_impl(x,
             strict = strict,
-            size = NULL,
+            grid_size = NULL,
             what = "grid_auto")
 }
 
@@ -118,7 +118,7 @@ grid_auto <- function(x,
 #' It is recommended to use `grid_from_geom()`.
 #'
 #' @param geometry A `sfc` vector.
-#' @param size A grid size.
+#' @param grid_size A grid size.
 #' @param options Options vector for GDALRasterize passed on to
 #' [stars::st_rasterize()].
 #' @param ... Passed on to [stars::st_rasterize()].
@@ -126,12 +126,12 @@ grid_auto <- function(x,
 #' @return A list of `grid` vectors.
 #'
 #' @export
-geometry_to_grid <- function(geometry, size,
+geometry_to_grid <- function(geometry, grid_size,
                              options = "ALL_TOUCHED=TRUE", ...) {
   lifecycle::deprecate_warn("0.4.0", "geometry_to_grid()", "grid_from_geom()")
 
   grid_from_geom(geometry = geometry,
-                 size = size,
+                 grid_size = grid_size,
                  options = options, ...)
 }
 
@@ -142,16 +142,16 @@ geometry_to_grid <- function(geometry, size,
 #' It is recommended to use `grid_from_bbox()`.
 #'
 #' @param bbox A `bbox`.
-#' @param size A grid size.
+#' @param grid_size A grid size.
 #'
 #' @return A `grid` vector.
 #'
 #' @export
-bbox_to_grid <- function(bbox, size) {
+bbox_to_grid <- function(bbox, grid_size) {
   lifecycle::deprecate_warn("0.4.0", "bbox_to_grid()", "grid_from_bbox()")
 
   grid_from_bbox(bbox = bbox,
-                 size = size)
+                 grid_size = grid_size)
 }
 
 #' Convert a data frame into a tbl_grid object
@@ -166,7 +166,7 @@ bbox_to_grid <- function(bbox, size) {
 #' @param x An object to be converted into an object class `tbl_grid`.
 #' @param var A variable to specify the grid object. By default, the first
 #' column of the grid object is taken.
-#' @param size 	A grid size.
+#' @param grid_size 	A grid size.
 #' @param strict A logical scalar. Should the number of digits in the grid
 #' square code match a given number of digits?
 #' @param ... Additional arguments passed to [stickyr::new_sticky_tibble()]
@@ -176,7 +176,7 @@ bbox_to_grid <- function(bbox, size) {
 #' @export
 as_tbl_grid <- function(x,
                         var = NULL,
-                        size = NULL,
+                        grid_size = NULL,
                         strict = TRUE, ...) {
   lifecycle::deprecate_warn("0.4.0", "as_tbl_grid()", "grid_as_sf()")
 
@@ -196,7 +196,7 @@ as_tbl_grid <- function(x,
     dplyr::mutate(dplyr::across(dplyr::all_of(var),
                                 purrr::partial(grid_parse,
                                                strict = strict,
-                                               size = size)))
+                                               grid_size = grid_size)))
 
   tibble::new_tibble(out,
                      grid_col = var,
@@ -233,16 +233,16 @@ grid_to_XY <- function(grid, center = TRUE) {
 #'
 #' @param X A numeric vector of longitude.
 #' @param Y A numeric vector of latitude.
-#' @param size A grid size.
+#' @param grid_size A grid size.
 #'
 #' @return `XY_to_grid()` returns a `grid` vector.
 #'
 #' @export
-XY_to_grid <- function(X, Y, size) {
+XY_to_grid <- function(X, Y, grid_size) {
   lifecycle::deprecate_warn("0.4.0", "XY_to_grid()", "grid_from_coords()")
   grid_from_coords(X = X,
                    Y = Y,
-                   size = size)
+                   grid_size = grid_size)
 }
 
 #' @importFrom sf st_as_sf
@@ -278,7 +278,7 @@ st_as_stars.tbl_grid <- function(.x,
   n_Y <- field(grid, "n_Y")
   n_XY <- tidyr::expand_grid(n_X = min(n_X):(max(n_X) + 1L),
                              n_Y = min(n_Y):(max(n_Y) + 1L))
-  grid <- new_grid(size = grid_size(grid),
+  grid <- new_grid(grid_size = grid_size(grid),
                    n_X = n_XY$n_X,
                    n_Y = n_XY$n_Y)
   coords <- grid_to_coords(grid)

@@ -12,7 +12,7 @@ grid_move <- function(grid, n_X, n_Y) {
     cli_abort("{.arg grid} must be a vector with type {.cls grid}.")
   }
 
-  new_grid(size = grid_size(grid),
+  new_grid(grid_size = grid_size(grid),
            n_X = field(grid, "n_X") + n_X,
            n_Y = field(grid, "n_Y") + n_Y)
 }

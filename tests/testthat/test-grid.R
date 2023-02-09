@@ -2,20 +2,13 @@ test_that("grid_strict", {
   x <- c("53394526313", 5339358633, "533945764", 53394611, "523503", 5339)
 
   # strict
-  grid_80km <- grid_parse(x,
-                          size = "80km")
-  grid_10km <- grid_parse(x,
-                          size = "10km")
-  grid_1km <- grid_parse(x,
-                         size = "1km")
-  grid_500m <- grid_parse(x,
-                          size = "500m")
-  grid_250m <- grid_parse(x,
-                          size = "250m")
-  grid_125m <- grid_parse(x,
-                          size = "125m")
-  grid_100m <- grid_parse(x,
-                          size = "100m")
+  grid_80km <- grid_parse(x, "80km")
+  grid_10km <- grid_parse(x, "10km")
+  grid_1km <- grid_parse(x, "1km")
+  grid_500m <- grid_parse(x, "500m")
+  grid_250m <- grid_parse(x, "250m")
+  grid_125m <- grid_parse(x, "125m")
+  grid_100m <- grid_parse(x, "100m")
 
   expect_s3_class(grid_80km, "grid_80km")
   expect_s3_class(grid_10km, "grid_10km")
@@ -45,26 +38,19 @@ test_that("grid_notstrict", {
   x <- c("53394526313", 5339358633, "533945764", 53394611, "523503", 5339)
 
   # not strict
-  grid_80km <- grid_parse(x,
-                          size = "80km",
+  grid_80km <- grid_parse(x, "80km",
                           strict = F)
-  grid_10km <- grid_parse(x,
-                          size = "10km",
+  grid_10km <- grid_parse(x, "10km",
                           strict = F)
-  grid_1km <- grid_parse(x,
-                         size = "1km",
+  grid_1km <- grid_parse(x, "1km",
                          strict = F)
-  grid_500m <- grid_parse(x,
-                          size = "500m",
+  grid_500m <- grid_parse(x, "500m",
                           strict = F)
-  grid_250m <- grid_parse(x,
-                          size = "250m",
+  grid_250m <- grid_parse(x, "250m",
                           strict = F)
-  grid_125m <- grid_parse(x,
-                          size = "125m",
+  grid_125m <- grid_parse(x, "125m",
                           strict = F)
-  grid_100m <- grid_parse(x,
-                          size = "100m",
+  grid_100m <- grid_parse(x, "100m",
                           strict = F)
 
   expect_s3_class(grid_80km, "grid_80km")
@@ -104,6 +90,6 @@ test_that("grid_auto", {
 
 test_that("grid_250m_or_100m", {
   x <- "5339452619"
-  expect_true(is.na(grid_parse(x, size = "250m")))
-  expect_equal(as.character(grid_parse(x, size = "100m")), x)
+  expect_true(is.na(grid_parse(x, "250m")))
+  expect_equal(as.character(grid_parse(x, "100m")), x)
 })

@@ -23,16 +23,16 @@ grid_distance <- function(grid,
       cli_abort("{.arg grid_to} must be a vector with type {.cls grid}.")
     }
 
-    size <- grid_size(grid)
-    if (size != grid_size(grid_to)) {
-      cli_abort("The size of {.arg grid} and {.arg grid_to} must be the same.")
+    grid_size <- grid_size(grid)
+    if (grid_size != grid_size(grid_to)) {
+      cli_abort("The grid size of {.arg grid} and {.arg grid_to} must be the same.")
     }
 
     grid <- tibble::tibble(diff_n_X = field(grid_to, "n_X") - field(grid, "n_X"),
                            n_Y = field(grid, "n_Y"),
                            n_Y_to = field(grid_to, "n_Y"))
 
-    length_X <- size / 80000L
+    length_X <- grid_size / 80000L
     length_Y <- length_X / 1.5
 
     distance <- vec_unique(grid)

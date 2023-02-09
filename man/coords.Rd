@@ -6,7 +6,7 @@
 \alias{grid_to_coords}
 \title{Conversion between grid square codes and coordinates (longitude and latitude)}
 \usage{
-grid_from_coords(X, Y, size)
+grid_from_coords(X, Y, grid_size)
 
 grid_to_coords(grid, center = TRUE)
 }
@@ -15,7 +15,7 @@ grid_to_coords(grid, center = TRUE)
 
 \item{Y}{A numeric vector of latitude.}
 
-\item{size}{A grid size.}
+\item{grid_size}{A grid size.}
 
 \item{grid}{A \code{grid} class vector.}
 

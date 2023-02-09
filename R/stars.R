@@ -42,7 +42,7 @@ grid_as_stars <- function(x,
   n_Y <- field(grid, "n_Y")
   n_XY <- tidyr::expand_grid(n_X = min(n_X):(max(n_X) + 1L),
                              n_Y = min(n_Y):(max(n_Y) + 1L))
-  grid <- new_grid(size = grid_size(grid),
+  grid <- new_grid(grid_size = grid_size(grid),
                    n_X = n_XY$n_X,
                    n_Y = n_XY$n_Y)
   coords_grid <- grid_to_coords(grid)

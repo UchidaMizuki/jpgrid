@@ -4,12 +4,12 @@
 \alias{grid_from_bbox}
 \title{Converting bbox to grid square codes}
 \usage{
-grid_from_bbox(bbox, size)
+grid_from_bbox(bbox, grid_size)
 }
 \arguments{
 \item{bbox}{A \code{bbox}.}
 
-\item{size}{A grid size.}
+\item{grid_size}{A grid size.}
 }
 \value{
 A \code{grid} vector.

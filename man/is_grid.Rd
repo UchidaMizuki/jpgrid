@@ -4,12 +4,12 @@
 \alias{is_grid}
 \title{Test if the object is a grid}
 \usage{
-is_grid(x, size = NULL)
+is_grid(x, grid_size = NULL)
 }
 \arguments{
 \item{x}{An object.}
 
-\item{size}{A grid size.}
+\item{grid_size}{A grid size.}
 }
 \value{
 \code{TRUE} if the object inherits from the \code{grid} class.

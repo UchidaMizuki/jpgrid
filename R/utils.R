@@ -1,28 +1,28 @@
-grid_size_match <- function(size) {
-  if (is_missing(size)) {
-    cli_abort("{.arg size} must not be missing.")
-  } else if (inherits(size, "units")) {
-    size <- size |>
+grid_size_match <- function(grid_size) {
+  if (is_missing(grid_size)) {
+    cli_abort("{.arg grid_size} must not be missing.")
+  } else if (inherits(grid_size, "units")) {
+    grid_size <- grid_size |>
       units::set_units("m") |>
       units::drop_units()
-  } else if (is.character(size)) {
-    size <- switch(size,
-                   `80km` = 80000L,
-                   `10km` = 10000L,
-                   `1km` = 1000L,
-                   `500m` = 500L,
-                   `250m` = 250L,
-                   `125m` = 125L,
-                   `100m` = 100L,
-                   NA_integer_)
+  } else if (is.character(grid_size)) {
+    grid_size <- switch(grid_size,
+                        `80km` = 80000L,
+                        `10km` = 10000L,
+                        `1km` = 1000L,
+                        `500m` = 500L,
+                        `250m` = 250L,
+                        `125m` = 125L,
+                        `100m` = 100L,
+                        NA_integer_)
   }
 
-  if (!size %in% c(80000L, 10000L, 1000L, 500L, 250L, 125L, 100L)) {
+  if (!grid_size %in% c(80000L, 10000L, 1000L, 500L, 250L, 125L, 100L)) {
     sizes <- cli_vec(c("80km", "10km", "1km", "500m", "250m", "125m", "100m"),
                      style = list("vec-last" = " or "))
-    cli_abort("{.arg size} must {.val {sizes}}")
+    cli_abort("{.arg grid_size} must {.val {sizes}}")
   }
-  size
+  grid_size
 }
 
 grid_size <- function(grid) {

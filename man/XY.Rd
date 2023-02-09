@@ -8,7 +8,7 @@
 \usage{
 grid_to_XY(grid, center = TRUE)
 
-XY_to_grid(X, Y, size)
+XY_to_grid(X, Y, grid_size)
 }
 \arguments{
 \item{grid}{A \code{grid} class vector.}
@@ -20,7 +20,7 @@ end points will be returned. \code{TRUE} by default.}
 
 \item{Y}{A numeric vector of latitude.}
 
-\item{size}{A grid size.}
+\item{grid_size}{A grid size.}
 }
 \value{
 \code{grid_to_XY()} returns a \code{tbl_df}.

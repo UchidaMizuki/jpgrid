@@ -4,7 +4,7 @@
 \alias{grid_circle}
 \title{Circular grid square codes}
 \usage{
-grid_circle(X, Y, dist, size, crs = 4326, ...)
+grid_circle(X, Y, dist, grid_size, crs = 4326, ...)
 }
 \arguments{
 \item{X}{A numeric vector of longitude.}
@@ -13,7 +13,7 @@ grid_circle(X, Y, dist, size, crs = 4326, ...)
 
 \item{dist}{A numeric vector of distances passed on to \code{\link[sf:geos_unary]{sf::st_buffer()}}.}
 
-\item{size}{A grid size.}
+\item{grid_size}{A grid size.}
 
 \item{crs}{Coordinate reference system.}
 

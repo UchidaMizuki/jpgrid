@@ -4,7 +4,7 @@
 \alias{as_tbl_grid}
 \title{Convert a data frame into a tbl_grid object}
 \usage{
-as_tbl_grid(x, var = NULL, size = NULL, strict = TRUE, ...)
+as_tbl_grid(x, var = NULL, grid_size = NULL, strict = TRUE, ...)
 }
 \arguments{
 \item{x}{An object to be converted into an object class \code{tbl_grid}.}
@@ -12,7 +12,7 @@ as_tbl_grid(x, var = NULL, size = NULL, strict = TRUE, ...)
 \item{var}{A variable to specify the grid object. By default, the first
 column of the grid object is taken.}
 
-\item{size}{A grid size.}
+\item{grid_size}{A grid size.}
 
 \item{strict}{A logical scalar. Should the number of digits in the grid
 square code match a given number of digits?}

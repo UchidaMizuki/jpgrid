@@ -1,23 +1,21 @@
 #' Parse grid square codes
 #'
 #' @param x A character vector of grid square codes.
-#' @param size A grid size.
+#' @param grid_size A grid size.
 #' @param strict A logical scalar. Should the number of digits in the grid
 #' square code match a given number of digits? By default, `TRUE`.
 #'
 #' @examples
 #' grid_parse("53394526313")
-#' grid_parse("53394526313",
-#'            size = "80km")
-#' grid_parse("53394526313",
-#'            size = "80km",
+#' grid_parse("53394526313", "80km")
+#' grid_parse("53394526313", "80km",
 #'            strict = FALSE)
 #'
 #' @export
 grid_parse <- function(x,
-                       size = NULL,
+                       grid_size = NULL,
                        strict = TRUE) {
-  if (is.null(size)) {
+  if (is.null(grid_size)) {
     pattern <- stringr::str_c("^",
                               stringr::str_dup("(<\\-?\\d+>|\\d{2})", 2),
                               "(\\d*)")
@@ -30,27 +28,27 @@ grid_parse <- function(x,
     digit <- min(stringr::str_length(code_others))
 
     if (digit %in% 0L:1L) {
-      size <- 80000L
+      grid_size <- 80000L
     } else if (digit %in% 2L:3L) {
-      size <- 10000L
+      grid_size <- 10000L
     } else if (digit == 4L) {
-      size <- 1000L
+      grid_size <- 1000L
     } else if (digit == 5L) {
-      size <- 500L
+      grid_size <- 500L
     } else if (digit == 6L) {
-      is_size_250m <- code_others |>
+      is_grid_size_250m <- code_others |>
         stringr::str_extract("\\d{6}") |>
         stringr::str_ends("[1-4]{2}")
-      if (all(is_size_250m)) {
-        size <- 250L
+      if (all(is_grid_size_250m)) {
+        grid_size <- 250L
       } else {
-        size <- 100L
+        grid_size <- 100L
       }
     } else if (digit >= 7L) {
-      size <- 125L
+      grid_size <- 125L
     }
 
-    grid_size_name <- switch(as.character(size),
+    grid_size_name <- switch(as.character(grid_size),
                              `80000` = "80km",
                              `10000` = "10km",
                              `1000` = "1km",
@@ -59,9 +57,9 @@ grid_parse <- function(x,
                              `125` = "125m",
                              `100` = "100m")
 
-    cli_inform("Guessing, size = {.val {grid_size_name}}")
+    cli_inform("Guessing, grid_size = {.val {grid_size_name}}")
   } else {
-    size <- grid_size_match(size)
+    grid_size <- grid_size_match(grid_size)
   }
 
   pattern_80km <- stringr::str_c("^",
@@ -72,25 +70,25 @@ grid_parse <- function(x,
   code_1km <- c("code_Y_1km", "code_X_1km")
   code_100m <- c("code_Y_100m", "code_X_100m")
 
-  if (size == 80000L) {
+  if (grid_size == 80000L) {
     digit <- 0L
     name <- code_80km
-  } else if (size == 10000L) {
+  } else if (grid_size == 10000L) {
     digit <- 2L
     name <- c(code_80km, code_10km)
-  } else if (size == 1000L) {
+  } else if (grid_size == 1000L) {
     digit <- 4L
     name <- c(code_80km, code_10km, code_1km)
-  } else if (size == 500L) {
+  } else if (grid_size == 500L) {
     digit <- 5L
     name <- c(code_80km, code_10km, code_1km, "code_500m")
-  } else if (size == 250L) {
+  } else if (grid_size == 250L) {
     digit <- 6L
     name <- c(code_80km, code_10km, code_1km, "code_500m", "code_250m")
-  } else if (size == 125L) {
+  } else if (grid_size == 125L) {
     digit <- 7L
     name <- c(code_80km, code_10km, code_1km, "code_500m", "code_250m", "code_125m")
-  } else if (size == 100L) {
+  } else if (grid_size == 100L) {
     digit <- 6L
     name <- c(code_80km, code_10km, code_1km, code_100m)
   }
@@ -110,6 +108,6 @@ grid_parse <- function(x,
     dplyr::select(!"code")
 
   exec(code_to_grid,
-       size = size,
+       grid_size = grid_size,
        !!!args)
 }

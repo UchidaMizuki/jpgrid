@@ -4,12 +4,12 @@
 \alias{grid_convert}
 \title{Convert the grid size of grid objects}
 \usage{
-grid_convert(grid, size)
+grid_convert(grid, grid_size)
 }
 \arguments{
 \item{grid}{A \code{grid} vector.}
 
-\item{size}{A grid size.}
+\item{grid_size}{A grid size.}
 }
 \value{
 A \code{grid} vector.
@@ -18,9 +18,7 @@ A \code{grid} vector.
 Convert the grid size of grid objects
 }
 \examples{
-grid_500m <- grid_parse(c("533945263", "533935863", "533945764"),
-                        size = "500m")
-grid_convert(grid_500m,
-             size = "10km")
+grid_500m <- grid_parse(c("533945263", "533935863", "533945764"), "500m")
+grid_convert(grid_500m, "10km")
 
 }

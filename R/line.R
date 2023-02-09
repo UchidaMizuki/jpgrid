@@ -23,9 +23,9 @@ grid_line <- function(grid,
       cli_abort("{.arg grid_to} must be a vector with type {.cls grid}.")
     }
 
-    size <- grid_size(grid)
-    if (size != grid_size(grid_to)) {
-      cli_abort("The size of {.arg grid} and {.arg grid_to} must be the same.")
+    grid_size <- grid_size(grid)
+    if (grid_size != grid_size(grid_to)) {
+      cli_abort("The grid size of {.arg grid} and {.arg grid_to} must be the same.")
     }
 
     grid <- tibble::tibble(grid = grid,
@@ -53,7 +53,7 @@ grid_line <- function(grid,
     line$line <- list(x, y, x_to, y_to, dx, dy, err, sx, sy) |>
       purrr::pmap(\(x, y, x_to, y_to, dx, dy, err, sx, sy) {
         if (is.na(x) || is.na(y) || is.na(x_to) || is.na(y_to)) {
-          new_grid(size = size,
+          new_grid(grid_size = grid_size,
                    n_X = NA_integer_,
                    n_Y = NA_integer_)
         } else {
@@ -73,7 +73,7 @@ grid_line <- function(grid,
             xs <- c(xs, x)
             ys <- c(ys, y)
           }
-          new_grid(size = size,
+          new_grid(grid_size = grid_size,
                    n_X = xs,
                    n_Y = ys)
         }

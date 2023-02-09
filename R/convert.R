@@ -1,24 +1,22 @@
 #' Convert the grid size of grid objects
 #'
 #' @param grid A `grid` vector.
-#' @param size A grid size.
+#' @param grid_size A grid size.
 #'
 #' @return A `grid` vector.
 #'
 #' @examples
-#' grid_500m <- grid_parse(c("533945263", "533935863", "533945764"),
-#'                         size = "500m")
-#' grid_convert(grid_500m,
-#'              size = "10km")
+#' grid_500m <- grid_parse(c("533945263", "533935863", "533945764"), "500m")
+#' grid_convert(grid_500m, "10km")
 #'
 #' @export
-grid_convert <- function(grid, size) {
+grid_convert <- function(grid, grid_size) {
   if (!is_grid(grid)) {
     cli_abort("{.arg grid} must be a vector with type {.cls grid}.")
   }
 
-  size <- grid_size_match(size)
-  ratio <- size / grid_size(grid)
+  grid_size <- grid_size_match(grid_size)
+  ratio <- grid_size / grid_size(grid)
 
   if (!is_integerish(ratio)) {
     cli_abort(c("{.arg grid} must be able to convert one-to-one.",
@@ -26,7 +24,7 @@ grid_convert <- function(grid, size) {
   }
   ratio <- as.integer(ratio)
 
-  new_grid(size = size,
+  new_grid(grid_size = grid_size,
            n_X = field(grid, "n_X") %/% ratio,
            n_Y = field(grid, "n_Y") %/% ratio)
 }

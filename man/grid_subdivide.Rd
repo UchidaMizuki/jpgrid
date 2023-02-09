@@ -4,12 +4,12 @@
 \alias{grid_subdivide}
 \title{Subdivide grid square codes}
 \usage{
-grid_subdivide(grid, size)
+grid_subdivide(grid, grid_size)
 }
 \arguments{
 \item{grid}{A \code{grid} vector.}
 
-\item{size}{A grid size.}
+\item{grid_size}{A grid size.}
 }
 \value{
 A list of \code{grid} vector.

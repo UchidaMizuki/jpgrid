@@ -1,7 +1,7 @@
 #' Converting sfc geometries to grid square codes
 #'
 #' @param geometry A `sfc` vector.
-#' @param size A grid size.
+#' @param grid_size A grid size.
 #' @param options Options vector for GDALRasterize passed on to
 #' [stars::st_rasterize()].
 #' @param ... Passed on to [stars::st_rasterize()].
@@ -9,7 +9,7 @@
 #' @return A list of `grid` vectors.
 #'
 #' @export
-grid_from_geom <- function(geometry, size,
+grid_from_geom <- function(geometry, grid_size,
                            options = "ALL_TOUCHED=TRUE", ...) {
   if (!inherits(geometry, "sfc")) {
     geometry <- sf::st_as_sfc(geometry)
@@ -22,13 +22,13 @@ grid_from_geom <- function(geometry, size,
 
     grid_from_coords(X = coords$X,
                      Y = coords$Y,
-                     size = size)
+                     grid_size = grid_size)
   } else {
     geometry |>
       purrr::map(function(x) {
         grid <- x |>
           sf::st_bbox() |>
-          grid_from_bbox(size = size) |>
+          grid_from_bbox(grid_size = grid_size) |>
           st_as_stars()
 
         coords <- x |>
@@ -42,7 +42,7 @@ grid_from_geom <- function(geometry, size,
 
         grid_from_coords(X = coords$X,
                          Y = coords$Y,
-                         size = size)
+                         grid_size = grid_size)
       })
   }
 }
@@ -50,31 +50,31 @@ grid_from_geom <- function(geometry, size,
 #' Converting bbox to grid square codes
 #'
 #' @param bbox A `bbox`.
-#' @param size A grid size.
+#' @param grid_size A grid size.
 #'
 #' @return A `grid` vector.
 #'
 #' @export
-grid_from_bbox <- function(bbox, size) {
+grid_from_bbox <- function(bbox, grid_size) {
   bbox <- sf::st_bbox(bbox)
-  size <- grid_size_match(size)
+  grid_size <- grid_size_match(grid_size)
 
   grid_min <- grid_from_coords(X = bbox[["xmin"]],
                                Y = bbox[["ymin"]],
-                               size = size)
+                               grid_size = grid_size)
   n_X_min <- field(grid_min, "n_X")
   n_Y_min <- field(grid_min, "n_Y")
 
   grid_max <- grid_from_coords(X = bbox[["xmax"]],
                                Y = bbox[["ymax"]],
-                               size = size)
+                               grid_size = grid_size)
   n_X_max <- field(grid_max, "n_X")
   n_Y_max <- field(grid_max, "n_Y")
 
   n_XY <- tidyr::expand_grid(n_X = n_X_min:n_X_max,
                              n_Y = n_Y_min:n_Y_max)
 
-  new_grid(size = size,
+  new_grid(grid_size = grid_size,
            n_X = n_XY$n_X,
            n_Y = n_XY$n_Y)
 }
