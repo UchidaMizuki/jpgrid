@@ -6,8 +6,8 @@ test_that("polygon_to_grid", {
     sf::st_sfc()
   polygon <- rep(polygon, 3L)
 
-  grid <- grid_from_geometry(polygon,
-                             size = "500m")
+  grid <- grid_from_geom(polygon,
+                         size = "500m")
   expect_s3_class(grid[[1L]], "grid")
 })
 
@@ -19,8 +19,8 @@ test_that("point_to_grid", {
     sf::st_sfc() |>
     sf::st_cast("POINT")
 
-  grid <- grid_from_geometry(point,
-                             size = "1km")
+  grid <- grid_from_geom(point,
+                         size = "1km")
   expect_s3_class(grid[[1L]], "grid")
 })
 
@@ -59,3 +59,27 @@ test_that("st_as_sf-2", {
     sf::st_as_sf()
   expect_s3_class(sf, "sf")
 })
+
+test_that("st_bbox", {
+  grid <- grid_parse(c("533945263", "533935863", "533945764"),
+                     size = "500m")
+  bbox <- st_bbox(grid)
+  grid_bbox <- grid_from_bbox(bbox, size = "500m")
+
+  expect_s3_class(bbox, "bbox")
+  expect_true(all(vec_in(grid, grid_bbox)))
+})
+
+test_that("grid_as_sf", {
+  grid <- grid_parse(c("533945263", "533935863", "533945764"),
+                     size = "500m")
+  df_grid <- grid_as_sf(grid)
+
+  expect_s3_class(df_grid, "sf")
+
+  df_grid <- tibble::tibble(grid = grid) |>
+    grid_as_sf()
+
+  expect_s3_class(df_grid, "sf")
+})
+

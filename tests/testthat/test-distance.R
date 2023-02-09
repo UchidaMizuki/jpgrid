@@ -9,4 +9,9 @@ test_that("distance", {
   distance_2 <- geosphere::distGeo(p1 = cbind(141.5, 43),
                                    p2 = cbind(137.5, 35))
   expect_equal(distance_1, distance_2)
+
+  distance_3 <- grid_distance(list(c(grid_from, grid_to))) |>
+    dplyr::first() |>
+    units::drop_units()
+  expect_equal(distance_1, distance_3)
 })
