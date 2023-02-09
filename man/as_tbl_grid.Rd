@@ -26,6 +26,8 @@ A \code{tbl_grid} object.
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 }
 \details{
+It is recommended to use \code{grid_as_sf()}.
+
 The \code{tbl_grid} object is a data frame with \code{grid} objects in the columns.
 \code{as_tbl_grid} converts a data frame into a tbl_grid object.
 }

@@ -9,20 +9,20 @@
 #' @return A list of `grid` vectors.
 #'
 #' @export
-grid_from_geometry <- function(geometry, size,
-                               options = "ALL_TOUCHED=TRUE", ...) {
+grid_from_geom <- function(geometry, size,
+                           options = "ALL_TOUCHED=TRUE", ...) {
   if (!inherits(geometry, "sfc")) {
     geometry <- sf::st_as_sfc(geometry)
   }
 
   if (inherits(geometry, "sfc_POINT")) {
-    XY <- geometry |>
+    coords <- geometry |>
       sf::st_coordinates() |>
       tibble::as_tibble()
 
-    grid_from_XY(X = XY$X,
-                 Y = XY$Y,
-                 size = size)
+    grid_from_coords(X = coords$X,
+                     Y = coords$Y,
+                     size = size)
   } else {
     geometry |>
       purrr::map(function(x) {
@@ -31,7 +31,7 @@ grid_from_geometry <- function(geometry, size,
           grid_from_bbox(size = size) |>
           st_as_stars()
 
-        XY <- x |>
+        coords <- x |>
           sf::st_sfc() |>
           sf::st_as_sf() |>
           stars::st_rasterize(grid,
@@ -40,9 +40,9 @@ grid_from_geometry <- function(geometry, size,
           sf::st_coordinates() |>
           tibble::as_tibble()
 
-        grid_from_XY(X = XY$X,
-                     Y = XY$Y,
-                     size = size)
+        grid_from_coords(X = coords$X,
+                         Y = coords$Y,
+                         size = size)
       })
   }
 }
@@ -59,15 +59,15 @@ grid_from_bbox <- function(bbox, size) {
   bbox <- sf::st_bbox(bbox)
   size <- grid_size_match(size)
 
-  grid_min <- grid_from_XY(X = bbox[["xmin"]],
-                           Y = bbox[["ymin"]],
-                           size = size)
+  grid_min <- grid_from_coords(X = bbox[["xmin"]],
+                               Y = bbox[["ymin"]],
+                               size = size)
   n_X_min <- field(grid_min, "n_X")
   n_Y_min <- field(grid_min, "n_Y")
 
-  grid_max <- grid_from_XY(X = bbox[["xmax"]],
-                           Y = bbox[["ymax"]],
-                           size = size)
+  grid_max <- grid_from_coords(X = bbox[["xmax"]],
+                               Y = bbox[["ymax"]],
+                               size = size)
   n_X_max <- field(grid_max, "n_X")
   n_Y_max <- field(grid_max, "n_Y")
 
@@ -82,18 +82,12 @@ grid_from_bbox <- function(bbox, size) {
 #' @importFrom sf st_bbox
 #' @export
 st_bbox.grid <- function(obj, ...) {
-  XY <- obj |>
-    grid_to_XY(center = FALSE)
-  st_bbox(c(xmin = min(XY$X_min),
-            ymin = min(XY$Y_min),
-            xmax = max(XY$X_max),
-            ymax = max(XY$Y_max)), ...)
-}
-
-#' @export
-st_bbox.tbl_grid <- function(obj, ...) {
-  obj <- obj[[grid_column(obj)]]
-  st_bbox(obj)
+  coords <- obj |>
+    grid_to_coords(center = FALSE)
+  st_bbox(c(xmin = min(coords$X_min),
+            ymin = min(coords$Y_min),
+            xmax = max(coords$X_max),
+            ymax = max(coords$Y_max)), ...)
 }
 
 #' @importFrom sf st_as_sfc
@@ -107,9 +101,9 @@ st_as_sfc.grid <- function(x,
                         !is.na(geometry$grid))
 
   if (!as_points) {
-    XY <- grid_to_XY(geometry$grid,
-                     center = FALSE)
-    geometry$geometry <- list(XY$X_min, XY$Y_min, XY$X_max, XY$Y_max) |>
+    coords <- grid_to_coords(geometry$grid,
+                             center = FALSE)
+    geometry$geometry <- list(coords$X_min, coords$Y_min, coords$X_max, coords$Y_max) |>
       purrr::pmap(function(X_min, Y_min, X_max, Y_max) {
         if (is.na(X_min) || is.na(Y_min) || is.na(X_max) || is.na(Y_max)) {
           sf::st_polygon() |>
@@ -124,8 +118,8 @@ st_as_sfc.grid <- function(x,
       }) |>
       purrr::list_c()
   } else {
-    geometry$geometry <- grid_to_XY(geometry$grid,
-                                    center = TRUE) |>
+    geometry$geometry <- grid_to_coords(geometry$grid,
+                                        center = TRUE) |>
       sf::st_as_sf(coords = c("X", "Y"), ...) |>
       sf::st_geometry()
   }

@@ -45,10 +45,10 @@ grid_as_stars <- function(x,
   grid <- new_grid(size = grid_size(grid),
                    n_X = n_XY$n_X,
                    n_Y = n_XY$n_Y)
-  XY <- grid_to_XY(grid)
+  coords_grid <- grid_to_coords(grid)
   grid <- tibble::tibble(!!grid_column_name := grid,
-                         X = XY$X,
-                         Y = XY$Y)
+                         X = coords_grid$X,
+                         Y = coords_grid$Y)
 
   coords <- coords[coords != grid_column_name]
   x <- tidyr::expand_grid(grid,

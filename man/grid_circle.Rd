@@ -17,7 +17,7 @@ grid_circle(X, Y, dist, size, crs = 4326, ...)
 
 \item{crs}{Coordinate reference system.}
 
-\item{...}{Passed on to \code{geometry_to_grid()}.}
+\item{...}{Passed on to \code{grid_from_geom()}.}
 }
 \value{
 A list of \code{grid} vector.

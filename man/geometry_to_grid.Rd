@@ -22,3 +22,6 @@ A list of \code{grid} vectors.
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 }
+\details{
+It is recommended to use \code{grid_from_geom()}.
+}

@@ -1,5 +1,7 @@
 grid_size_match <- function(size) {
-  if (inherits(size, "units")) {
+  if (is_missing(size)) {
+    cli_abort("{.arg size} must not be missing.")
+  } else if (inherits(size, "units")) {
     size <- size |>
       units::set_units("m") |>
       units::drop_units()

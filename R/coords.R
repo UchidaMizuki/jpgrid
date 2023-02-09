@@ -1,18 +1,18 @@
 #' Conversion between grid square codes and coordinates (longitude and latitude)
 #'
-#' @name XY
+#' @name coords
 NULL
 
-#' @rdname XY
+#' @rdname coords
 #'
 #' @param X A numeric vector of longitude.
 #' @param Y A numeric vector of latitude.
 #' @param size A grid size.
 #'
-#' @return `grid_from_XY` returns a `grid` vector.
+#' @return `grid_from_coords()` returns a `grid` vector.
 #'
 #' @export
-grid_from_XY <- function(X, Y, size) {
+grid_from_coords <- function(X, Y, size) {
   size <- grid_size_match(size)
 
   length_X <- size / 80000L
@@ -23,16 +23,16 @@ grid_from_XY <- function(X, Y, size) {
            n_Y = Y %/% length_Y)
 }
 
-#' @rdname XY
+#' @rdname coords
 #'
 #' @param grid A `grid` class vector.
 #' @param center Should the center point of the grid be returned? Otherwise the
 #' end points will be returned. `TRUE` by default.
 #'
-#' @return `grid_to_XY` returns a `tbl_df`.
+#' @return `grid_to_coords()` returns a `tbl_df`.
 #'
 #' @export
-grid_to_XY <- function(grid, center = TRUE) {
+grid_to_coords <- function(grid, center = TRUE) {
   if (!is_grid(grid)) {
     cli_abort("{.arg grid} must be a vector with type {.cls grid}.")
   }
@@ -47,10 +47,10 @@ grid_to_XY <- function(grid, center = TRUE) {
     tibble::tibble(X = 100 + length_X * (n_X + .5),
                    Y = length_Y * (n_Y + .5))
   } else {
-    XY <- tibble::tibble(X_min = 100 + length_X * n_X,
-                         Y_min = length_Y * n_Y)
-    XY$X_max <- XY$X_min + length_X
-    XY$Y_max <- XY$Y_min + length_Y
-    XY
+    coords <- tibble::tibble(X_min = 100 + length_X * n_X,
+                             Y_min = length_Y * n_Y)
+    coords$X_max <- coords$X_min + length_X
+    coords$Y_max <- coords$Y_min + length_Y
+    coords
   }
 }

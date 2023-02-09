@@ -2,8 +2,10 @@
 #'
 #' `r lifecycle::badge("deprecated")`
 #'
+#' It is recommended to use `grid_parse()` or `grid_convert()`.
+#'
 #' A series of functions return `grid` class for each grid size.
-#' `grid_auto` returns automatically determine grid size by the largest
+#' `grid_auto()` returns automatically determine grid size by the largest
 #' grid size.
 #'
 #' @name grid_class
@@ -13,13 +15,6 @@
 #' square code match a given number of digits?
 #'
 #' @return A `grid` vector.
-#'
-#' @examples
-#' grid_80km("53394526313")
-#' grid_80km("53394526313", strict = FALSE)
-#'
-#' grid_auto(c("53394526313", "5339358633", "533945764"))
-#' grid_auto(c("53394526313", "5339358633", "533945764"), strict = FALSE)
 NULL
 
 grid_impl <- function(x, strict, size, what) {
@@ -120,6 +115,8 @@ grid_auto <- function(x,
 #'
 #' `r lifecycle::badge("deprecated")`
 #'
+#' It is recommended to use `grid_from_geom()`.
+#'
 #' @param geometry A `sfc` vector.
 #' @param size A grid size.
 #' @param options Options vector for GDALRasterize passed on to
@@ -131,16 +128,18 @@ grid_auto <- function(x,
 #' @export
 geometry_to_grid <- function(geometry, size,
                              options = "ALL_TOUCHED=TRUE", ...) {
-  lifecycle::deprecate_warn("0.4.0", "geometry_to_grid()", "grid_from_geometry()")
+  lifecycle::deprecate_warn("0.4.0", "geometry_to_grid()", "grid_from_geom()")
 
-  grid_from_geometry(geometry = geometry,
-                     size = size,
-                     options = options, ...)
+  grid_from_geom(geometry = geometry,
+                 size = size,
+                 options = options, ...)
 }
 
 #' Converting bbox to grid square codes
 #'
 #' `r lifecycle::badge("deprecated")`
+#'
+#' It is recommended to use `grid_from_bbox()`.
 #'
 #' @param bbox A `bbox`.
 #' @param size A grid size.
@@ -158,6 +157,8 @@ bbox_to_grid <- function(bbox, size) {
 #' Convert a data frame into a tbl_grid object
 #'
 #' `r lifecycle::badge("deprecated")`
+#'
+#' It is recommended to use `grid_as_sf()`.
 #'
 #' The `tbl_grid` object is a data frame with `grid` objects in the columns.
 #' `as_tbl_grid` converts a data frame into a tbl_grid object.
@@ -210,18 +211,38 @@ grid_column <- function(x) {
 #'
 #' `r lifecycle::badge("deprecated")`
 #'
+#' @name XY
+NULL
+
+#' @rdname XY
+#'
+#' @param grid A `grid` class vector.
+#' @param center Should the center point of the grid be returned? Otherwise the
+#' end points will be returned. `TRUE` by default.
+#'
+#' @return `grid_to_XY()` returns a `tbl_df`.
+#'
+#' @export
+grid_to_XY <- function(grid, center = TRUE) {
+  lifecycle::deprecate_warn("0.4.0", "grid_to_XY()", "grid_to_coords()")
+  grid_to_coords(grid = grid,
+                 center = center)
+}
+
+#' @rdname XY
+#'
 #' @param X A numeric vector of longitude.
 #' @param Y A numeric vector of latitude.
 #' @param size A grid size.
 #'
-#' @return `XY_to_grid` returns a `grid` vector.
+#' @return `XY_to_grid()` returns a `grid` vector.
 #'
 #' @export
 XY_to_grid <- function(X, Y, size) {
-  lifecycle::deprecate_warn("0.4.0", "XY_to_grid()", "grid_from_XY()")
-  grid_from_XY(X = X,
-               Y = Y,
-               size = size)
+  lifecycle::deprecate_warn("0.4.0", "XY_to_grid()", "grid_from_coords()")
+  grid_from_coords(X = X,
+                   Y = Y,
+                   size = size)
 }
 
 #' @importFrom sf st_as_sf
@@ -239,6 +260,13 @@ st_as_sf.tbl_grid <- function(x,
     sf::st_as_sf(...)
 }
 
+
+#' @export
+st_bbox.tbl_grid <- function(obj, ...) {
+  obj <- obj[[grid_column(obj)]]
+  st_bbox(obj)
+}
+
 #' @export
 st_as_stars.tbl_grid <- function(.x,
                                  coords = NULL,
@@ -253,10 +281,10 @@ st_as_stars.tbl_grid <- function(.x,
   grid <- new_grid(size = grid_size(grid),
                    n_X = n_XY$n_X,
                    n_Y = n_XY$n_Y)
-  XY <- grid_to_XY(grid)
+  coords <- grid_to_coords(grid)
   grid <- tibble::tibble(!!grid_col := grid,
-                         X = XY$X,
-                         Y = XY$Y)
+                         X = coords$X,
+                         Y = coords$Y)
 
   coords <- coords[coords != grid_col]
   .x <- tidyr::expand_grid(grid,
