@@ -70,63 +70,63 @@ library(ggplot2)
 
 ### Generation of Grid Square Codes from character strings or numbers
 
-Use functions such as `grid_80km()`, `grid_auto()`, etc. to generate
-Grid Square Codes from strings or numbers.
+Use `grid_parse()` to generate Grid Square Codes from strings or
+numbers.
 
-- The `grid_auto()` function automatically determines the mesh size.
+- Specify the grid size as `grid_size = "80km"`.
+  - If `grid_size = NULL`, the grid size is automatically determined.
 - The default (`strict = TRUE`) requires the mesh codes to have a given
   number of digits.
 
 ``` r
-library(jpgrid)
-
 x <- c("53394526313", "5339358633", "533945764", "53394611", "523503", "5339", NA)
 
-grid_80km(x)
+grid_parse(x, grid_size = "80km")
 #> <grid_80km[7]>
 #> [1] <NA> <NA> <NA> <NA> <NA> 5339 <NA>
-grid_125m(x)
+grid_parse(x, grid_size = "125m")
 #> <grid_125m[7]>
 #> [1] 53394526313 <NA>        <NA>        <NA>        <NA>        <NA>       
 #> [7] <NA>
-grid_auto(x)
-#> Guessing grid size as `80km`
+grid_parse(x)
+#> Guessing, grid_size = "80km"
 #> <grid_80km[7]>
 #> [1] <NA> <NA> <NA> <NA> <NA> 5339 <NA>
 
-grid_80km(x, strict = FALSE)
+grid_parse(x, "80km",
+           strict = FALSE)
 #> <grid_80km[7]>
 #> [1] 5339 5339 5339 5339 5235 5339 <NA>
-grid_125m(x, strict = FALSE)
+grid_parse(x, "125m",
+           strict = FALSE)
 #> <grid_125m[7]>
 #> [1] 53394526313 <NA>        <NA>        <NA>        <NA>        <NA>       
 #> [7] <NA>
-grid_auto(x, strict = FALSE)
-#> Guessing grid size as `80km`
+grid_parse(x, 
+           strict = FALSE)
+#> Guessing, grid_size = "80km"
 #> <grid_80km[7]>
 #> [1] 5339 5339 5339 5339 5235 5339 <NA>
 ```
 
 ### Converting the mesh size of Grid Square Codes
 
-Use functions such as `grid_80km()` to coarsen the mesh size of Grid
-Square Codes. The `grid_subdivide()` function can be used to subdivide
-Grid Square Codes.
+Use `grid_convert()` to coarsen the mesh size of Grid Square Codes. The
+`grid_subdivide()` function can be used to subdivide Grid Square Codes.
 
 - `grid_subdivide()` outputs a list of mesh codes whose elements are
   contained in the original meshes.
 - The conversion between 500m mesh and 100m mesh is supported.
 
 ``` r
-grid500m <- grid_500m("533945764")
+grid_500m <- grid_parse("533945764", "500m")
 
-grid_1km(grid500m)
+grid_convert(grid_500m, "1km")
 #> <grid_1km[1]>
 #> [1] 53394576
 
-grid100m <- grid_subdivide(grid500m,
-                           size = "100m")
-grid100m
+grid_100m <- grid_subdivide(grid_500m, "100m")
+grid_100m
 #> [[1]]
 #> <grid_100m[25]>
 #>  [1] 5339457655 5339457665 5339457675 5339457685 5339457695 5339457656
@@ -135,48 +135,75 @@ grid100m
 #> [19] 5339457688 5339457698 5339457659 5339457669 5339457679 5339457689
 #> [25] 5339457699
 
-tibble(grid100m = grid100m[[1]]) |> 
-  as_tbl_grid() |> 
-  sf::st_as_sf() |> 
+tibble(grid_100m = grid_100m[[1]]) |> 
+  grid_as_sf() |>  
   ggplot() +
   geom_sf() +
-  geom_sf_text(aes(label = grid100m))
-#> Don't know how to automatically pick scale for object of type
-#> <grid_100m/grid/vctrs_rcrd/vctrs_vctr>. Defaulting to continuous.
+  geom_sf_text(aes(label = as.character(grid_100m)))
 ```
 
 <img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
 
+### Conversion of geometry to Grid Square Codes
+
+`grid_from_geom()` can be used to convert `sf` objects to regional mesh
+codes. You can also use `grid_as_sf()` to convert data containing a
+regional mesh (of class `grid`) into an `sf` object.
+
+``` r
+geom_chiba <- rnaturalearth::ne_states(country = "japan",
+                                       returnclass = "sf") |> 
+  filter(name == "Chiba")
+grid_chiba <- grid_from_geom(geom_chiba, "10km") |> 
+  first() |> 
+  grid_as_sf(crs = sf::st_crs(geom_chiba))
+
+grid_chiba |> 
+  ggplot() +
+  geom_sf(data = geom_chiba) +
+  geom_sf(fill = "transparent") +
+  geom_sf_text(aes(label = as.character(grid)),
+               size = 2)
+#> Warning in st_point_on_surface.sfc(sf::st_zm(x)): st_point_on_surface may not
+#> give correct results for longitude/latitude data
+```
+
+<img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
+
 ### Conversion from longitude/latitude to Grid Square Codes
 
-The `XY_to_grid()` function converts longitude and latitude to Grid
-Square Codes.
+The `grid_from_coords()` converts longitude and latitude to Grid Square
+Codes.
 
 ``` r
 tibble(X = c(139.7008, 135.4375), # longitude
        Y = c(35.68906, 34.70833)) |> # latitude
-  mutate(grid100m = XY_to_grid(X, Y, size = "100m"),
-         mesh125m = XY_to_grid(X, Y, size = "125m")) |> 
+  mutate(grid_100m = grid_from_coords(X, Y, "100m"),
+         grid_125m = grid_from_coords(X, Y, "125m")) |> 
   knitr::kable()
 ```
 
-|        X |        Y | grid100m   | mesh125m    |
+|        X |        Y | grid_100m  | grid_125m   |
 |---------:|---------:|:-----------|:------------|
 | 139.7008 | 35.68906 | 5339452660 | 53394526313 |
 | 135.4375 | 34.70833 | 5235034499 | 52350344444 |
 
 ### Conversion from Grid Square Codes to longitude/latitude
 
-The `grid_to_XY()` function converts Grid Square Codes to longitude and
-latitude.
+The `grid_to_coords()` function converts Grid Square Codes to longitude
+and latitude.
 
 ``` r
-tibble(mesh = grid_100m(c("5339452660", "5235034590"))) |> 
-  mutate(grid_to_XY(mesh)) |> 
+tibble(grid = grid_100m(c("5339452660", "5235034590"))) |> 
+  mutate(grid_to_coords(grid)) |> 
   knitr::kable()
+#> Warning: `grid_100m()` was deprecated in jpgrid 0.4.0.
+#> ℹ Please use `grid_parse()` or `grid_convert()`
+#> ℹ The deprecated feature was likely used in the jpgrid package.
+#>   Please report the issue at <]8;;https://github.com/UchidaMizuki/jpgrid/issueshttps://github.com/UchidaMizuki/jpgrid/issues]8;;>.
 ```
 
-| mesh       |        X |        Y |
+| grid       |        X |        Y |
 |:-----------|---------:|---------:|
 | 5339452660 | 139.7006 | 35.68875 |
 | 5235034590 | 135.4381 | 34.70792 |
@@ -189,40 +216,34 @@ The `grid_neighbor()` function calculates the neighboring meshes.
 - Can be calculated in a Neumann neighborhood with `moore = FALSE`.
 
 ``` r
-neighbor <- grid_10km("644142") |> 
+neighbor <- grid_parse("644142", "10km") |> 
   grid_neighbor(n = c(0:2),
                 simplify = FALSE)
 
 neighbor[[1]] |> 
-  as_tbl_grid() |> 
-  sf::st_as_sf() |> 
+  grid_as_sf() |> 
   
   ggplot(aes(fill = as.factor(n))) +
   geom_sf() +
-  geom_sf_text(aes(label = grid_neighbor))
-#> Don't know how to automatically pick scale for object of type
-#> <grid_10km/grid/vctrs_rcrd/vctrs_vctr>. Defaulting to continuous.
+  geom_sf_text(aes(label = as.character(grid_neighbor)))
 ```
 
-<img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-9-1.png" width="100%" />
 
 ``` r
-neighbor_neumann <- grid_10km("644142") |> 
+neighbor_neumann <- grid_parse("644142", "10km") |> 
   grid_neighbor(n = c(0:2),
                 simplify = F,
                 moore = F)
 
 neighbor_neumann[[1]] |> 
-  as_tbl_grid() |> 
-  sf::st_as_sf() |> 
+  grid_as_sf() |> 
   ggplot(aes(fill = as.factor(n))) +
   geom_sf() +
-  geom_sf_text(aes(label = grid_neighbor))
-#> Don't know how to automatically pick scale for object of type
-#> <grid_10km/grid/vctrs_rcrd/vctrs_vctr>. Defaulting to continuous.
+  geom_sf_text(aes(label = as.character(grid_neighbor)))
 ```
 
-<img src="man/figures/README-unnamed-chunk-9-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-10-1.png" width="100%" />
 
 ### Draw line segments between meshes
 
@@ -230,22 +251,19 @@ The `grid_line()` function extracts meshes that lie on the line segments
 between meshes.
 
 ``` r
-grid_from <- grid_80km(c("6441", "5339"))
-grid_to <- grid_80km(c("5237", "5235"))
+grid_from <- grid_parse(c("6441", "5339"), "80km")
+grid_to <- grid_parse(c("5237", "5235"), "80km")
 
 line <- grid_line(grid_from, grid_to)
 
 tibble::tibble(grid = line[[1]]) |> 
-  as_tbl_grid() |> 
-  sf::st_as_sf() |> 
+  grid_as_sf() |> 
   ggplot() +
   geom_sf() +
-  geom_sf_text(aes(label = grid))
-#> Don't know how to automatically pick scale for object of type
-#> <grid_80km/grid/vctrs_rcrd/vctrs_vctr>. Defaulting to continuous.
+  geom_sf_text(aes(label = as.character(grid)))
 ```
 
-<img src="man/figures/README-unnamed-chunk-10-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-11-1.png" width="100%" />
 
 It can handle the case of passing through multiple meshes by giving a
 `list` of meshes.
@@ -254,24 +272,21 @@ It can handle the case of passing through multiple meshes by giving a
 - `skip_na = TRUE` to skip `NA`.
 
 ``` r
-grid_1 <- grid_80km(c("6441", "5339", NA, "5250"))
-grid_2 <- grid_80km(c("6439", "5211", "4013", "6635"))
+grid_1 <- grid_parse(c("6441", "5339", NA, "5250"), "80km")
+grid_2 <- grid_parse(c("6439", "5211", "4013", "6635"), "80km")
 
 line <- grid_line(list(grid_1, grid_2), 
                   close = TRUE,
                   skip_na = TRUE)
 
 tibble::tibble(grid = line[[1]]) |> 
-  as_tbl_grid() |> 
-  sf::st_as_sf() |> 
+  grid_as_sf() |> 
   ggplot() +
   geom_sf() +
-  geom_sf_text(aes(label = grid))
-#> Don't know how to automatically pick scale for object of type
-#> <grid_80km/grid/vctrs_rcrd/vctrs_vctr>. Defaulting to continuous.
+  geom_sf_text(aes(label = as.character(grid)))
 ```
 
-<img src="man/figures/README-unnamed-chunk-11-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-12-1.png" width="100%" />
 
 ### Calculation of distance between meshes
 
@@ -282,8 +297,8 @@ The `grid_distance()` function calculates the distance between meshes
   of meshes.
 
 ``` r
-grid_from <- grid_80km(c("6441", "5339"))
-grid_to <- grid_80km(c("5237", "5235"))
+grid_from <- grid_parse(c("6441", "5339"), "80km")
+grid_to <- grid_parse(c("5237", "5235"), "80km")
 
 distance <- grid_distance(grid_from, grid_to)
 
@@ -296,7 +311,6 @@ print(distance)
 
 - `grid_move()` function can be used to calculate regional meshes in the
   east-west and north-south directions.
-- `sf::st_as_sfc` function can output `sfc` geometry.
 - For meshes outside the range of the 80 km mesh, where the digits are
   negative or exceed three digits, the relevant code is displayed as
   `<-1>` or `<123>` to clearly distinguish them from existing meshes.
@@ -307,6 +321,6 @@ The conversion speed between meshes and latitude/longitude in this
 package is several tens to several hundred times faster than in the
 jpmesh package.
 
-<img src="man/figures/README-unnamed-chunk-13-1.png" width="100%" />
-
 <img src="man/figures/README-unnamed-chunk-14-1.png" width="100%" />
+
+<img src="man/figures/README-unnamed-chunk-15-1.png" width="100%" />
