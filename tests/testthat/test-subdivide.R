@@ -1,6 +1,6 @@
 test_that("subdivide", {
   # 1km
-  grid_1km <- grid_parse("53396354", "1km")
+  grid_1km <- parse_grid("53396354", "1km")
 
   # 1km -> 1km
   expect_equal(grid_subdivide(grid_1km, "1km")[[1]], grid_1km)
@@ -14,10 +14,10 @@ test_that("subdivide", {
 
 test_that("zoomout", {
   # 1km
-  grid_1km <- grid_parse("53396354", "1km")
+  grid_1km <- parse_grid("53396354", "1km")
 
   # 1km -> 1km
-  expect_equal(grid_convert(grid_1km, "1km"), grid_1km)
+  expect_equal(convert_grid(grid_1km, "1km"), grid_1km)
   # 1km -> 10km
-  expect_equal(as.character(grid_convert(grid_1km, "10km")), stringr::str_sub(grid_1km, 1, 6))
+  expect_equal(as.character(convert_grid(grid_1km, "10km")), stringr::str_sub(grid_1km, 1, 6))
 })

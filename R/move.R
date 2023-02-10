@@ -7,7 +7,7 @@
 #' @return A `grid` vector.
 #'
 #' @export
-grid_move <- function(grid, n_X, n_Y) {
+move_grid <- function(grid, n_X, n_Y) {
   if (!is_grid(grid)) {
     cli_abort("{.arg grid} must be a vector with type {.cls grid}.")
   }
@@ -50,7 +50,7 @@ grid_neighbor <- function(grid,
     vec_unique() |>
     tidyr::expand_grid(n_XY)
   neighbor$grid_neighbor <- neighbor$grid |>
-    grid_move(n_X = neighbor$n_X,
+    move_grid(n_X = neighbor$n_X,
               n_Y = neighbor$n_Y)
   neighbor <- neighbor |>
     dplyr::group_nest(grid,

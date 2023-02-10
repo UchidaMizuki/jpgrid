@@ -16,36 +16,35 @@ pref_name <- rnaturalearth::ne_states(country = "japan",
            str_extract("(?<=JP-)\\d+") |>
            as.integer())
 
-html_grid_city2015 <- read_html("https://www.stat.go.jp/data/mesh/m_itiran.html") |>
+html_grid_city <- read_html("https://www.stat.go.jp/data/mesh/m_itiran.html") |>
   html_elements("#section > article:nth-child(2) > ul:nth-child(7) > li > a")
 
-grid_city2015 <- tibble(pref_name_ja = html_grid_city2015 |>
-                          html_text() |>
-                          str_extract("(?<=^\\d{2}\\s).+(?=（)"),
-                        file = html_grid_city2015 |>
-                          html_attr("href") |>
-                          fs::path_file()) |>
+grid_city <- tibble(pref_name_ja = html_grid_city |>
+                      html_text() |>
+                      str_extract("(?<=^\\d{2}\\s).+(?=（)"),
+                    file = html_grid_city |>
+                      html_attr("href") |>
+                      fs::path_file()) |>
   mutate(pref_code = file |>
            str_extract("^\\d{2}") |>
            as.integer(),
          file = str_glue("https://www.stat.go.jp/data/mesh/csv/{file}")) |>
   rowwise() |>
-  mutate(grid_city2015 = read_csv(file,
-                                  locale = locale(encoding = "shift-jis"),
-                                  col_types = cols(.default = "c"),
-                                  col_select = 1:3) |>
+  mutate(grid_city = read_csv(file,
+                              locale = locale(encoding = "shift-jis"),
+                              col_types = cols(.default = "c"),
+                              col_select = 1:3) |>
            list()) |>
   ungroup() |>
   select(!file) |>
-  unnest(grid_city2015) |>
+  unnest(grid_city) |>
   rename(city_code = `都道府県市区町村コード`,
          city_name_ja = `市区町村名`,
          grid = `基準メッシュ・コード`) |>
-  mutate(grid = grid_parse(grid,
-                           size = "1km")) |>
+  mutate(grid = parse_grid(grid, "1km")) |>
   left_join(pref_name,
             by = "pref_code") |>
   relocate(pref_code, city_code, pref_name, pref_name_ja, city_name_ja, grid)
 
-usethis::use_data(grid_city2015,
+usethis::use_data(grid_city,
                   overwrite = TRUE)

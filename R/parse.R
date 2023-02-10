@@ -6,13 +6,13 @@
 #' square code match a given number of digits? By default, `TRUE`.
 #'
 #' @examples
-#' grid_parse("53394526313")
-#' grid_parse("53394526313", "80km")
-#' grid_parse("53394526313", "80km",
+#' parse_grid("53394526313")
+#' parse_grid("53394526313", "80km")
+#' parse_grid("53394526313", "80km",
 #'            strict = FALSE)
 #'
 #' @export
-grid_parse <- function(x,
+parse_grid <- function(x,
                        grid_size = NULL,
                        strict = TRUE) {
   if (is.null(grid_size)) {

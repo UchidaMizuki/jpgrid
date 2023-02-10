@@ -1,6 +1,6 @@
 test_that("distance", {
-  grid_from <- grid_parse("6441", "80km")
-  grid_to <- grid_parse("5237", "80km")
+  grid_from <- parse_grid("6441", "80km")
+  grid_to <- parse_grid("5237", "80km")
 
   distance_1 <- grid_distance(grid_from, grid_to) |>
     units::drop_units()

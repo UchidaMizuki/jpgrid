@@ -2,7 +2,7 @@
 #'
 #' `r lifecycle::badge("deprecated")`
 #'
-#' It is recommended to use `grid_parse()` or `grid_convert()`.
+#' It is recommended to use `grid_parse()` or `convert_grid()`.
 #'
 #' A series of functions return `grid` class for each grid size.
 #' `grid_auto()` returns automatically determine grid size by the largest
@@ -19,13 +19,13 @@ NULL
 
 grid_impl <- function(x, strict, grid_size, what) {
   lifecycle::deprecate_warn("0.4.0", stringr::str_c(what, "()"),
-                            details = "Please use `grid_parse()` or `grid_convert()`")
+                            details = "Please use `parse_grid()` or `convert_grid()`")
 
   if (is_grid(x)) {
-    grid_convert(x,
+    convert_grid(x,
                  grid_size = grid_size)
   } else {
-    grid_parse(x,
+    parse_grid(x,
                grid_size = grid_size,
                strict = strict)
   }
@@ -111,46 +111,41 @@ grid_auto <- function(x,
             what = "grid_auto")
 }
 
-#' Converting sfc geometries to grid square codes
+#' Conversion between grid square codes and coordinates (longitude and latitude)
 #'
 #' `r lifecycle::badge("deprecated")`
 #'
-#' It is recommended to use `grid_from_geom()`.
+#' @name XY
+NULL
+
+#' @rdname XY
 #'
-#' @param geometry A `sfc` vector.
-#' @param grid_size A grid size.
-#' @param options Options vector for GDALRasterize passed on to
-#' [stars::st_rasterize()].
-#' @param ... Passed on to [stars::st_rasterize()].
+#' @param grid A `grid` class vector.
+#' @param center Should the center point of the grid be returned? Otherwise the
+#' end points will be returned. `TRUE` by default.
 #'
-#' @return A list of `grid` vectors.
+#' @return `grid_to_XY()` returns a `tbl_df`.
 #'
 #' @export
-geometry_to_grid <- function(geometry, grid_size,
-                             options = "ALL_TOUCHED=TRUE", ...) {
-  lifecycle::deprecate_warn("0.4.0", "geometry_to_grid()", "grid_from_geom()")
-
-  grid_from_geom(geometry = geometry,
-                 grid_size = grid_size,
-                 options = options, ...)
+grid_to_XY <- function(grid, center = TRUE) {
+  lifecycle::deprecate_warn("0.4.0", "grid_to_XY()", "grid_to_coords()")
+  grid_to_coords(grid = grid,
+                 center = center)
 }
 
-#' Converting bbox to grid square codes
+#' @rdname XY
 #'
-#' `r lifecycle::badge("deprecated")`
-#'
-#' It is recommended to use `grid_from_bbox()`.
-#'
-#' @param bbox A `bbox`.
+#' @param X A numeric vector of longitude.
+#' @param Y A numeric vector of latitude.
 #' @param grid_size A grid size.
 #'
-#' @return A `grid` vector.
+#' @return `XY_to_grid()` returns a `grid` vector.
 #'
 #' @export
-bbox_to_grid <- function(bbox, grid_size) {
-  lifecycle::deprecate_warn("0.4.0", "bbox_to_grid()", "grid_from_bbox()")
-
-  grid_from_bbox(bbox = bbox,
+XY_to_grid <- function(X, Y, grid_size) {
+  lifecycle::deprecate_warn("0.4.0", "XY_to_grid()", "coords_to_grid()")
+  coords_to_grid(X = X,
+                 Y = Y,
                  grid_size = grid_size)
 }
 
@@ -194,7 +189,7 @@ as_tbl_grid <- function(x,
 
   out <- x |>
     dplyr::mutate(dplyr::across(dplyr::all_of(var),
-                                purrr::partial(grid_parse,
+                                purrr::partial(parse_grid,
                                                strict = strict,
                                                grid_size = grid_size)))
 
@@ -205,44 +200,6 @@ as_tbl_grid <- function(x,
 
 grid_column <- function(x) {
   attr(x, "grid_col")
-}
-
-#' Conversion between grid square codes and coordinates (longitude and latitude)
-#'
-#' `r lifecycle::badge("deprecated")`
-#'
-#' @name XY
-NULL
-
-#' @rdname XY
-#'
-#' @param grid A `grid` class vector.
-#' @param center Should the center point of the grid be returned? Otherwise the
-#' end points will be returned. `TRUE` by default.
-#'
-#' @return `grid_to_XY()` returns a `tbl_df`.
-#'
-#' @export
-grid_to_XY <- function(grid, center = TRUE) {
-  lifecycle::deprecate_warn("0.4.0", "grid_to_XY()", "grid_to_coords()")
-  grid_to_coords(grid = grid,
-                 center = center)
-}
-
-#' @rdname XY
-#'
-#' @param X A numeric vector of longitude.
-#' @param Y A numeric vector of latitude.
-#' @param grid_size A grid size.
-#'
-#' @return `XY_to_grid()` returns a `grid` vector.
-#'
-#' @export
-XY_to_grid <- function(X, Y, grid_size) {
-  lifecycle::deprecate_warn("0.4.0", "XY_to_grid()", "grid_from_coords()")
-  grid_from_coords(X = X,
-                   Y = Y,
-                   grid_size = grid_size)
 }
 
 #' @importFrom sf st_as_sf

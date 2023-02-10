@@ -41,7 +41,7 @@ A \code{grid} vector.
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 }
 \details{
-It is recommended to use \code{grid_parse()} or \code{grid_convert()}.
+It is recommended to use \code{grid_parse()} or \code{convert_grid()}.
 
 A series of functions return \code{grid} class for each grid size.
 \code{grid_auto()} returns automatically determine grid size by the largest

@@ -9,8 +9,8 @@
 #' @return A list of `grid` vectors.
 #'
 #' @export
-grid_from_geom <- function(geometry, grid_size,
-                           options = "ALL_TOUCHED=TRUE", ...) {
+geometry_to_grid <- function(geometry, grid_size,
+                             options = "ALL_TOUCHED=TRUE", ...) {
   if (!inherits(geometry, "sfc")) {
     geometry <- sf::st_as_sfc(geometry)
   }
@@ -20,15 +20,15 @@ grid_from_geom <- function(geometry, grid_size,
       sf::st_coordinates() |>
       tibble::as_tibble()
 
-    grid_from_coords(X = coords$X,
-                     Y = coords$Y,
-                     grid_size = grid_size)
+    coords_to_grid(X = coords$X,
+                   Y = coords$Y,
+                   grid_size = grid_size)
   } else {
     geometry |>
       purrr::map(function(x) {
         grid <- x |>
           sf::st_bbox() |>
-          grid_from_bbox(grid_size = grid_size) |>
+          bbox_to_grid(grid_size = grid_size) |>
           st_as_stars()
 
         coords <- x |>
@@ -40,9 +40,9 @@ grid_from_geom <- function(geometry, grid_size,
           sf::st_coordinates() |>
           tibble::as_tibble()
 
-        grid_from_coords(X = coords$X,
-                         Y = coords$Y,
-                         grid_size = grid_size)
+        coords_to_grid(X = coords$X,
+                       Y = coords$Y,
+                       grid_size = grid_size)
       })
   }
 }
@@ -55,19 +55,19 @@ grid_from_geom <- function(geometry, grid_size,
 #' @return A `grid` vector.
 #'
 #' @export
-grid_from_bbox <- function(bbox, grid_size) {
+bbox_to_grid <- function(bbox, grid_size) {
   bbox <- sf::st_bbox(bbox)
   grid_size <- grid_size_match(grid_size)
 
-  grid_min <- grid_from_coords(X = bbox[["xmin"]],
-                               Y = bbox[["ymin"]],
-                               grid_size = grid_size)
+  grid_min <- coords_to_grid(X = bbox[["xmin"]],
+                             Y = bbox[["ymin"]],
+                             grid_size = grid_size)
   n_X_min <- field(grid_min, "n_X")
   n_Y_min <- field(grid_min, "n_Y")
 
-  grid_max <- grid_from_coords(X = bbox[["xmax"]],
-                               Y = bbox[["ymax"]],
-                               grid_size = grid_size)
+  grid_max <- coords_to_grid(X = bbox[["xmax"]],
+                             Y = bbox[["ymax"]],
+                             grid_size = grid_size)
   n_X_max <- field(grid_max, "n_X")
   n_Y_max <- field(grid_max, "n_Y")
 

@@ -2,11 +2,11 @@
 % Please edit documentation in R/coords.R
 \name{coords}
 \alias{coords}
-\alias{grid_from_coords}
+\alias{coords_to_grid}
 \alias{grid_to_coords}
 \title{Conversion between grid square codes and coordinates (longitude and latitude)}
 \usage{
-grid_from_coords(X, Y, grid_size)
+coords_to_grid(X, Y, grid_size)
 
 grid_to_coords(grid, center = TRUE)
 }
@@ -23,7 +23,7 @@ grid_to_coords(grid, center = TRUE)
 end points will be returned. \code{TRUE} by default.}
 }
 \value{
-\code{grid_from_coords()} returns a \code{grid} vector.
+\code{coords_to_grid()} returns a \code{grid} vector.
 
 \code{grid_to_coords()} returns a \code{tbl_df}.
 }

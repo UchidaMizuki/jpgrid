@@ -1,6 +1,6 @@
 test_that("circle", {
   # 1km
-  grid_1km <- grid_parse("53396354", "1km")
+  grid_1km <- parse_grid("53396354", "1km")
   coords <- grid_to_coords(grid_1km)
 
   grid_100m <- grid_circle(X = coords$X,

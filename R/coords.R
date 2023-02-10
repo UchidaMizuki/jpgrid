@@ -9,10 +9,10 @@ NULL
 #' @param Y A numeric vector of latitude.
 #' @param grid_size A grid size.
 #'
-#' @return `grid_from_coords()` returns a `grid` vector.
+#' @return `coords_to_grid()` returns a `grid` vector.
 #'
 #' @export
-grid_from_coords <- function(X, Y, grid_size) {
+coords_to_grid <- function(X, Y, grid_size) {
   grid_size <- grid_size_match(grid_size)
 
   length_X <- grid_size / 80000L

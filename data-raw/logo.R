@@ -13,14 +13,13 @@ sysfonts::font_add_google(font_logo)
 
 file_logo <- "man/figures/logo.png"
 
-fill_logo <- "#BC002D"
+fill_logo <- "firebrick"
 color_logo <- "snow"
 
 JGD2011 <- 6668
 
 plot_grid_city2015 <- grid_city2015 |>
-  mutate(grid = grid_convert(grid,
-                             size = "80km")) |>
+  mutate(grid = convert_grid(grid, "80km")) |>
   distinct(grid) |>
   st_as_sf(crs = JGD2011) |>
 

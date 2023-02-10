@@ -6,11 +6,11 @@
 #' @return A `grid` vector.
 #'
 #' @examples
-#' grid_500m <- grid_parse(c("533945263", "533935863", "533945764"), "500m")
-#' grid_convert(grid_500m, "10km")
+#' grid_500m <- parse_grid(c("533945263", "533935863", "533945764"), "500m")
+#' convert_grid(grid_500m, "10km")
 #'
 #' @export
-grid_convert <- function(grid, grid_size) {
+convert_grid <- function(grid, grid_size) {
   if (!is_grid(grid)) {
     cli_abort("{.arg grid} must be a vector with type {.cls grid}.")
   }
