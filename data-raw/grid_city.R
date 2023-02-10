@@ -3,7 +3,7 @@ library(rvest)
 
 pkgload::load_all()
 
-# grid_city2015 -----------------------------------------------------------
+# grid_city ---------------------------------------------------------------
 
 pref_name <- rnaturalearth::ne_states(country = "japan",
                                       returnclass = "sf") |>
