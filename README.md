@@ -145,7 +145,7 @@ parse_grid(x,
 
 ### 地域メッシュコードのサイズの変換
 
-地域メッシュコードのメッシュサイズを粗くする場合には，`convert_grid()`を使用します．
+地域メッシュコードのメッシュサイズを粗くする場合には，`grid_convert()`を使用します．
 また，`grid_subdivide()`により，地域メッシュコードの細分化を行います．
 
 - `grid_subdivide()`は，元のメッシュに含まれるメッシュを要素にもつリストを出力します．
@@ -154,7 +154,7 @@ parse_grid(x,
 ``` r
 grid_500m <- parse_grid("533945764", "500m")
 
-convert_grid(grid_500m, "1km")
+grid_convert(grid_500m, "1km")
 #> <grid_1km[1]>
 #> [1] 53394576
 
@@ -205,7 +205,7 @@ tibble(grid = grid_100m(c("5339452660", "5235034590"))) |>
   mutate(grid_to_coords(grid)) |> 
   knitr::kable()
 #> Warning: `grid_100m()` was deprecated in jpgrid 0.4.0.
-#> ℹ Please use `parse_grid()` or `convert_grid()`
+#> ℹ Please use `parse_grid()` or `grid_convert()`
 #> ℹ The deprecated feature was likely used in the jpgrid package.
 #>   Please report the issue at <]8;;https://github.com/UchidaMizuki/jpgrid/issueshttps://github.com/UchidaMizuki/jpgrid/issues]8;;>.
 ```
@@ -332,7 +332,7 @@ print(distance)
 
 ### その他
 
-- `move_grid()`関数により，東西南北方向の地域メッシュコードを算出可能です．
+- `grid_move()`関数により，東西南北方向の地域メッシュコードを算出可能です．
 - 80kmメッシュの桁が負や三桁以上になる範囲外のメッシュについては，当該コードを`<-1>`，`<123>`のように表示し，既存メッシュと明確に区別できるようにしています．
 
 ## jpmeshとの処理速度の比較

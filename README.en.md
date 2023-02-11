@@ -12,7 +12,7 @@ status](https://www.r-pkg.org/badges/version/jpgrid)](https://CRAN.R-project.org
 jpgrid is an R package for using the JIS (Japan Industrial Standard) X
 0410 ‘[Grid Square
 Code](https://www.jisc.go.jp/app/jis/general/GnrJISNumberNameSearchList?show&jisStdNo=X0410)’.
-Grid Square Codes are square-like regional divisions set up for all
+grid square codes are square-like regional divisions set up for all
 regions of Japan based on longitude and latitude. For more information,
 please check [the Statistics Bureau of Japan
 page](https://www.stat.go.jp/data/mesh/pdf/gaiyo1.pdf).
@@ -64,7 +64,7 @@ library(tidyverse)
 JGD2011 <- 6668
 ```
 
-### Conversion of geometry to Grid Square Codes
+### Conversion of geometry to grid square codes
 
 `geometry_to_grid()` can be used to convert `sf` objects to the grid
 square codes. You can also use `grid_as_sf()` to convert data containing
@@ -105,9 +105,9 @@ grid_city |>
 
 <img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
 
-### Generation of Grid Square Codes from character strings or numbers
+### Generation of grid square codes from character strings or numbers
 
-Use `parse_grid()` to generate Grid Square Codes from strings or
+Use `parse_grid()` to generate grid square codes from strings or
 numbers.
 
 - Specify the grid size as `grid_size = "80km"`.
@@ -146,10 +146,10 @@ parse_grid(x,
 #> [1] 5339 5339 5339 5339 5235 5339 <NA>
 ```
 
-### Converting the grid size of Grid Square Codes
+### Converting the grid size of grid square codes
 
-Use `convert_grid()` to coarsen the grid size of Grid Square Codes. The
-`grid_subdivide()` function can be used to subdivide Grid Square Codes.
+Use `grid_convert()` to coarsen the grid size of grid square codes. The
+`grid_subdivide()` function can be used to subdivide grid square codes.
 
 - `grid_subdivide()` outputs a list of grid square codes whose elements
   are contained in the original grids.
@@ -158,7 +158,7 @@ Use `convert_grid()` to coarsen the grid size of Grid Square Codes. The
 ``` r
 grid_500m <- parse_grid("533945764", "500m")
 
-convert_grid(grid_500m, "1km")
+grid_convert(grid_500m, "1km")
 #> <grid_1km[1]>
 #> [1] 53394576
 
@@ -183,10 +183,10 @@ tibble(grid_100m = grid_100m[[1]]) |>
 
 <img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
 
-### Conversion from longitude/latitude to Grid Square Codes
+### Conversion from longitude/latitude to grid square codes
 
-The `coords_to_grid()` converts longitude and latitude to Grid Square
-Codes.
+The `coords_to_grid()` converts longitude and latitude to grid square
+codes.
 
 ``` r
 tibble(X = c(139.7008, 135.4375), # longitude
@@ -201,9 +201,9 @@ tibble(X = c(139.7008, 135.4375), # longitude
 | 139.7008 | 35.68906 | 5339452660 | 53394526313 |
 | 135.4375 | 34.70833 | 5235034499 | 52350344444 |
 
-### Conversion from Grid Square Codes to longitude/latitude
+### Conversion from grid square codes to longitude/latitude
 
-The `grid_to_coords()` function converts Grid Square Codes to longitude
+The `grid_to_coords()` function converts grid square codes to longitude
 and latitude.
 
 ``` r
@@ -211,7 +211,7 @@ tibble(grid = grid_100m(c("5339452660", "5235034590"))) |>
   mutate(grid_to_coords(grid)) |> 
   knitr::kable()
 #> Warning: `grid_100m()` was deprecated in jpgrid 0.4.0.
-#> ℹ Please use `parse_grid()` or `convert_grid()`
+#> ℹ Please use `parse_grid()` or `grid_convert()`
 #> ℹ The deprecated feature was likely used in the jpgrid package.
 #>   Please report the issue at <]8;;https://github.com/UchidaMizuki/jpgrid/issueshttps://github.com/UchidaMizuki/jpgrid/issues]8;;>.
 ```
@@ -342,7 +342,7 @@ print(distance)
 
 ### Others
 
-- `move_grid()` function can be used to calculate the grid square code
+- `grid_move()` function can be used to calculate the grid square code
   in the east-west and north-south directions.
 - For grid outside the range of the 80 km grid, where the digits are
   negative or exceed three digits, the relevant code is displayed as
