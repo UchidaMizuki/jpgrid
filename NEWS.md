@@ -1,3 +1,11 @@
+# version 0.3.0
+
+- Add `parse_grid()` and `grid_convert()`, and deprecate `grid_80km()`, `grid_10km()` and so on.
+- Add `grid_to_coords()` and `coords_to_grid()`, and deprecate `grid_to_XY()` and `XY_to_grid()`.
+- Remove deprecations for `grid_as_sf()` and `grid_as_stars()`, and deprecated `as_tbl_grid()`.
+- Remove `grid_bbox()` and `grid_circle()`.
+- Rename `grid_city2015` to `grid_city`.
+
 # version 0.2.1
 - Add `as_tbl_grid()`.
 - Add `st_as_sf()`, `st_bbox()`, `st_as_stars()` and `plot()` for `tbl_grid`. 

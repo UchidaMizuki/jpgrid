@@ -44,14 +44,14 @@ test_that("bbox_to_grid", {
   # expect_equal(vctrs::vec_size(grid[[1L]]), 12L)
 })
 
-test_that("st_as_sf-2", {
+test_that("grid_as_sf", {
   grid_10km_1 <- parse_grid(c("53394526313", 5339358633, "533945764", 53394611, "523503", 5339), "10km",
                             strict = FALSE)
   grid_10km_2 <- rev(grid_10km_1)
 
   sf <- tibble::tibble(grid1 = grid_10km_1,
                        grid2 = grid_10km_2) |>
-    sf::st_as_sf()
+    grid_as_sf()
   expect_s3_class(sf, "sf")
 })
 

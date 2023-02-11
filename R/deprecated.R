@@ -164,7 +164,7 @@ XY_to_grid <- function(X, Y, grid_size) {
 #' @param grid_size 	A grid size.
 #' @param strict A logical scalar. Should the number of digits in the grid
 #' square code match a given number of digits?
-#' @param ... Additional arguments passed to [stickyr::new_sticky_tibble()]
+#' @param ... Additional arguments passed to [tibble::new_tibble()].
 #'
 #' @return A `tbl_grid` object.
 #'
@@ -194,7 +194,7 @@ as_tbl_grid <- function(x,
                                                grid_size = grid_size)))
 
   tibble::new_tibble(out,
-                     grid_col = var,
+                     grid_col = var, ...,
                      class = "tbl_grid")
 }
 

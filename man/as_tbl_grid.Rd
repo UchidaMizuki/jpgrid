@@ -17,7 +17,7 @@ column of the grid object is taken.}
 \item{strict}{A logical scalar. Should the number of digits in the grid
 square code match a given number of digits?}
 
-\item{...}{Additional arguments passed to \code{\link[stickyr:new_sticky_tibble]{stickyr::new_sticky_tibble()}}}
+\item{...}{Additional arguments passed to \code{\link[tibble:new_tibble]{tibble::new_tibble()}}.}
 }
 \value{
 A \code{tbl_grid} object.
