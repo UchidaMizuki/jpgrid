@@ -2,7 +2,7 @@
 #'
 #' `r lifecycle::badge("deprecated")`
 #'
-#' It is recommended to use `grid_parse()` or `convert_grid()`.
+#' It is recommended to use `grid_parse()` or `grid_convert()`.
 #'
 #' A series of functions return `grid` class for each grid size.
 #' `grid_auto()` returns automatically determine grid size by the largest
@@ -19,10 +19,10 @@ NULL
 
 grid_impl <- function(x, strict, grid_size, what) {
   lifecycle::deprecate_warn("0.4.0", stringr::str_c(what, "()"),
-                            details = "Please use `parse_grid()` or `convert_grid()`")
+                            details = "Please use `parse_grid()` or `grid_convert()`")
 
   if (is_grid(x)) {
-    convert_grid(x,
+    grid_convert(x,
                  grid_size = grid_size)
   } else {
     parse_grid(x,

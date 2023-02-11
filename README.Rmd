@@ -124,7 +124,7 @@ parse_grid(x,
 
 ### 地域メッシュコードのサイズの変換
 
-地域メッシュコードのメッシュサイズを粗くする場合には，`convert_grid()`を使用します．
+地域メッシュコードのメッシュサイズを粗くする場合には，`grid_convert()`を使用します．
 また，`grid_subdivide()`により，地域メッシュコードの細分化を行います．
 
 - `grid_subdivide()`は，元のメッシュに含まれるメッシュを要素にもつリストを出力します．
@@ -133,7 +133,7 @@ parse_grid(x,
 ```{r}
 grid_500m <- parse_grid("533945764", "500m")
 
-convert_grid(grid_500m, "1km")
+grid_convert(grid_500m, "1km")
 
 grid_100m <- grid_subdivide(grid_500m, "100m")
 grid_100m

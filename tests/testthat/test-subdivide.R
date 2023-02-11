@@ -17,7 +17,7 @@ test_that("zoomout", {
   grid_1km <- parse_grid("53396354", "1km")
 
   # 1km -> 1km
-  expect_equal(convert_grid(grid_1km, "1km"), grid_1km)
+  expect_equal(grid_convert(grid_1km, "1km"), grid_1km)
   # 1km -> 10km
-  expect_equal(as.character(convert_grid(grid_1km, "10km")), stringr::str_sub(grid_1km, 1, 6))
+  expect_equal(as.character(grid_convert(grid_1km, "10km")), stringr::str_sub(grid_1km, 1, 6))
 })

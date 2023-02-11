@@ -119,7 +119,7 @@ parse_grid(x,
 
 ### Converting the grid size of Grid Square Codes
 
-Use `convert_grid()` to coarsen the grid size of Grid Square Codes.
+Use `grid_convert()` to coarsen the grid size of Grid Square Codes.
 The `grid_subdivide()` function can be used to subdivide Grid Square Codes.
 
 - `grid_subdivide()` outputs a list of grid square codes whose elements are contained in the original grids.
@@ -128,7 +128,7 @@ The `grid_subdivide()` function can be used to subdivide Grid Square Codes.
 ```{r}
 grid_500m <- parse_grid("533945764", "500m")
 
-convert_grid(grid_500m, "1km")
+grid_convert(grid_500m, "1km")
 
 grid_100m <- grid_subdivide(grid_500m, "100m")
 grid_100m

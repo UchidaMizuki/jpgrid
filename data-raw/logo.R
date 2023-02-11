@@ -19,7 +19,7 @@ fill_logo <- "firebrick"
   JGD2011 <- 6668
 
   plot_grid_city <- grid_city |>
-    mutate(grid = convert_grid(grid, "80km")) |>
+    mutate(grid = grid_convert(grid, "80km")) |>
     distinct(grid) |>
     st_as_sf(crs = JGD2011) |>
 
