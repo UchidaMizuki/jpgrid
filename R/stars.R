@@ -14,7 +14,7 @@ st_as_stars.grid <- function(.x, ...) {
 #' @param grid_column_name A scalar character.
 #' @param ... Passed on to [stars::st_as_stars()].
 #'
-#' @return A \code{stars} object.
+#' @return A `stars` object.
 #'
 #' @export
 grid_as_stars <- function(x,

@@ -151,7 +151,7 @@ plot.grid <- function(x, y,
 #' @param grid_column_name A scalar character.
 #' @param ... passed on to [sf::st_as_sf()].
 #'
-#' @return A \code{sf} object.
+#' @return A `sf` object.
 #'
 #' @export
 grid_as_sf <- function(x,
