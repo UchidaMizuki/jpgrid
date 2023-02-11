@@ -1,7 +1,7 @@
 test_that("move", {
   grid_10km <- parse_grid(533877, "10km")
 
-  expect_equal(move_grid(grid_10km, 1, 1), parse_grid(543900, "10km"))
+  expect_equal(grid_move(grid_10km, 1, 1), parse_grid(543900, "10km"))
 })
 
 test_that("neighbor", {

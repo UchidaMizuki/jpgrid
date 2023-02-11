@@ -248,7 +248,7 @@ print(distance)
 ```
 
 ### Others
-- `move_grid()` function can be used to calculate the grid square code in the east-west and north-south directions.
+- `grid_move()` function can be used to calculate the grid square code in the east-west and north-south directions.
 - For grid outside the range of the 80 km grid, where the digits are negative or exceed three digits, the relevant code is displayed as `<-1>` or `<123>` to clearly distinguish them from existing grids.
 
 ## Comparison of processing speed with jpmesh package
