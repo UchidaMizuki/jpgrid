@@ -28,6 +28,9 @@
     <loc>https://uchidamizuki.github.io/jpgrid/reference/bbox_to_grid.html</loc>
   </url>
   <url>
+    <loc>https://uchidamizuki.github.io/jpgrid/reference/coords.html</loc>
+  </url>
+  <url>
     <loc>https://uchidamizuki.github.io/jpgrid/reference/geometry_to_grid.html</loc>
   </url>
   <url>
@@ -37,16 +40,13 @@
     <loc>https://uchidamizuki.github.io/jpgrid/reference/grid_as_stars.html</loc>
   </url>
   <url>
-    <loc>https://uchidamizuki.github.io/jpgrid/reference/grid_bbox.html</loc>
-  </url>
-  <url>
-    <loc>https://uchidamizuki.github.io/jpgrid/reference/grid_circle.html</loc>
-  </url>
-  <url>
-    <loc>https://uchidamizuki.github.io/jpgrid/reference/grid_city2015.html</loc>
+    <loc>https://uchidamizuki.github.io/jpgrid/reference/grid_city.html</loc>
   </url>
   <url>
     <loc>https://uchidamizuki.github.io/jpgrid/reference/grid_class.html</loc>
+  </url>
+  <url>
+    <loc>https://uchidamizuki.github.io/jpgrid/reference/grid_convert.html</loc>
   </url>
   <url>
     <loc>https://uchidamizuki.github.io/jpgrid/reference/grid_distance.html</loc>
@@ -67,6 +67,12 @@
     <loc>https://uchidamizuki.github.io/jpgrid/reference/index.html</loc>
   </url>
   <url>
+    <loc>https://uchidamizuki.github.io/jpgrid/reference/is_grid.html</loc>
+  </url>
+  <url>
     <loc>https://uchidamizuki.github.io/jpgrid/reference/jpgrid.html</loc>
+  </url>
+  <url>
+    <loc>https://uchidamizuki.github.io/jpgrid/reference/parse_grid.html</loc>
   </url>
 </urlset>

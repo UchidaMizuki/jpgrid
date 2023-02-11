@@ -150,67 +150,103 @@
 </h2>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/UchidaMizuki/jpgrid" class="external-link">jpgrid</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tibble.tidyverse.org/" class="external-link">tibble</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">JGD2011</span> <span class="op">&lt;-</span> <span class="fl">6668</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="ジオメトリの地域メッシュコードへの変換">ジオメトリの地域メッシュコードへの変換<a class="anchor" aria-label="anchor" href="#%E3%82%B8%E3%82%AA%E3%83%A1%E3%83%88%E3%83%AA%E3%81%AE%E5%9C%B0%E5%9F%9F%E3%83%A1%E3%83%83%E3%82%B7%E3%83%A5%E3%82%B3%E3%83%BC%E3%83%89%E3%81%B8%E3%81%AE%E5%A4%89%E6%8F%9B"></a>
+</h3>
+<p><code><a href="reference/geometry_to_grid.html">geometry_to_grid()</a></code>により，<code>sf</code>オブジェクトを地域メッシュコードに変換することができます． また，<code><a href="reference/grid_as_sf.html">grid_as_sf()</a></code>により地域メッシュ（<code>grid</code>クラス）を含むデータを<code>sf</code>オブジェクトに変換できます．</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">geom_chiba</span> <span class="op">&lt;-</span> <span class="fu">rnaturalearth</span><span class="fu">::</span><span class="fu">ne_states</span><span class="op">(</span>country <span class="op">=</span> <span class="st">"japan"</span>,</span>
+<span>                                       returnclass <span class="op">=</span> <span class="st">"sf"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">name</span> <span class="op">==</span> <span class="st">"Chiba"</span><span class="op">)</span></span>
+<span><span class="va">grid_chiba</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/geometry_to_grid.html">geometry_to_grid</a></span><span class="op">(</span><span class="va">geom_chiba</span>, <span class="st">"10km"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">first</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="reference/grid_as_sf.html">grid_as_sf</a></span><span class="op">(</span>crs <span class="op">=</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="va">geom_chiba</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">grid_chiba</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_sf</span><span class="op">(</span>data <span class="op">=</span> <span class="va">geom_chiba</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_sf</span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"transparent"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_sf_text</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">grid</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>               size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in st_point_on_surface.sfc(sf::st_zm(x)): st_point_on_surface may not</span></span>
+<span><span class="co">#&gt; give correct results for longitude/latitude data</span></span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-4-1.png" width="100%"></p>
+<p>また，<code>grid_city</code>には，市区町村別の1 kmメッシュコードが格納されています．</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">grid_city</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu">str_starts</span><span class="op">(</span><span class="va">city_code</span>, <span class="st">"121"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="reference/grid_as_sf.html">grid_as_sf</a></span><span class="op">(</span>crs <span class="op">=</span> <span class="va">JGD2011</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>fill <span class="op">=</span> <span class="fu">as_factor</span><span class="op">(</span><span class="va">city_name_ja</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_sf</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_fill_brewer</span><span class="op">(</span><span class="st">"City"</span>,</span>
+<span>                    palette <span class="op">=</span> <span class="st">"Set2"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-5-1.png" width="100%"></p>
+</div>
 <div class="section level3">
 <h3 id="文字列数値からの地域メッシュコードの生成">文字列・数値からの地域メッシュコードの生成<a class="anchor" aria-label="anchor" href="#%E6%96%87%E5%AD%97%E5%88%97%E6%95%B0%E5%80%A4%E3%81%8B%E3%82%89%E3%81%AE%E5%9C%B0%E5%9F%9F%E3%83%A1%E3%83%83%E3%82%B7%E3%83%A5%E3%82%B3%E3%83%BC%E3%83%89%E3%81%AE%E7%94%9F%E6%88%90"></a>
 </h3>
-<p>文字列・数値から地域メッシュコードを生成するためには<code><a href="reference/grid_class.html">grid_80km()</a></code>，<code><a href="reference/grid_class.html">grid_auto()</a></code>などの関数を使用します．</p>
+<p>文字列・数値から地域メッシュコードを生成するためには<code><a href="reference/parse_grid.html">parse_grid()</a></code>を使用します．</p>
 <ul>
 <li>
-<code><a href="reference/grid_class.html">grid_auto()</a></code>関数はメッシュサイズを自動的に決定します．</li>
+<code>grid_size = "80km"</code>のようにメッシュサイズを指定します．
+<ul>
+<li>
+<code>grid_size = NULL</code>の場合はメッシュサイズが自動的に決定されます．</li>
+</ul>
+</li>
 <li>デフォルト（<code>strict = TRUE</code>）では，メッシュコードの桁数が所定の桁数であることを要求します．</li>
 </ul>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/UchidaMizuki/jpgrid" class="external-link">jpgrid</a></span><span class="op">)</span></span>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"53394526313"</span>, <span class="st">"5339358633"</span>, <span class="st">"533945764"</span>, <span class="st">"53394611"</span>, <span class="st">"523503"</span>, <span class="st">"5339"</span>, <span class="cn">NA</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"53394526313"</span>, <span class="st">"5339358633"</span>, <span class="st">"533945764"</span>, <span class="st">"53394611"</span>, <span class="st">"523503"</span>, <span class="st">"5339"</span>, <span class="cn">NA</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="reference/grid_class.html">grid_80km</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/parse_grid.html">parse_grid</a></span><span class="op">(</span><span class="va">x</span>, grid_size <span class="op">=</span> <span class="st">"80km"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;grid_80km[7]&gt;</span></span>
 <span><span class="co">#&gt; [1] &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; 5339 &lt;NA&gt;</span></span>
-<span><span class="fu"><a href="reference/grid_class.html">grid_125m</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/parse_grid.html">parse_grid</a></span><span class="op">(</span><span class="va">x</span>, grid_size <span class="op">=</span> <span class="st">"125m"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;grid_125m[7]&gt;</span></span>
 <span><span class="co">#&gt; [1] 53394526313 &lt;NA&gt;        &lt;NA&gt;        &lt;NA&gt;        &lt;NA&gt;        &lt;NA&gt;       </span></span>
 <span><span class="co">#&gt; [7] &lt;NA&gt;</span></span>
-<span><span class="fu"><a href="reference/grid_class.html">grid_auto</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Guessing grid size as `80km`</span></span>
+<span><span class="fu"><a href="reference/parse_grid.html">parse_grid</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Guessing, grid_size = "80km"</span></span>
 <span><span class="co">#&gt; &lt;grid_80km[7]&gt;</span></span>
 <span><span class="co">#&gt; [1] &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; 5339 &lt;NA&gt;</span></span>
 <span></span>
-<span><span class="fu"><a href="reference/grid_class.html">grid_80km</a></span><span class="op">(</span><span class="va">x</span>, strict <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/parse_grid.html">parse_grid</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"80km"</span>,</span>
+<span>           strict <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;grid_80km[7]&gt;</span></span>
 <span><span class="co">#&gt; [1] 5339 5339 5339 5339 5235 5339 &lt;NA&gt;</span></span>
-<span><span class="fu"><a href="reference/grid_class.html">grid_125m</a></span><span class="op">(</span><span class="va">x</span>, strict <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/parse_grid.html">parse_grid</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"125m"</span>,</span>
+<span>           strict <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;grid_125m[7]&gt;</span></span>
 <span><span class="co">#&gt; [1] 53394526313 &lt;NA&gt;        &lt;NA&gt;        &lt;NA&gt;        &lt;NA&gt;        &lt;NA&gt;       </span></span>
 <span><span class="co">#&gt; [7] &lt;NA&gt;</span></span>
-<span><span class="fu"><a href="reference/grid_class.html">grid_auto</a></span><span class="op">(</span><span class="va">x</span>, strict <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Guessing grid size as `80km`</span></span>
+<span><span class="fu"><a href="reference/parse_grid.html">parse_grid</a></span><span class="op">(</span><span class="va">x</span>, </span>
+<span>           strict <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Guessing, grid_size = "80km"</span></span>
 <span><span class="co">#&gt; &lt;grid_80km[7]&gt;</span></span>
 <span><span class="co">#&gt; [1] 5339 5339 5339 5339 5235 5339 &lt;NA&gt;</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="地域メッシュコードのサイズの変換">地域メッシュコードのサイズの変換<a class="anchor" aria-label="anchor" href="#%E5%9C%B0%E5%9F%9F%E3%83%A1%E3%83%83%E3%82%B7%E3%83%A5%E3%82%B3%E3%83%BC%E3%83%89%E3%81%AE%E3%82%B5%E3%82%A4%E3%82%BA%E3%81%AE%E5%A4%89%E6%8F%9B"></a>
 </h3>
-<p>地域メッシュコードのメッシュサイズを粗くする場合には，<code><a href="reference/grid_class.html">grid_80km()</a></code>などの関数を使用します． また，<code><a href="reference/grid_subdivide.html">grid_subdivide()</a></code>関数により，地域メッシュコードの細分化を行います．</p>
+<p>地域メッシュコードのメッシュサイズを粗くする場合には，<code><a href="reference/grid_convert.html">grid_convert()</a></code>を使用します． また，<code><a href="reference/grid_subdivide.html">grid_subdivide()</a></code>により，地域メッシュコードの細分化を行います．</p>
 <ul>
 <li>
-<code><a href="reference/grid_subdivide.html">grid_subdivide()</a></code>は元のメッシュに含まれるメッシュを要素にもつリストを出力します．</li>
+<code><a href="reference/grid_subdivide.html">grid_subdivide()</a></code>は，元のメッシュに含まれるメッシュを要素にもつリストを出力します．</li>
 <li>500 mメッシュ・100 mメッシュ間の変換に対応しています．</li>
 </ul>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">grid500m</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/grid_class.html">grid_500m</a></span><span class="op">(</span><span class="st">"533945764"</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">grid_500m</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/parse_grid.html">parse_grid</a></span><span class="op">(</span><span class="st">"533945764"</span>, <span class="st">"500m"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="reference/grid_class.html">grid_1km</a></span><span class="op">(</span><span class="va">grid500m</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/grid_convert.html">grid_convert</a></span><span class="op">(</span><span class="va">grid_500m</span>, <span class="st">"1km"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;grid_1km[1]&gt;</span></span>
 <span><span class="co">#&gt; [1] 53394576</span></span>
 <span></span>
-<span><span class="va">grid100m</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/grid_subdivide.html">grid_subdivide</a></span><span class="op">(</span><span class="va">grid500m</span>,</span>
-<span>                           size <span class="op">=</span> <span class="st">"100m"</span><span class="op">)</span></span>
-<span><span class="va">grid100m</span></span>
+<span><span class="va">grid_100m</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/grid_subdivide.html">grid_subdivide</a></span><span class="op">(</span><span class="va">grid_500m</span>, <span class="st">"100m"</span><span class="op">)</span></span>
+<span><span class="va">grid_100m</span></span>
 <span><span class="co">#&gt; [[1]]</span></span>
 <span><span class="co">#&gt; &lt;grid_100m[25]&gt;</span></span>
 <span><span class="co">#&gt;  [1] 5339457655 5339457665 5339457675 5339457685 5339457695 5339457656</span></span>
@@ -219,32 +255,31 @@
 <span><span class="co">#&gt; [19] 5339457688 5339457698 5339457659 5339457669 5339457679 5339457689</span></span>
 <span><span class="co">#&gt; [25] 5339457699</span></span>
 <span></span>
-<span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>grid100m <span class="op">=</span> <span class="va">grid100m</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="reference/as_tbl_grid.html">as_tbl_grid</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span><span class="fu">tibble</span><span class="op">(</span>grid_100m <span class="op">=</span> <span class="va">grid_100m</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="reference/grid_as_sf.html">grid_as_sf</a></span><span class="op">(</span>crs <span class="op">=</span> <span class="va">JGD2011</span><span class="op">)</span> <span class="op">|&gt;</span>  </span>
 <span>  <span class="fu">ggplot</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_sf</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_sf_text</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>label <span class="op">=</span> <span class="va">grid100m</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Don't know how to automatically pick scale for object of type</span></span>
-<span><span class="co">#&gt; &lt;grid_100m/grid/vctrs_rcrd/vctrs_vctr&gt;. Defaulting to continuous.</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-5-1.png" width="100%"></p>
+<span>  <span class="fu">geom_sf_text</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">grid_100m</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in st_point_on_surface.sfc(sf::st_zm(x)): st_point_on_surface may not</span></span>
+<span><span class="co">#&gt; give correct results for longitude/latitude data</span></span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-7-1.png" width="100%"></p>
 </div>
 <div class="section level3">
 <h3 id="経度緯度から地域メッシュコードへの変換">経度・緯度から地域メッシュコードへの変換<a class="anchor" aria-label="anchor" href="#%E7%B5%8C%E5%BA%A6%E7%B7%AF%E5%BA%A6%E3%81%8B%E3%82%89%E5%9C%B0%E5%9F%9F%E3%83%A1%E3%83%83%E3%82%B7%E3%83%A5%E3%82%B3%E3%83%BC%E3%83%89%E3%81%B8%E3%81%AE%E5%A4%89%E6%8F%9B"></a>
 </h3>
-<p><code><a href="reference/XY.html">XY_to_grid()</a></code>関数は，経度・緯度を地域メッシュコードに変換します．</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>X <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">139.7008</span>, <span class="fl">135.4375</span><span class="op">)</span>, <span class="co"># 経度</span></span>
+<p><code><a href="reference/coords.html">coords_to_grid()</a></code>は，経度・緯度を地域メッシュコードに変換します．</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">tibble</span><span class="op">(</span>X <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">139.7008</span>, <span class="fl">135.4375</span><span class="op">)</span>, <span class="co"># 経度</span></span>
 <span>       Y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">35.68906</span>, <span class="fl">34.70833</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span>  <span class="co"># 緯度</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>grid100m <span class="op">=</span> <span class="fu"><a href="reference/XY.html">XY_to_grid</a></span><span class="op">(</span><span class="va">X</span>, <span class="va">Y</span>, size <span class="op">=</span> <span class="st">"100m"</span><span class="op">)</span>,</span>
-<span>         grid125m <span class="op">=</span> <span class="fu"><a href="reference/XY.html">XY_to_grid</a></span><span class="op">(</span><span class="va">X</span>, <span class="va">Y</span>, size <span class="op">=</span> <span class="st">"125m"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">mutate</span><span class="op">(</span>grid_100m <span class="op">=</span> <span class="fu"><a href="reference/coords.html">coords_to_grid</a></span><span class="op">(</span><span class="va">X</span>, <span class="va">Y</span>, <span class="st">"100m"</span><span class="op">)</span>,</span>
+<span>         grid_125m <span class="op">=</span> <span class="fu"><a href="reference/coords.html">coords_to_grid</a></span><span class="op">(</span><span class="va">X</span>, <span class="va">Y</span>, <span class="st">"125m"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="right">X</th>
 <th align="right">Y</th>
-<th align="left">grid100m</th>
-<th align="left">grid125m</th>
+<th align="left">grid_100m</th>
+<th align="left">grid_125m</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
@@ -265,11 +300,15 @@
 <div class="section level3">
 <h3 id="地域メッシュコードから経度緯度への変換">地域メッシュコードから経度・緯度への変換<a class="anchor" aria-label="anchor" href="#%E5%9C%B0%E5%9F%9F%E3%83%A1%E3%83%83%E3%82%B7%E3%83%A5%E3%82%B3%E3%83%BC%E3%83%89%E3%81%8B%E3%82%89%E7%B5%8C%E5%BA%A6%E7%B7%AF%E5%BA%A6%E3%81%B8%E3%81%AE%E5%A4%89%E6%8F%9B"></a>
 </h3>
-<p><code><a href="reference/XY.html">grid_to_XY()</a></code>関数は，地域メッシュコードを経度・緯度に変換します．</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>grid <span class="op">=</span> <span class="fu"><a href="reference/grid_class.html">grid_100m</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"5339452660"</span>, <span class="st">"5235034590"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="fu"><a href="reference/XY.html">grid_to_XY</a></span><span class="op">(</span><span class="va">grid</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><code><a href="reference/coords.html">grid_to_coords()</a></code>は，地域メッシュコードを経度・緯度に変換します．</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">tibble</span><span class="op">(</span>grid <span class="op">=</span> <span class="fu"><a href="reference/grid_class.html">grid_100m</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"5339452660"</span>, <span class="st">"5235034590"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">mutate</span><span class="op">(</span><span class="fu"><a href="reference/coords.html">grid_to_coords</a></span><span class="op">(</span><span class="va">grid</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: `grid_100m()` was deprecated in jpgrid 0.4.0.</span></span>
+<span><span class="co">#&gt; ℹ Please use `parse_grid()` or `grid_convert()`</span></span>
+<span><span class="co">#&gt; ℹ The deprecated feature was likely used in the jpgrid package.</span></span>
+<span><span class="co">#&gt;   Please report the issue at &lt;]8;;https://github.com/UchidaMizuki/jpgrid/issueshttps://github.com/UchidaMizuki/jpgrid/issues]8;;&gt;.</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="left">grid</th>
@@ -300,56 +339,65 @@
 <li>
 <code>moore = FALSE</code>でノイマン近傍での算出が可能</li>
 </ul>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">neighbor</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/grid_class.html">grid_10km</a></span><span class="op">(</span><span class="st">"644142"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">neighbor</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/parse_grid.html">parse_grid</a></span><span class="op">(</span><span class="st">"644142"</span>, <span class="st">"10km"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="reference/grid_neighbor.html">grid_neighbor</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span>,</span>
 <span>                simplify <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">neighbor</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="reference/as_tbl_grid.html">as_tbl_grid</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="reference/grid_as_sf.html">grid_as_sf</a></span><span class="op">(</span>crs <span class="op">=</span> <span class="va">JGD2011</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  </span>
 <span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_sf</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_sf_text</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>label <span class="op">=</span> <span class="va">grid_neighbor</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Don't know how to automatically pick scale for object of type</span></span>
-<span><span class="co">#&gt; &lt;grid_10km/grid/vctrs_rcrd/vctrs_vctr&gt;. Defaulting to continuous.</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-8-1.png" width="100%"></p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">neighbor_neumann</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/grid_class.html">grid_10km</a></span><span class="op">(</span><span class="st">"644142"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">geom_sf_text</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">grid_neighbor</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in st_point_on_surface.sfc(sf::st_zm(x)): st_point_on_surface may not</span></span>
+<span><span class="co">#&gt; give correct results for longitude/latitude data</span></span>
+<span></span>
+<span><span class="co">#&gt; Warning in st_point_on_surface.sfc(sf::st_zm(x)): st_point_on_surface may not</span></span>
+<span><span class="co">#&gt; give correct results for longitude/latitude data</span></span>
+<span></span>
+<span><span class="co">#&gt; Warning in st_point_on_surface.sfc(sf::st_zm(x)): st_point_on_surface may not</span></span>
+<span><span class="co">#&gt; give correct results for longitude/latitude data</span></span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-10-1.png" width="100%"></p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">neighbor_neumann</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/parse_grid.html">parse_grid</a></span><span class="op">(</span><span class="st">"644142"</span>, <span class="st">"10km"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="reference/grid_neighbor.html">grid_neighbor</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span>,</span>
 <span>                simplify <span class="op">=</span> <span class="cn">F</span>,</span>
 <span>                moore <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">neighbor_neumann</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="reference/as_tbl_grid.html">as_tbl_grid</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="reference/grid_as_sf.html">grid_as_sf</a></span><span class="op">(</span>crs <span class="op">=</span> <span class="va">JGD2011</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_sf</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_sf_text</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>label <span class="op">=</span> <span class="va">grid_neighbor</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Don't know how to automatically pick scale for object of type</span></span>
-<span><span class="co">#&gt; &lt;grid_10km/grid/vctrs_rcrd/vctrs_vctr&gt;. Defaulting to continuous.</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-9-1.png" width="100%"></p>
+<span>  <span class="fu">geom_sf_text</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">grid_neighbor</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in st_point_on_surface.sfc(sf::st_zm(x)): st_point_on_surface may not</span></span>
+<span><span class="co">#&gt; give correct results for longitude/latitude data</span></span>
+<span></span>
+<span><span class="co">#&gt; Warning in st_point_on_surface.sfc(sf::st_zm(x)): st_point_on_surface may not</span></span>
+<span><span class="co">#&gt; give correct results for longitude/latitude data</span></span>
+<span></span>
+<span><span class="co">#&gt; Warning in st_point_on_surface.sfc(sf::st_zm(x)): st_point_on_surface may not</span></span>
+<span><span class="co">#&gt; give correct results for longitude/latitude data</span></span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-11-1.png" width="100%"></p>
 </div>
 <div class="section level3">
 <h3 id="メッシュ間の線分描画">メッシュ間の線分描画<a class="anchor" aria-label="anchor" href="#%E3%83%A1%E3%83%83%E3%82%B7%E3%83%A5%E9%96%93%E3%81%AE%E7%B7%9A%E5%88%86%E6%8F%8F%E7%94%BB"></a>
 </h3>
 <p><code><a href="reference/grid_line.html">grid_line()</a></code>関数により，メッシュ間の線分上に存在するメッシュを抽出します．</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">grid_from</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/grid_class.html">grid_80km</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"6441"</span>, <span class="st">"5339"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">grid_to</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/grid_class.html">grid_80km</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"5237"</span>, <span class="st">"5235"</span><span class="op">)</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">grid_from</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/parse_grid.html">parse_grid</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"6441"</span>, <span class="st">"5339"</span><span class="op">)</span>, <span class="st">"80km"</span><span class="op">)</span></span>
+<span><span class="va">grid_to</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/parse_grid.html">parse_grid</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"5237"</span>, <span class="st">"5235"</span><span class="op">)</span>, <span class="st">"80km"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">line</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/grid_line.html">grid_line</a></span><span class="op">(</span><span class="va">grid_from</span>, <span class="va">grid_to</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>grid <span class="op">=</span> <span class="va">line</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="reference/as_tbl_grid.html">as_tbl_grid</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="reference/grid_as_sf.html">grid_as_sf</a></span><span class="op">(</span>crs <span class="op">=</span> <span class="va">JGD2011</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">ggplot</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_sf</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_sf_text</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>label <span class="op">=</span> <span class="va">grid</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Don't know how to automatically pick scale for object of type</span></span>
-<span><span class="co">#&gt; &lt;grid_80km/grid/vctrs_rcrd/vctrs_vctr&gt;. Defaulting to continuous.</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-10-1.png" width="100%"></p>
+<span>  <span class="fu">geom_sf_text</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">grid</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in st_point_on_surface.sfc(sf::st_zm(x)): st_point_on_surface may not</span></span>
+<span><span class="co">#&gt; give correct results for longitude/latitude data</span></span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-12-1.png" width="100%"></p>
 <p>メッシュの<code>list</code>を与えることで複数メッシュを通る場合に対応可能です．</p>
 <ul>
 <li>
@@ -357,23 +405,22 @@
 <li>
 <code>skip_na = TRUE</code>で<code>NA</code>をスキップします．</li>
 </ul>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">grid_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/grid_class.html">grid_80km</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"6441"</span>, <span class="st">"5339"</span>, <span class="cn">NA</span>, <span class="st">"5250"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">grid_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/grid_class.html">grid_80km</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"6439"</span>, <span class="st">"5211"</span>, <span class="st">"4013"</span>, <span class="st">"6635"</span><span class="op">)</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">grid_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/parse_grid.html">parse_grid</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"6441"</span>, <span class="st">"5339"</span>, <span class="cn">NA</span>, <span class="st">"5250"</span><span class="op">)</span>, <span class="st">"80km"</span><span class="op">)</span></span>
+<span><span class="va">grid_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/parse_grid.html">parse_grid</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"6439"</span>, <span class="st">"5211"</span>, <span class="st">"4013"</span>, <span class="st">"6635"</span><span class="op">)</span>, <span class="st">"80km"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">line</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/grid_line.html">grid_line</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">grid_1</span>, <span class="va">grid_2</span><span class="op">)</span>, </span>
 <span>                  close <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>                  skip_na <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>grid <span class="op">=</span> <span class="va">line</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="reference/as_tbl_grid.html">as_tbl_grid</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span><span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>grid <span class="op">=</span> <span class="va">line</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="reference/grid_as_sf.html">grid_as_sf</a></span><span class="op">(</span>crs <span class="op">=</span> <span class="va">JGD2011</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">ggplot</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_sf</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_sf_text</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>label <span class="op">=</span> <span class="va">grid</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Don't know how to automatically pick scale for object of type</span></span>
-<span><span class="co">#&gt; &lt;grid_80km/grid/vctrs_rcrd/vctrs_vctr&gt;. Defaulting to continuous.</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-11-1.png" width="100%"></p>
+<span>  <span class="fu">geom_sf_text</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">grid</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in st_point_on_surface.sfc(sf::st_zm(x)): st_point_on_surface may not</span></span>
+<span><span class="co">#&gt; give correct results for longitude/latitude data</span></span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-13-1.png" width="100%"></p>
 </div>
 <div class="section level3">
 <h3 id="メッシュ間距離の算出">メッシュ間距離の算出<a class="anchor" aria-label="anchor" href="#%E3%83%A1%E3%83%83%E3%82%B7%E3%83%A5%E9%96%93%E8%B7%9D%E9%9B%A2%E3%81%AE%E7%AE%97%E5%87%BA"></a>
@@ -383,9 +430,9 @@
 <li>
 <code><a href="reference/grid_line.html">grid_line()</a></code>と同様にメッシュの<code>list</code>で経路距離を算出可能です．</li>
 </ul>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">grid_from</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/grid_class.html">grid_80km</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"6441"</span>, <span class="st">"5339"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">grid_to</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/grid_class.html">grid_80km</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"5237"</span>, <span class="st">"5235"</span><span class="op">)</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">grid_from</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/parse_grid.html">parse_grid</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"6441"</span>, <span class="st">"5339"</span><span class="op">)</span>, <span class="st">"80km"</span><span class="op">)</span></span>
+<span><span class="va">grid_to</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/parse_grid.html">parse_grid</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"5237"</span>, <span class="st">"5235"</span><span class="op">)</span>, <span class="st">"80km"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">distance</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/grid_distance.html">grid_distance</a></span><span class="op">(</span><span class="va">grid_from</span>, <span class="va">grid_to</span><span class="op">)</span></span>
 <span></span>
@@ -399,8 +446,6 @@
 <ul>
 <li>
 <code><a href="reference/grid_move.html">grid_move()</a></code>関数により，東西南北方向の地域メッシュコードを算出可能です．</li>
-<li>
-<code><a href="https://r-spatial.github.io/sf/reference/st_as_sfc.html" class="external-link">sf::st_as_sfc</a></code>関数により<code>sfc</code>ジオメトリを出力可能です．</li>
 <li>80kmメッシュの桁が負や三桁以上になる範囲外のメッシュについては，当該コードを<code>&lt;-1&gt;</code>，<code>&lt;123&gt;</code>のように表示し，既存メッシュと明確に区別できるようにしています．</li>
 </ul>
 </div>
@@ -409,8 +454,8 @@
 <h2 id="jpmeshとの処理速度の比較">jpmeshとの処理速度の比較<a class="anchor" aria-label="anchor" href="#jpmesh%E3%81%A8%E3%81%AE%E5%87%A6%E7%90%86%E9%80%9F%E5%BA%A6%E3%81%AE%E6%AF%94%E8%BC%83"></a>
 </h2>
 <p>本パッケージのメッシュ・緯度経度間の変換速度は，jpmeshパッケージと比べて数十～数百倍ほど高速です．</p>
-<p><img src="reference/figures/README-unnamed-chunk-13-1.png" width="100%"></p>
-<p><img src="reference/figures/README-unnamed-chunk-14-1.png" width="100%"></p>
+<p><img src="reference/figures/README-unnamed-chunk-15-1.png" width="100%"></p>
+<p><img src="reference/figures/README-unnamed-chunk-16-1.png" width="100%"></p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
