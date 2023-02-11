@@ -7,6 +7,3 @@
 
 ## R CMD check results
 0 errors √ | 0 warnings √ | 0 notes √
-
-* This is a re-submission.
-* Change `http` to `https` to fix an invalid URL.
