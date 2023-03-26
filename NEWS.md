@@ -1,3 +1,8 @@
+# version 0.3.1
+
+- Fix bug in `st_as_sfc.grid()`.
+- Fix `vec_ptype_abbr()` methods.
+
 # version 0.3.0
 
 - Add `parse_grid()` and `grid_convert()`, and deprecate `grid_80km()`, `grid_10km()` and so on.
