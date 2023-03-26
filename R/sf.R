@@ -97,31 +97,26 @@ st_as_sfc.grid <- function(x,
                            crs = sf::NA_crs_, ...) {
   geometry <- tibble::tibble(grid = x) |>
     vec_unique()
-  geometry <- vec_slice(geometry ,
+  geometry <- vec_slice(geometry,
                         !is.na(geometry$grid))
 
-  if (!as_points) {
-    coords <- grid_to_coords(geometry$grid,
-                             center = FALSE)
-    geometry$geometry <- list(coords$X_min, coords$Y_min, coords$X_max, coords$Y_max) |>
-      purrr::pmap(function(X_min, Y_min, X_max, Y_max) {
-        if (is.na(X_min) || is.na(Y_min) || is.na(X_max) || is.na(Y_max)) {
-          sf::st_polygon() |>
-            sf::st_sfc(...)
-        } else {
-          sf::st_bbox(c(xmin = X_min,
-                        ymin = Y_min,
-                        xmax = X_max,
-                        ymax = Y_max)) |>
-            sf::st_as_sfc(...)
-        }
-      }) |>
-      purrr::list_c()
-  } else {
+  if (as_points) {
     geometry$geometry <- grid_to_coords(geometry$grid,
                                         center = TRUE) |>
       sf::st_as_sf(coords = c("X", "Y"), ...) |>
       sf::st_geometry()
+  } else {
+    coords <- grid_to_coords(geometry$grid,
+                             center = FALSE)
+    geometry$geometry <- list(coords$X_min, coords$Y_min, coords$X_max, coords$Y_max) |>
+      purrr::pmap(function(X_min, Y_min, X_max, Y_max) {
+        sf::st_bbox(c(xmin = X_min,
+                      ymin = Y_min,
+                      xmax = X_max,
+                      ymax = Y_max)) |>
+          sf::st_as_sfc(...)
+      }) |>
+      purrr::list_c(ptype = sf::st_sfc(sf::st_polygon()))
   }
 
   tibble::tibble(grid = x) |>
