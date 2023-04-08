@@ -201,13 +201,9 @@ tibble(X = c(139.7008, 135.4375), # 経度
 `grid_to_coords()`は，地域メッシュコードを経度・緯度に変換します．
 
 ``` r
-tibble(grid = grid_100m(c("5339452660", "5235034590"))) |> 
+tibble(grid = parse_grid(c("5339452660", "5235034590"), "100m")) |> 
   mutate(grid_to_coords(grid)) |> 
   knitr::kable()
-#> Warning: `grid_100m()` was deprecated in jpgrid 0.4.0.
-#> ℹ Please use `parse_grid()` or `grid_convert()`
-#> ℹ The deprecated feature was likely used in the jpgrid package.
-#>   Please report the issue at <]8;;https://github.com/UchidaMizuki/jpgrid/issueshttps://github.com/UchidaMizuki/jpgrid/issues]8;;>.
 ```
 
 | grid       |        X |        Y |
