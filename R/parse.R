@@ -2,7 +2,7 @@
 #'
 #' @param x A character vector of grid square codes.
 #' @param grid_size A grid size.
-#' @param strict A logical scalar. Should the number of digits in the grid
+#' @param strict A scalar logical. Should the number of digits in the grid
 #' square code match a given number of digits? By default, `TRUE`.
 #'
 #' @examples

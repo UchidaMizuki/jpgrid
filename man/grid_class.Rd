@@ -31,7 +31,7 @@ grid_auto(x, strict = TRUE)
 \arguments{
 \item{x}{A list or vector.}
 
-\item{strict}{A logical scalar. Should the number of digits in the grid
+\item{strict}{A scalar logical. Should the number of digits in the grid
 square code match a given number of digits?}
 }
 \value{

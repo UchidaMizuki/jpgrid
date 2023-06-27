@@ -11,7 +11,7 @@ parse_grid(x, grid_size = NULL, strict = TRUE)
 
 \item{grid_size}{A grid size.}
 
-\item{strict}{A logical scalar. Should the number of digits in the grid
+\item{strict}{A scalar logical. Should the number of digits in the grid
 square code match a given number of digits? By default, \code{TRUE}.}
 }
 \description{

@@ -11,7 +11,7 @@
 #' @name grid_class
 #'
 #' @param x A list or vector.
-#' @param strict A logical scalar. Should the number of digits in the grid
+#' @param strict A scalar logical. Should the number of digits in the grid
 #' square code match a given number of digits?
 #'
 #' @return A `grid` vector.
@@ -162,7 +162,7 @@ XY_to_grid <- function(X, Y, grid_size) {
 #' @param var A variable to specify the grid object. By default, the first
 #' column of the grid object is taken.
 #' @param grid_size 	A grid size.
-#' @param strict A logical scalar. Should the number of digits in the grid
+#' @param strict A scalar logical. Should the number of digits in the grid
 #' square code match a given number of digits?
 #' @param ... Additional arguments passed to [tibble::new_tibble()].
 #'
