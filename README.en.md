@@ -84,8 +84,6 @@ grid_chiba |>
   geom_sf(fill = "transparent") +
   geom_sf_text(aes(label = as.character(grid)),
                size = 2)
-#> Warning in st_point_on_surface.sfc(sf::st_zm(x)): st_point_on_surface may not
-#> give correct results for longitude/latitude data
 ```
 
 <img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
@@ -177,8 +175,6 @@ tibble(grid_100m = grid_100m[[1]]) |>
   ggplot() +
   geom_sf() +
   geom_sf_text(aes(label = as.character(grid_100m)))
-#> Warning in st_point_on_surface.sfc(sf::st_zm(x)): st_point_on_surface may not
-#> give correct results for longitude/latitude data
 ```
 
 <img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
@@ -235,14 +231,6 @@ neighbor[[1]] |>
   ggplot(aes(fill = as.factor(n))) +
   geom_sf() +
   geom_sf_text(aes(label = as.character(grid_neighbor)))
-#> Warning in st_point_on_surface.sfc(sf::st_zm(x)): st_point_on_surface may not
-#> give correct results for longitude/latitude data
-
-#> Warning in st_point_on_surface.sfc(sf::st_zm(x)): st_point_on_surface may not
-#> give correct results for longitude/latitude data
-
-#> Warning in st_point_on_surface.sfc(sf::st_zm(x)): st_point_on_surface may not
-#> give correct results for longitude/latitude data
 ```
 
 <img src="man/figures/README-unnamed-chunk-10-1.png" width="100%" />
@@ -258,14 +246,6 @@ neighbor_neumann[[1]] |>
   ggplot(aes(fill = as.factor(n))) +
   geom_sf() +
   geom_sf_text(aes(label = as.character(grid_neighbor)))
-#> Warning in st_point_on_surface.sfc(sf::st_zm(x)): st_point_on_surface may not
-#> give correct results for longitude/latitude data
-
-#> Warning in st_point_on_surface.sfc(sf::st_zm(x)): st_point_on_surface may not
-#> give correct results for longitude/latitude data
-
-#> Warning in st_point_on_surface.sfc(sf::st_zm(x)): st_point_on_surface may not
-#> give correct results for longitude/latitude data
 ```
 
 <img src="man/figures/README-unnamed-chunk-11-1.png" width="100%" />
@@ -286,8 +266,6 @@ tibble::tibble(grid = line[[1]]) |>
   ggplot() +
   geom_sf() +
   geom_sf_text(aes(label = as.character(grid)))
-#> Warning in st_point_on_surface.sfc(sf::st_zm(x)): st_point_on_surface may not
-#> give correct results for longitude/latitude data
 ```
 
 <img src="man/figures/README-unnamed-chunk-12-1.png" width="100%" />
@@ -311,8 +289,6 @@ tibble::tibble(grid = line[[1]]) |>
   ggplot() +
   geom_sf() +
   geom_sf_text(aes(label = as.character(grid)))
-#> Warning in st_point_on_surface.sfc(sf::st_zm(x)): st_point_on_surface may not
-#> give correct results for longitude/latitude data
 ```
 
 <img src="man/figures/README-unnamed-chunk-13-1.png" width="100%" />

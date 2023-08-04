@@ -9,7 +9,8 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "man/figures/README-",
-  out.width = "100%"
+  out.width = "100%",
+  warning = FALSE
 )
 ```
 
@@ -54,7 +55,7 @@ devtools::install_github("UchidaMizuki/jpgrid")
 ```
 ## Usage
 
-```{r,message=FALSE,warning=FALSE}
+```{r,message=FALSE}
 library(jpgrid)
 library(tidyverse)
 
@@ -66,7 +67,7 @@ JGD2011 <- 6668
 `geometry_to_grid()` can be used to convert `sf` objects to the grid square codes.
 You can also use `grid_as_sf()` to convert data containing grid square codes (of class `grid`) into an `sf` object.
 
-```{r}
+```{r,message=FALSE}
 geom_chiba <- rnaturalearth::ne_states(country = "japan",
                                        returnclass = "sf") |> 
   filter(name == "Chiba")
@@ -255,7 +256,7 @@ print(distance)
 
 The conversion speed between grids and latitude/longitude in this package is several tens to several hundred times faster than in the jpmesh package.
 
-```{r,echo=FALSE,message=FALSE}
+```{r,echo=FALSE}
 X <- runif(1e1, 139, 140)
 Y <- runif(1e1, 39, 40)
 
@@ -266,7 +267,7 @@ microbenchmark::microbenchmark(`jpgrid::coords_to_grid()` = coords_to_grid(X, Y,
   autoplot()
 ```
 
-```{r,echo=FALSE,message=FALSE}
+```{r,echo=FALSE}
 X <- runif(1e1, 139, 140)
 Y <- runif(1e1, 39, 40)
 grid_jpgrid <- coords_to_grid(X, Y, "1km")
