@@ -88,11 +88,11 @@ grid_chiba |>
 
 <img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
 
-`grid_city` contains 1 km grid square codes for each municipality in
-Japan.
+`grid_city_2020` contains 1 km grid square codes for each municipality
+in Japan.
 
 ``` r
-grid_city |> 
+grid_city_2020 |> 
   filter(str_starts(city_code, "121")) |> 
   grid_as_sf(crs = JGD2011) |> 
   ggplot(aes(fill = as_factor(city_name_ja))) +
@@ -309,7 +309,7 @@ distance <- grid_distance(grid_from, grid_to)
 
 print(distance)
 #> Units: [m]
-#> [1] 953014.2 371081.9
+#> [1] 954045.5 370318.1
 ```
 
 ### Others

@@ -90,11 +90,11 @@ grid_chiba |>
 
 <img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
 
-また，`grid_city`には，市区町村別の1
+また，`grid_city_2020`には，市区町村別の1
 kmメッシュコードが格納されています．
 
 ``` r
-grid_city |> 
+grid_city_2020 |> 
   filter(str_starts(city_code, "121")) |> 
   grid_as_sf(crs = JGD2011) |> 
   ggplot(aes(fill = as_factor(city_name_ja))) +
@@ -302,7 +302,7 @@ distance <- grid_distance(grid_from, grid_to)
 
 print(distance)
 #> Units: [m]
-#> [1] 953014.2 371081.9
+#> [1] 954045.5 370318.1
 ```
 
 ### その他

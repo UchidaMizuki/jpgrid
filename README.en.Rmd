@@ -83,10 +83,10 @@ grid_chiba |>
                size = 2)
 ```
 
-`grid_city` contains 1 km grid square codes for each municipality in Japan.
+`grid_city_2020` contains 1 km grid square codes for each municipality in Japan.
 
 ```{r}
-grid_city |> 
+grid_city_2020 |> 
   filter(str_starts(city_code, "121")) |> 
   grid_as_sf(crs = JGD2011) |> 
   ggplot(aes(fill = as_factor(city_name_ja))) +
