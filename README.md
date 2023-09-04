@@ -7,6 +7,9 @@
 
 [![CRAN
 status](https://www.r-pkg.org/badges/version/jpgrid)](https://CRAN.R-project.org/package=jpgrid)
+[![R-CMD-check](https://github.com/UchidaMizuki/jpgrid/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/UchidaMizuki/jpgrid/actions/workflows/R-CMD-check.yaml)
+[![Codecov test
+coverage](https://codecov.io/gh/UchidaMizuki/jpgrid/branch/main/graph/badge.svg)](https://app.codecov.io/gh/UchidaMizuki/jpgrid?branch=main)
 <!-- badges: end -->
 
 *[The English version of the README is
