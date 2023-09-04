@@ -45,9 +45,10 @@ grid_distance <- function(grid,
     Y <- length_Y * (distance$n_Y + .5)
     Y_to <- length_Y * (distance$n_Y_to + .5)
 
-    distance$distance <- geosphere::distGeo(p1 = cbind(0, Y),
-                                            p2 = cbind(diff_X, Y_to)) |>
-      units::set_units("m")
+    distance$distance <- distance_by_element(X_from = 0,
+                                             Y_from = Y,
+                                             X_to = diff_X,
+                                             Y_to = Y_to)
 
     grid |>
       dplyr::left_join(distance,
@@ -80,4 +81,17 @@ grid_distance <- function(grid,
           sum(na.rm = type == "ignore_na")
       })
   }
+}
+
+distance_by_element <- function(X_from, Y_from, X_to, Y_to) {
+  from <- tibble::tibble(X_from = X_from,
+                         Y_from = Y_from) |>
+    sf::st_as_sf(coords = c("X_from", "Y_from"),
+                 crs = 4326)
+  to <- tibble::tibble(X_to = X_to,
+                       Y_to = Y_to) |>
+    sf::st_as_sf(coords = c("X_to", "Y_to"),
+                 crs = 4326)
+  sf::st_distance(from, to,
+                  by_element = TRUE)
 }
