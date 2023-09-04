@@ -172,9 +172,9 @@
 <span>  <span class="fu">geom_sf_text</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">grid</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>               size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-4-1.png" width="100%"></p>
-<p>また，<code>grid_city</code>には，市区町村別の1 kmメッシュコードが格納されています．</p>
+<p>また，<code>grid_city_2020</code>には，市区町村別の1 kmメッシュコードが格納されています．</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">grid_city</span> <span class="op">|&gt;</span> </span>
+<code class="sourceCode R"><span><span class="va">grid_city_2020</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu">str_starts</span><span class="op">(</span><span class="va">city_code</span>, <span class="st">"121"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="reference/grid_as_sf.html">grid_as_sf</a></span><span class="op">(</span>crs <span class="op">=</span> <span class="va">JGD2011</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>fill <span class="op">=</span> <span class="fu">as_factor</span><span class="op">(</span><span class="va">city_name_ja</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -410,7 +410,7 @@
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">distance</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Units: [m]</span></span>
-<span><span class="co">#&gt; [1] 953014.2 371081.9</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 954045.5 370318.1</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="その他">その他<a class="anchor" aria-label="anchor" href="#%E3%81%9D%E3%81%AE%E4%BB%96"></a>
