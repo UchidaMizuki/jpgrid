@@ -53,8 +53,8 @@ grid_neighbor <- function(grid,
     grid_move(n_X = neighbor$n_X,
               n_Y = neighbor$n_Y)
   neighbor <- neighbor |>
-    dplyr::group_nest(grid,
-                      .key = "neighbor")
+    tidyr::nest(.by = "grid",
+                .key = "neighbor")
 
   if (simplify) {
     neighbor$neighbor <- neighbor$neighbor |>
@@ -68,4 +68,37 @@ grid_neighbor <- function(grid,
     dplyr::left_join(neighbor,
                      by = "grid") |>
     purrr::chuck("neighbor")
+}
+
+#' Connected components of grid square codes
+#'
+#' @param grid A `grid` vector.
+#' @param n A numeric vector of degrees.
+#' @param moore Moore neighborhood (`TRUE`) or Von Neumann neighborhood
+#' (`FALSE`).
+#'
+#' @return A integer vector of group IDs.
+#'
+#' @export
+grid_components <- function(grid,
+                            n = 0L:1L,
+                            moore = TRUE) {
+  edges <- tibble::tibble(grid_from = grid,
+                          grid_to = grid_neighbor(grid,
+                                                  n = n,
+                                                  moore = moore)) |>
+    tidyr::unnest("grid_to") |>
+    dplyr::filter(.data$grid_to %in% grid)
+
+  grid_unique <- vec_unique(c(edges$grid_from, edges$grid_to))
+
+  edges <- edges |>
+    dplyr::mutate(grid_from = vec_match(.data$grid_from, grid_unique),
+                  grid_to = vec_match(.data$grid_to, grid_unique))
+
+  group <- tidygraph::tbl_graph(edges = edges) |>
+    dplyr::mutate(group = tidygraph::group_components()) |>
+    dplyr::pull("group")
+
+  vec_slice(group, vec_match(grid, grid_unique))
 }
