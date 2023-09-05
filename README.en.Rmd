@@ -18,6 +18,8 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/jpgrid)](https://CRAN.R-project.org/package=jpgrid)
+[![R-CMD-check](https://github.com/UchidaMizuki/jpgrid/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/UchidaMizuki/jpgrid/actions/workflows/R-CMD-check.yaml)
+[![Codecov test coverage](https://codecov.io/gh/UchidaMizuki/jpgrid/branch/main/graph/badge.svg)](https://app.codecov.io/gh/UchidaMizuki/jpgrid?branch=main)
 <!-- badges: end -->
 
 jpgrid is an R package for using the JIS (Japan Industrial Standard) X 0410 '[Grid Square Code](https://www.jisc.go.jp/app/jis/general/GnrJISNumberNameSearchList?show&jisStdNo=X0410)'.
@@ -256,7 +258,7 @@ print(distance)
 
 The conversion speed between grids and latitude/longitude in this package is several tens to several hundred times faster than in the jpmesh package.
 
-```{r,echo=FALSE}
+```{r,echo=FALSE,eval=FALSE}
 X <- runif(1e1, 139, 140)
 Y <- runif(1e1, 39, 40)
 
@@ -267,7 +269,7 @@ microbenchmark::microbenchmark(`jpgrid::coords_to_grid()` = coords_to_grid(X, Y,
   autoplot()
 ```
 
-```{r,echo=FALSE}
+```{r,echo=FALSE,eval=FALSE}
 X <- runif(1e1, 139, 140)
 Y <- runif(1e1, 39, 40)
 grid_jpgrid <- coords_to_grid(X, Y, "1km")
@@ -279,3 +281,7 @@ microbenchmark::microbenchmark(`jpgrid::grid_to_coords()` = grid_to_coords(grid_
                                setup = set.seed(1234)) |> 
   autoplot()
 ```
+
+<img src="man/figures/README-microbenchmark-coords-to-grid.png" width="100%" />
+
+<img src="man/figures/README-microbenchmark-grid-to-coords.png" width="100%" />

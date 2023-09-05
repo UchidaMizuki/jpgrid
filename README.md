@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# jpgrid <a href="https://uchidamizuki.github.io/jpgrid/"><img src="man/figures/logo.png" align="right" height="139" /></a>
+# jpgrid <a href="https://uchidamizuki.github.io/jpgrid/"><img src="man/figures/logo.png" align="right" height="139"/></a>
 
 <!-- badges: start -->
 
@@ -10,10 +10,11 @@ status](https://www.r-pkg.org/badges/version/jpgrid)](https://CRAN.R-project.org
 [![R-CMD-check](https://github.com/UchidaMizuki/jpgrid/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/UchidaMizuki/jpgrid/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
 coverage](https://codecov.io/gh/UchidaMizuki/jpgrid/branch/main/graph/badge.svg)](https://app.codecov.io/gh/UchidaMizuki/jpgrid?branch=main)
+
 <!-- badges: end -->
 
-*[The English version of the README is
-here.](https://github.com/UchidaMizuki/jpgrid/blob/main/README.en.md)*
+[*The English version of the README is
+here.*](https://github.com/UchidaMizuki/jpgrid/blob/main/README.en.md)
 
 jpgridは，日本産業規格JIS X 0410
 [地域メッシュコード](https://www.jisc.go.jp/app/jis/general/GnrJISNumberNameSearchList?show&jisStdNo=X0410)
@@ -314,6 +315,6 @@ print(distance)
 
 本パッケージのメッシュ・緯度経度間の変換速度は，jpmeshパッケージと比べて数十～数百倍ほど高速です．
 
-<img src="man/figures/README-unnamed-chunk-15-1.png" width="100%" />
+<img src="man/figures/README-microbenchmark-coords-to-grid.png" width="100%" />
 
-<img src="man/figures/README-unnamed-chunk-16-1.png" width="100%" />
+<img src="man/figures/README-microbenchmark-grid-to-coords.png" width="100%" />

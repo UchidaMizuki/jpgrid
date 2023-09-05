@@ -7,6 +7,9 @@
 
 [![CRAN
 status](https://www.r-pkg.org/badges/version/jpgrid)](https://CRAN.R-project.org/package=jpgrid)
+[![R-CMD-check](https://github.com/UchidaMizuki/jpgrid/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/UchidaMizuki/jpgrid/actions/workflows/R-CMD-check.yaml)
+[![Codecov test
+coverage](https://codecov.io/gh/UchidaMizuki/jpgrid/branch/main/graph/badge.svg)](https://app.codecov.io/gh/UchidaMizuki/jpgrid?branch=main)
 <!-- badges: end -->
 
 jpgrid is an R package for using the JIS (Japan Industrial Standard) X
@@ -326,6 +329,6 @@ The conversion speed between grids and latitude/longitude in this
 package is several tens to several hundred times faster than in the
 jpmesh package.
 
-<img src="man/figures/README-unnamed-chunk-15-1.png" width="100%" />
+<img src="man/figures/README-microbenchmark-coords-to-grid.png" width="100%" />
 
-<img src="man/figures/README-unnamed-chunk-16-1.png" width="100%" />
+<img src="man/figures/README-microbenchmark-grid-to-coords.png" width="100%" />
