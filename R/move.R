@@ -20,8 +20,8 @@ grid_move <- function(grid, n_X, n_Y) {
 #' Neighborhood grid square codes
 #'
 #' @param grid A `grid` vector.
-#' @param n A numeric vector of degrees.
-#' @param moore Moore neighborhood (`TRUE`) or Von Neumann neighborhood
+#' @param n A numeric vector of degrees. By default, `1L`.
+#' @param moore Moore neighborhood (`TRUE`, default) or Von Neumann neighborhood
 #' (`FALSE`).
 #' @param simplify Should simplify the format of the return?
 #'
@@ -73,16 +73,16 @@ grid_neighbor <- function(grid,
 #' Connected components of grid square codes
 #'
 #' @param grid A `grid` vector.
-#' @param n A numeric vector of degrees.
+#' @param n A numeric vector of degrees. By default, `0:1`.
 #' @param moore Moore neighborhood (`TRUE`) or Von Neumann neighborhood
-#' (`FALSE`).
+#' (`FALSE`, default).
 #'
 #' @return A integer vector of group IDs.
 #'
 #' @export
 grid_components <- function(grid,
-                            n = 0L:1L,
-                            moore = TRUE) {
+                            n = 0:1,
+                            moore = FALSE) {
   edges <- tibble::tibble(grid_from = grid,
                           grid_to = grid_neighbor(grid,
                                                   n = n,

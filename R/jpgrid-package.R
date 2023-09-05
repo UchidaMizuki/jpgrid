@@ -6,6 +6,7 @@
 #' @import rlang
 #' @importFrom cli cli_abort cli_inform cli_vec
 #' @importFrom pillar tbl_sum
+#' @importFrom lifecycle deprecated
 #'
 #' @name jpgrid
 "_PACKAGE"

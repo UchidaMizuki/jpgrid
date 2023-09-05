@@ -9,9 +9,9 @@ grid_neighbor(grid, n = 1L, moore = TRUE, simplify = TRUE)
 \arguments{
 \item{grid}{A \code{grid} vector.}
 
-\item{n}{A numeric vector of degrees.}
+\item{n}{A numeric vector of degrees. By default, \code{1L}.}
 
-\item{moore}{Moore neighborhood (\code{TRUE}) or Von Neumann neighborhood
+\item{moore}{Moore neighborhood (\code{TRUE}, default) or Von Neumann neighborhood
 (\code{FALSE}).}
 
 \item{simplify}{Should simplify the format of the return?}
