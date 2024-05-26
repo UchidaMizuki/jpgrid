@@ -2,7 +2,7 @@
 % Please edit documentation in R/deprecated.R
 \name{as_tbl_grid}
 \alias{as_tbl_grid}
-\title{Convert a data frame into a tbl_grid object}
+\title{Convert a data frame into a tbl_grid object (Deprecated)}
 \usage{
 as_tbl_grid(x, var = NULL, grid_size = NULL, strict = TRUE, ...)
 }
