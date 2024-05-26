@@ -167,35 +167,36 @@ tibble(grid = parse_grid(c("5339452660", "5235034590"), "100m")) |>
 
 ### Calculation of adjacent grid square codes
 
-The `grid_neighbor()` function calculates the neighboring grids.
+The `grid_neighborhood()` function calculates the neighboring grids.
 
 - nth order neighboring grids can be calculated by specifying `n`.
-- Can be calculated in a Neumann neighborhood with `moore = FALSE`.
+- You can specify a Neumann neighborhood with `type = "von_neumann"` and a Moore neighborhood with `type = "moore"`.
 
 ```{r}
-neighbor <- parse_grid("644142", "10km") |> 
-  grid_neighbor(n = c(0:2),
-                simplify = FALSE)
+neighborhood <- parse_grid("644142", "10km") |> 
+  grid_neighborhood(n = c(0:2),
+                    type = "von_neumann",
+                    simplify = FALSE)
 
-neighbor[[1]] |> 
+neighborhood[[1]] |> 
   grid_as_sf(crs = JGD2011) |> 
   
   ggplot(aes(fill = as.factor(n))) +
   geom_sf() +
-  geom_sf_text(aes(label = as.character(grid_neighbor)))
+  geom_sf_text(aes(label = as.character(grid_neighborhood)))
 ```
 
 ```{r}
-neighbor_neumann <- parse_grid("644142", "10km") |> 
-  grid_neighbor(n = c(0:2),
-                simplify = F,
-                moore = F)
+neighborhood <- parse_grid("644142", "10km") |> 
+  grid_neighborhood(n = c(0:2),
+                    type = "moore",
+                    simplify = FALSE)
 
-neighbor_neumann[[1]] |> 
+neighborhood[[1]] |> 
   grid_as_sf(crs = JGD2011) |> 
   ggplot(aes(fill = as.factor(n))) +
   geom_sf() +
-  geom_sf_text(aes(label = as.character(grid_neighbor)))
+  geom_sf_text(aes(label = as.character(grid_neighborhood)))
 ```
 
 ### Draw line segments between grids

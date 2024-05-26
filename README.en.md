@@ -122,24 +122,39 @@ x <- c("53394526313", "5339358633", "533945764", "53394611", "523503", "5339", N
 parse_grid(x, grid_size = "80km")
 #> <grid_80km[7]>
 #> [1] <NA> <NA> <NA> <NA> <NA> 5339 <NA>
+```
+
+``` r
 parse_grid(x, grid_size = "125m")
 #> <grid_125m[7]>
 #> [1] 53394526313 <NA>        <NA>        <NA>        <NA>        <NA>       
 #> [7] <NA>
+```
+
+``` r
 parse_grid(x)
 #> Guessing, grid_size = "80km"
 #> <grid_80km[7]>
 #> [1] <NA> <NA> <NA> <NA> <NA> 5339 <NA>
+```
+
+``` r
 
 parse_grid(x, "80km",
            strict = FALSE)
 #> <grid_80km[7]>
 #> [1] 5339 5339 5339 5339 5235 5339 <NA>
+```
+
+``` r
 parse_grid(x, "125m",
            strict = FALSE)
 #> <grid_125m[7]>
 #> [1] 53394526313 <NA>        <NA>        <NA>        <NA>        <NA>       
 #> [7] <NA>
+```
+
+``` r
 parse_grid(x, 
            strict = FALSE)
 #> Guessing, grid_size = "80km"
@@ -162,6 +177,9 @@ grid_500m <- parse_grid("533945764", "500m")
 grid_convert(grid_500m, "1km")
 #> <grid_1km[1]>
 #> [1] 53394576
+```
+
+``` r
 
 grid_100m <- grid_subdivide(grid_500m, "100m")
 grid_100m
@@ -172,6 +190,9 @@ grid_100m
 #> [13] 5339457677 5339457687 5339457697 5339457658 5339457668 5339457678
 #> [19] 5339457688 5339457698 5339457659 5339457669 5339457679 5339457689
 #> [25] 5339457699
+```
+
+``` r
 
 tibble(grid_100m = grid_100m[[1]]) |> 
   grid_as_sf(crs = JGD2011) |>  
@@ -218,37 +239,39 @@ tibble(grid = parse_grid(c("5339452660", "5235034590"), "100m")) |>
 
 ### Calculation of adjacent grid square codes
 
-The `grid_neighbor()` function calculates the neighboring grids.
+The `grid_neighborhood()` function calculates the neighboring grids.
 
 - nth order neighboring grids can be calculated by specifying `n`.
-- Can be calculated in a Neumann neighborhood with `moore = FALSE`.
+- You can specify a Neumann neighborhood with `type = "von_neumann"` and
+  a Moore neighborhood with `type = "moore"`.
 
 ``` r
-neighbor <- parse_grid("644142", "10km") |> 
-  grid_neighbor(n = c(0:2),
-                simplify = FALSE)
+neighborhood <- parse_grid("644142", "10km") |> 
+  grid_neighborhood(n = c(0:2),
+                    type = "von_neumann",
+                    simplify = FALSE)
 
-neighbor[[1]] |> 
+neighborhood[[1]] |> 
   grid_as_sf(crs = JGD2011) |> 
   
   ggplot(aes(fill = as.factor(n))) +
   geom_sf() +
-  geom_sf_text(aes(label = as.character(grid_neighbor)))
+  geom_sf_text(aes(label = as.character(grid_neighborhood)))
 ```
 
 <img src="man/figures/README-unnamed-chunk-10-1.png" width="100%" />
 
 ``` r
-neighbor_neumann <- parse_grid("644142", "10km") |> 
-  grid_neighbor(n = c(0:2),
-                simplify = F,
-                moore = F)
+neighborhood <- parse_grid("644142", "10km") |> 
+  grid_neighborhood(n = c(0:2),
+                    type = "moore",
+                    simplify = FALSE)
 
-neighbor_neumann[[1]] |> 
+neighborhood[[1]] |> 
   grid_as_sf(crs = JGD2011) |> 
   ggplot(aes(fill = as.factor(n))) +
   geom_sf() +
-  geom_sf_text(aes(label = as.character(grid_neighbor)))
+  geom_sf_text(aes(label = as.character(grid_neighborhood)))
 ```
 
 <img src="man/figures/README-unnamed-chunk-11-1.png" width="100%" />
