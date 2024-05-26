@@ -2,7 +2,7 @@ pandoc: 3.1.11
 pkgdown: 2.0.9
 pkgdown_sha: ~
 articles: {}
-last_built: 2024-05-26T08:07Z
+last_built: 2024-05-26T10:17Z
 urls:
   reference: https://uchidamizuki.github.io/jpgrid/reference
   article: https://uchidamizuki.github.io/jpgrid/articles
