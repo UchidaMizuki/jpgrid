@@ -50,8 +50,8 @@ grid_neighborhood <- function(grid,
                                  n_X = -n:n,
                                  n_Y = -n:n)
       vec_slice(n_XY,
-                (type != "von_neumann" | abs(n_XY$n_X) == n | abs(n_XY$n_Y) == n) &
-                  (type != "moore" | (abs(n_XY$n_X) + abs(n_XY$n_Y)) == n))
+                (type != "von_neumann" | (abs(n_XY$n_X) + abs(n_XY$n_Y)) == n) &
+                  (type != "moore" | abs(n_XY$n_X) == n | abs(n_XY$n_Y) == n))
     })
 
   neighbor <- tibble::tibble(grid = grid) |>
