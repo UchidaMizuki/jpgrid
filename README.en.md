@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# jpgrid <a href="https://uchidamizuki.github.io/jpgrid/"><img src="man/figures/logo.png" align="right" height="139" /></a>
+# jpgrid <a href="https://uchidamizuki.github.io/jpgrid/"><img src="man/figures/logo.png" align="right" height="139"/></a>
 
 <!-- badges: start -->
 
@@ -10,6 +10,7 @@ status](https://www.r-pkg.org/badges/version/jpgrid)](https://CRAN.R-project.org
 [![R-CMD-check](https://github.com/UchidaMizuki/jpgrid/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/UchidaMizuki/jpgrid/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
 coverage](https://codecov.io/gh/UchidaMizuki/jpgrid/branch/main/graph/badge.svg)](https://app.codecov.io/gh/UchidaMizuki/jpgrid?branch=main)
+
 <!-- badges: end -->
 
 jpgrid is an R package for using the JIS (Japan Industrial Standard) X
@@ -276,6 +277,28 @@ neighborhood[[1]] |>
 
 <img src="man/figures/README-unnamed-chunk-11-1.png" width="100%" />
 
+### Get the connected components of grid square codes
+
+`grid_components()` calculates the connected components of grid square
+codes and returns the cluster ID.
+
+- You can specify `n` and `type` as in the `grid_neighborhood()`.
+
+``` r
+set.seed(1234)
+
+grid_city_2020 |> 
+  filter(str_starts(city_code, "121")) |> 
+  slice_sample(prop = 0.5) |> 
+  mutate(cluster = grid_components(grid,
+                                   type = "von_neumann")) |> 
+  grid_as_sf(crs = JGD2011) |> 
+  ggplot(aes(fill = fct_shuffle(as_factor(cluster)))) +
+  geom_sf(show.legend = FALSE) 
+```
+
+<img src="man/figures/README-unnamed-chunk-12-1.png" width="100%" />
+
 ### Draw line segments between grids
 
 The `grid_line()` function extracts grids that lie on the line segments
@@ -294,7 +317,7 @@ tibble::tibble(grid = line[[1]]) |>
   geom_sf_text(aes(label = as.character(grid)))
 ```
 
-<img src="man/figures/README-unnamed-chunk-12-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-13-1.png" width="100%" />
 
 It can handle the case of passing through multiple grids by giving a
 `list` of grids.
@@ -317,7 +340,7 @@ tibble::tibble(grid = line[[1]]) |>
   geom_sf_text(aes(label = as.character(grid)))
 ```
 
-<img src="man/figures/README-unnamed-chunk-13-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-14-1.png" width="100%" />
 
 ### Calculation of distance between grids
 
@@ -352,6 +375,6 @@ The conversion speed between grids and latitude/longitude in this
 package is several tens to several hundred times faster than in the
 jpmesh package.
 
-<img src="man/figures/README-microbenchmark-coords-to-grid.png" width="100%" />
+<img src="man/figures/README-microbenchmark-coords-to-grid.png" width="100%"/>
 
-<img src="man/figures/README-microbenchmark-grid-to-coords.png" width="100%" />
+<img src="man/figures/README-microbenchmark-grid-to-coords.png" width="100%"/>

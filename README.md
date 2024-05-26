@@ -271,6 +271,27 @@ neighborhood[[1]] |>
 
 <img src="man/figures/README-unnamed-chunk-11-1.png" width="100%" />
 
+### メッシュの連結成分を取得
+
+`grid_components()`関数は，メッシュの連結成分を算出し，クラスターIDを返します．
+
+- `grid_neighborhood()`関数と同じく`n`と`type`を指定できます．
+
+``` r
+set.seed(1234)
+
+grid_city_2020 |> 
+  filter(str_starts(city_code, "121")) |> 
+  slice_sample(prop = 0.5) |> 
+  mutate(cluster = grid_components(grid,
+                                   type = "von_neumann")) |> 
+  grid_as_sf(crs = JGD2011) |> 
+  ggplot(aes(fill = fct_shuffle(as_factor(cluster)))) +
+  geom_sf(show.legend = FALSE) 
+```
+
+<img src="man/figures/README-unnamed-chunk-12-1.png" width="100%" />
+
 ### メッシュ間の線分描画
 
 `grid_line()`関数により，メッシュ間の線分上に存在するメッシュを抽出します．
@@ -288,7 +309,7 @@ tibble::tibble(grid = line[[1]]) |>
   geom_sf_text(aes(label = as.character(grid)))
 ```
 
-<img src="man/figures/README-unnamed-chunk-12-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-13-1.png" width="100%" />
 
 メッシュの`list`を与えることで複数メッシュを通る場合に対応可能です．
 
@@ -310,7 +331,7 @@ tibble::tibble(grid = line[[1]]) |>
   geom_sf_text(aes(label = as.character(grid)))
 ```
 
-<img src="man/figures/README-unnamed-chunk-13-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-14-1.png" width="100%" />
 
 ### メッシュ間距離の算出
 

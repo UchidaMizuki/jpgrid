@@ -198,6 +198,25 @@ neighborhood[[1]] |>
   geom_sf_text(aes(label = as.character(grid_neighborhood)))
 ```
 
+### メッシュの連結成分を取得
+
+`grid_components()`関数は，メッシュの連結成分を算出し，クラスターIDを返します．
+
+-   `grid_neighborhood()`関数と同じく`n`と`type`を指定できます．
+
+```{r}
+set.seed(1234)
+
+grid_city_2020 |> 
+  filter(str_starts(city_code, "121")) |> 
+  slice_sample(prop = 0.5) |> 
+  mutate(cluster = grid_components(grid,
+                                   type = "von_neumann")) |> 
+  grid_as_sf(crs = JGD2011) |> 
+  ggplot(aes(fill = fct_shuffle(as_factor(cluster)))) +
+  geom_sf(show.legend = FALSE) 
+```
+
 ### メッシュ間の線分描画
 
 `grid_line()`関数により，メッシュ間の線分上に存在するメッシュを抽出します．

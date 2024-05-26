@@ -1,5 +1,8 @@
 ---
 output: github_document
+editor_options: 
+  markdown: 
+    wrap: sentence
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -14,18 +17,20 @@ knitr::opts_chunk$set(
 )
 ```
 
-# jpgrid <a href="https://uchidamizuki.github.io/jpgrid/"><img src="man/figures/logo.png" align="right" height="139" /></a>
+# jpgrid <a href="https://uchidamizuki.github.io/jpgrid/"><img src="man/figures/logo.png" align="right" height="139"/></a>
 
 <!-- badges: start -->
-[![CRAN status](https://www.r-pkg.org/badges/version/jpgrid)](https://CRAN.R-project.org/package=jpgrid)
-[![R-CMD-check](https://github.com/UchidaMizuki/jpgrid/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/UchidaMizuki/jpgrid/actions/workflows/R-CMD-check.yaml)
-[![Codecov test coverage](https://codecov.io/gh/UchidaMizuki/jpgrid/branch/main/graph/badge.svg)](https://app.codecov.io/gh/UchidaMizuki/jpgrid?branch=main)
+
+[![CRAN status](https://www.r-pkg.org/badges/version/jpgrid)](https://CRAN.R-project.org/package=jpgrid) [![R-CMD-check](https://github.com/UchidaMizuki/jpgrid/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/UchidaMizuki/jpgrid/actions/workflows/R-CMD-check.yaml) [![Codecov test coverage](https://codecov.io/gh/UchidaMizuki/jpgrid/branch/main/graph/badge.svg)](https://app.codecov.io/gh/UchidaMizuki/jpgrid?branch=main)
+
 <!-- badges: end -->
 
 jpgrid is an R package for using the JIS (Japan Industrial Standard) X 0410 '[Grid Square Code](https://www.jisc.go.jp/app/jis/general/GnrJISNumberNameSearchList?show&jisStdNo=X0410)'.
-grid square codes are square-like regional divisions set up for all regions of Japan based on longitude and latitude. For more information, please check [the Statistics Bureau of Japan page](https://www.stat.go.jp/data/mesh/pdf/gaiyo1.pdf).
+grid square codes are square-like regional divisions set up for all regions of Japan based on longitude and latitude.
+For more information, please check [the Statistics Bureau of Japan page](https://www.stat.go.jp/data/mesh/pdf/gaiyo1.pdf).
 
-A summary of the grid square codes is shown below. In jpgrid, each code is distinguished by the length of a piece of grid, such as `grid_80km`.
+A summary of the grid square codes is shown below.
+In jpgrid, each code is distinguished by the length of a piece of grid, such as `grid_80km`.
 
 ```{r,echo=FALSE}
 df <- tibble::tibble(`Name` = c("1st grid", "2nd grid", "3rd grid", "1/2 grid", "1/4 grid", "1/8 grid", "1/10 subdivision of the 3rd grid"),
@@ -37,9 +42,9 @@ knitr::kable(df)
 jpgrid has been developed to enable faster processing than the R package [jpmesh](https://github.com/uribo/jpmesh).
 The main differences between jpgrid and jpmesh are as follows
 
-1. Explicitly given a grid size (such as `grid_80km`). 
-2. Non-land (ocean) grids are supported.
-3. It can extract nth-order neighboring grids and perform complex operations such as extracting grids and calculating the distance of (line) paths between grids.
+1.  Explicitly given a grid size (such as `grid_80km`).
+2.  Non-land (ocean) grids are supported.
+3.  It can extract nth-order neighboring grids and perform complex operations such as extracting grids and calculating the distance of (line) paths between grids.
 
 ## Installation
 
@@ -55,6 +60,7 @@ You can also install the development version from GitHub.
 # install.packages("devtools")
 devtools::install_github("UchidaMizuki/jpgrid")
 ```
+
 ## Usage
 
 ```{r,message=FALSE}
@@ -101,9 +107,9 @@ grid_city_2020 |>
 
 Use `parse_grid()` to generate grid square codes from strings or numbers.
 
-- Specify the grid size as `grid_size = "80km"`.
-  - If `grid_size = NULL`, the grid size is automatically determined.
-- The default (`strict = TRUE`) requires the grid square codes to have a given number of digits.
+-   Specify the grid size as `grid_size = "80km"`.
+    -   If `grid_size = NULL`, the grid size is automatically determined.
+-   The default (`strict = TRUE`) requires the grid square codes to have a given number of digits.
 
 ```{r}
 x <- c("53394526313", "5339358633", "533945764", "53394611", "523503", "5339", NA)
@@ -125,8 +131,8 @@ parse_grid(x,
 Use `grid_convert()` to coarsen the grid size of grid square codes.
 The `grid_subdivide()` function can be used to subdivide grid square codes.
 
-- `grid_subdivide()` outputs a list of grid square codes whose elements are contained in the original grids.
-- The conversion between 500m grid and 100m grid is supported.
+-   `grid_subdivide()` outputs a list of grid square codes whose elements are contained in the original grids.
+-   The conversion between 500m grid and 100m grid is supported.
 
 ```{r}
 grid_500m <- parse_grid("533945764", "500m")
@@ -169,8 +175,8 @@ tibble(grid = parse_grid(c("5339452660", "5235034590"), "100m")) |>
 
 The `grid_neighborhood()` function calculates the neighboring grids.
 
-- nth order neighboring grids can be calculated by specifying `n`.
-- You can specify a Neumann neighborhood with `type = "von_neumann"` and a Moore neighborhood with `type = "moore"`.
+-   nth order neighboring grids can be calculated by specifying `n`.
+-   You can specify a Neumann neighborhood with `type = "von_neumann"` and a Moore neighborhood with `type = "moore"`.
 
 ```{r}
 neighborhood <- parse_grid("644142", "10km") |> 
@@ -199,6 +205,25 @@ neighborhood[[1]] |>
   geom_sf_text(aes(label = as.character(grid_neighborhood)))
 ```
 
+### Get the connected components of grid square codes
+
+`grid_components()` calculates the connected components of grid square codes and returns the cluster ID.
+
+-   You can specify `n` and `type` as in the `grid_neighborhood()`.
+
+```{r}
+set.seed(1234)
+
+grid_city_2020 |> 
+  filter(str_starts(city_code, "121")) |> 
+  slice_sample(prop = 0.5) |> 
+  mutate(cluster = grid_components(grid,
+                                   type = "von_neumann")) |> 
+  grid_as_sf(crs = JGD2011) |> 
+  ggplot(aes(fill = fct_shuffle(as_factor(cluster)))) +
+  geom_sf(show.legend = FALSE) 
+```
+
 ### Draw line segments between grids
 
 The `grid_line()` function extracts grids that lie on the line segments between grids.
@@ -218,8 +243,8 @@ tibble::tibble(grid = line[[1]]) |>
 
 It can handle the case of passing through multiple grids by giving a `list` of grids.
 
-- Close the line segment with `close = TRUE`.
-- `skip_na = TRUE` to skip `NA`.
+-   Close the line segment with `close = TRUE`.
+-   `skip_na = TRUE` to skip `NA`.
 
 ```{r}
 grid_1 <- parse_grid(c("6441", "5339", NA, "5250"), "80km")
@@ -240,7 +265,7 @@ tibble::tibble(grid = line[[1]]) |>
 
 The `grid_distance()` function calculates the distance between grids (great circle distance).
 
-- As with `grid_line()`, the path distance can be calculated by `list` of grids.
+-   As with `grid_line()`, the path distance can be calculated by `list` of grids.
 
 ```{r}
 grid_from <- parse_grid(c("6441", "5339"), "80km")
@@ -252,8 +277,9 @@ print(distance)
 ```
 
 ### Others
-- `grid_move()` function can be used to calculate the grid square code in the east-west and north-south directions.
-- For grid outside the range of the 80 km grid, where the digits are negative or exceed three digits, the relevant code is displayed as `<-1>` or `<123>` to clearly distinguish them from existing grids.
+
+-   `grid_move()` function can be used to calculate the grid square code in the east-west and north-south directions.
+-   For grid outside the range of the 80 km grid, where the digits are negative or exceed three digits, the relevant code is displayed as `<-1>` or `<123>` to clearly distinguish them from existing grids.
 
 ## Comparison of processing speed with jpmesh package
 
@@ -283,6 +309,6 @@ microbenchmark::microbenchmark(`jpgrid::grid_to_coords()` = grid_to_coords(grid_
   autoplot()
 ```
 
-<img src="man/figures/README-microbenchmark-coords-to-grid.png" width="100%" />
+<img src="man/figures/README-microbenchmark-coords-to-grid.png" width="100%"/>
 
-<img src="man/figures/README-microbenchmark-grid-to-coords.png" width="100%" />
+<img src="man/figures/README-microbenchmark-grid-to-coords.png" width="100%"/>
