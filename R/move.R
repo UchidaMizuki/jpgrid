@@ -57,7 +57,7 @@ grid_neighborhood <- function(grid,
   neighbor <- tibble::tibble(grid = grid) |>
     vec_unique() |>
     tidyr::expand_grid(n_XY)
-  neighbor$grid_neighbor <- neighbor$grid |>
+  neighbor$grid_neighborhood <- neighbor$grid |>
     grid_move(n_X = neighbor$n_X,
               n_Y = neighbor$n_Y)
   neighbor <- neighbor |>
@@ -68,7 +68,7 @@ grid_neighborhood <- function(grid,
     neighbor$neighbor <- neighbor$neighbor |>
       purrr::map(function(neighbor) {
         neighbor |>
-          purrr::chuck("grid_neighbor")
+          purrr::chuck("grid_neighborhood")
       })
   }
 
@@ -82,7 +82,8 @@ grid_neighborhood <- function(grid,
 #'
 #' @param grid A `grid` vector.
 #' @param n A numeric vector of degrees. By default, `0:1`.
-#' @param moore Moore neighborhood (`TRUE`) or Von Neumann neighborhood
+#' @param type A character vector of neighborhood types, `"von_neumann"` or
+#' `"moore"`. By default, `"von_neumann"`.
 #' (`FALSE`, default).
 #'
 #' @return A integer vector of group IDs.
@@ -90,11 +91,11 @@ grid_neighborhood <- function(grid,
 #' @export
 grid_components <- function(grid,
                             n = 0:1,
-                            moore = FALSE) {
+                            type = NULL) {
   edges <- tibble::tibble(grid_from = grid,
-                          grid_to = grid_neighbor(grid,
-                                                  n = n,
-                                                  moore = moore)) |>
+                          grid_to = grid_neighborhood(grid,
+                                                      n = n,
+                                                      type = type)) |>
     tidyr::unnest("grid_to") |>
     dplyr::filter(.data$grid_to %in% grid)
 

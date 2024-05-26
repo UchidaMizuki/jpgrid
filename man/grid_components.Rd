@@ -4,14 +4,15 @@
 \alias{grid_components}
 \title{Connected components of grid square codes}
 \usage{
-grid_components(grid, n = 0:1, moore = FALSE)
+grid_components(grid, n = 0:1, type = NULL)
 }
 \arguments{
 \item{grid}{A \code{grid} vector.}
 
 \item{n}{A numeric vector of degrees. By default, \code{0:1}.}
 
-\item{moore}{Moore neighborhood (\code{TRUE}) or Von Neumann neighborhood
+\item{type}{A character vector of neighborhood types, \code{"von_neumann"} or
+\code{"moore"}. By default, \code{"von_neumann"}.
 (\code{FALSE}, default).}
 }
 \value{

@@ -20,3 +20,19 @@ test_that("neighborhood", {
                                                  523877, 523970, 523971),
                                                grid_size = "10km"))))
 })
+
+test_that("components", {
+  grid_1km <- parse_grid(c(53394620,
+                           53394631, 53394632,
+                           53394507, 53394508, 53394509),
+                         "1km")
+
+  expect_equal(grid_components(grid_1km, n = 0:1, type = "von_neumann"),
+               c(3, 2, 2, 1, 1, 1))
+  expect_equal(grid_components(grid_1km, n = 0:1, type = "moore"),
+               c(1, 1, 1, 2, 2, 2))
+  expect_equal(grid_components(grid_1km, n = 0:2, type = "von_neumann"),
+               c(1, 1, 1, 2, 2, 2))
+  expect_equal(grid_components(grid_1km, n = 0:2, type = "moore"),
+               c(1, 1, 1, 1, 1, 1))
+})
