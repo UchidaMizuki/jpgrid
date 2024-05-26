@@ -19,12 +19,6 @@
     <loc>https://uchidamizuki.github.io/jpgrid/news/index.html</loc>
   </url>
   <url>
-    <loc>https://uchidamizuki.github.io/jpgrid/reference/XY.html</loc>
-  </url>
-  <url>
-    <loc>https://uchidamizuki.github.io/jpgrid/reference/as_tbl_grid.html</loc>
-  </url>
-  <url>
     <loc>https://uchidamizuki.github.io/jpgrid/reference/bbox_to_grid.html</loc>
   </url>
   <url>
@@ -41,9 +35,6 @@
   </url>
   <url>
     <loc>https://uchidamizuki.github.io/jpgrid/reference/grid_city_2020.html</loc>
-  </url>
-  <url>
-    <loc>https://uchidamizuki.github.io/jpgrid/reference/grid_class.html</loc>
   </url>
   <url>
     <loc>https://uchidamizuki.github.io/jpgrid/reference/grid_components.html</loc>

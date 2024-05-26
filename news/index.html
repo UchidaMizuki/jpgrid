@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">jpgrid</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,33 +45,43 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.3.1" id="version-031">version 0.3.1<a class="anchor" aria-label="anchor" href="#version-031"></a></h2><p class="text-muted">CRAN release: 2023-03-26</p>
+<h2 class="pkg-version" data-toc-text="0.4.0" id="jpgrid-040">jpgrid 0.4.0<a class="anchor" aria-label="anchor" href="#jpgrid-040"></a></h2>
+<ul><li>Add <code><a href="../reference/grid_neighborhood.html">grid_neighborhood()</a></code> and deprecate <code><a href="../reference/grid_neighbor.html">grid_neighbor()</a></code>.
+<ul><li>
+<code><a href="../reference/grid_neighborhood.html">grid_neighborhood()</a></code> has <code>type</code> argument to specify the type of neighborhood and by default <code>type = "von_neumann"</code>.</li>
+</ul></li>
+<li>Add <code><a href="../reference/grid_components.html">grid_components()</a></code> to get the connected components of grid square codes.</li>
+<li>Rename <code>grid_city</code> to <code>grid_city_2020</code>.</li>
+<li>Delete deprecated functions.</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.3.1" id="jpgrid-031">jpgrid 0.3.1<a class="anchor" aria-label="anchor" href="#jpgrid-031"></a></h2><p class="text-muted">CRAN release: 2023-03-26</p>
 <ul><li>Fix bug in <code>st_as_sfc.grid()</code>.</li>
 <li>Fix <code>vec_ptype_abbr()</code> methods.</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.3.0" id="version-030">version 0.3.0<a class="anchor" aria-label="anchor" href="#version-030"></a></h2><p class="text-muted">CRAN release: 2023-02-11</p>
-<ul><li>Add <code><a href="../reference/parse_grid.html">parse_grid()</a></code> and <code><a href="../reference/grid_convert.html">grid_convert()</a></code>, and deprecate <code><a href="../reference/grid_class.html">grid_80km()</a></code>, <code><a href="../reference/grid_class.html">grid_10km()</a></code> and so on.</li>
-<li>Add <code><a href="../reference/coords.html">grid_to_coords()</a></code> and <code><a href="../reference/coords.html">coords_to_grid()</a></code>, and deprecate <code><a href="../reference/XY.html">grid_to_XY()</a></code> and <code><a href="../reference/XY.html">XY_to_grid()</a></code>.</li>
-<li>Remove deprecations for <code><a href="../reference/grid_as_sf.html">grid_as_sf()</a></code> and <code><a href="../reference/grid_as_stars.html">grid_as_stars()</a></code>, and deprecated <code><a href="../reference/as_tbl_grid.html">as_tbl_grid()</a></code>.</li>
+<h2 class="pkg-version" data-toc-text="0.3.0" id="jpgrid-030">jpgrid 0.3.0<a class="anchor" aria-label="anchor" href="#jpgrid-030"></a></h2><p class="text-muted">CRAN release: 2023-02-11</p>
+<ul><li>Add <code><a href="../reference/parse_grid.html">parse_grid()</a></code> and <code><a href="../reference/grid_convert.html">grid_convert()</a></code>, and deprecate <code>grid_80km()</code>, <code>grid_10km()</code> and so on.</li>
+<li>Add <code><a href="../reference/coords.html">grid_to_coords()</a></code> and <code><a href="../reference/coords.html">coords_to_grid()</a></code>, and deprecate <code>grid_to_XY()</code> and <code>XY_to_grid()</code>.</li>
+<li>Remove deprecations for <code><a href="../reference/grid_as_sf.html">grid_as_sf()</a></code> and <code><a href="../reference/grid_as_stars.html">grid_as_stars()</a></code>, and deprecated <code>as_tbl_grid()</code>.</li>
 <li>Remove <code>grid_bbox()</code> and <code>grid_circle()</code>.</li>
 <li>Rename <code>grid_city2015</code> to <code>grid_city</code>.</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.2.1" id="version-021">version 0.2.1<a class="anchor" aria-label="anchor" href="#version-021"></a></h2><p class="text-muted">CRAN release: 2023-01-14</p>
-<ul><li>Add <code><a href="../reference/as_tbl_grid.html">as_tbl_grid()</a></code>.</li>
+<h2 class="pkg-version" data-toc-text="0.2.1" id="jpgrid-021">jpgrid 0.2.1<a class="anchor" aria-label="anchor" href="#jpgrid-021"></a></h2><p class="text-muted">CRAN release: 2023-01-14</p>
+<ul><li>Add <code>as_tbl_grid()</code>.</li>
 <li>Add <code>st_as_sf()</code>, <code>st_bbox()</code>, <code>st_as_stars()</code> and <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> for <code>tbl_grid</code>.</li>
 <li>Add <code>grid_circle()</code>.</li>
 <li>Rename <code>grid_rectangle()</code> to <code>grid_bbox()</code>.</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.2.0" id="version-020">version 0.2.0<a class="anchor" aria-label="anchor" href="#version-020"></a></h2><p class="text-muted">CRAN release: 2022-05-03</p>
+<h2 class="pkg-version" data-toc-text="0.2.0" id="jpgrid-020">jpgrid 0.2.0<a class="anchor" aria-label="anchor" href="#jpgrid-020"></a></h2><p class="text-muted">CRAN release: 2022-05-03</p>
 <ul><li>Change package name from <code>japanmesh</code> to <code>jpgrid</code> to match the English name, “Grid Square Codes”.</li>
 <li>Replace <code>mesh</code> with <code>grid</code> in the function names.</li>
 <li>Remove <code>mesh_to_polygon()</code> and <code>mesh_to_point()</code> and add <code><a href="https://r-spatial.github.io/sf/reference/st_as_sfc.html" class="external-link">sf::st_as_sfc()</a></code> method.</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.1.1" id="version-011">version 0.1.1<a class="anchor" aria-label="anchor" href="#version-011"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.1.1" id="jpgrid-011">jpgrid 0.1.1<a class="anchor" aria-label="anchor" href="#jpgrid-011"></a></h2>
 <div class="section level3">
 <h3 id="new-features-0-1-1">New Features<a class="anchor" aria-label="anchor" href="#new-features-0-1-1"></a></h3>
 <ul><li>
@@ -84,7 +94,7 @@
 </ul></div>
 </div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.1.0" id="version-010">version 0.1.0<a class="anchor" aria-label="anchor" href="#version-010"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.1.0" id="jpgrid-010">jpgrid 0.1.0<a class="anchor" aria-label="anchor" href="#jpgrid-010"></a></h2>
 <p>Initial version.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
