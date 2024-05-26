@@ -10,7 +10,7 @@
 \alias{grid_125m}
 \alias{grid_100m}
 \alias{grid_auto}
-\title{Grid square code vector}
+\title{Grid square code vector (Deprecated)}
 \usage{
 grid_80km(x, strict = TRUE)
 

@@ -2,8 +2,8 @@
 % Please edit documentation in R/jpgrid-package.R
 \docType{package}
 \name{jpgrid}
-\alias{jpgrid}
 \alias{jpgrid-package}
+\alias{jpgrid}
 \title{Functions for the Grid Square Codes in Japan}
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}

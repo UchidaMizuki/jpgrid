@@ -21,17 +21,25 @@ grid_move <- function(grid, n_X, n_Y) {
 #'
 #' @param grid A `grid` vector.
 #' @param n A numeric vector of degrees. By default, `1L`.
-#' @param moore Moore neighborhood (`TRUE`, default) or Von Neumann neighborhood
-#' (`FALSE`).
+#' @param type A character vector of neighborhood types, `"von_neumann"` or
+#' `"moore"`. By default, `"von_neumann"`.
 #' @param simplify Should simplify the format of the return?
 #'
 #' @return A list of `grid` vectors.
 #'
 #' @export
-grid_neighbor <- function(grid,
-                          n = 1L,
-                          moore = TRUE,
-                          simplify = TRUE) {
+grid_neighborhood <- function(grid,
+                              n = 1L,
+                              type = NULL,
+                              simplify = TRUE) {
+  if (is.null(type)) {
+    type <- "von_neumann"
+    cli_inform(c('Using default neighborhood type "von_neumann".',
+                 "i" = 'Use `type = "moore"` for Moore neighborhood.'))
+  }
+
+  type <- arg_match(type, c("von_neumann", "moore"))
+
   if (!all(n >= 0 & is_integerish(n))) {
     cli_abort("{.arg n} must be a {.cls integer} vector greater than or equal to 0.")
   }
@@ -42,8 +50,8 @@ grid_neighbor <- function(grid,
                                  n_X = -n:n,
                                  n_Y = -n:n)
       vec_slice(n_XY,
-                (!moore | abs(n_XY$n_X) == n | abs(n_XY$n_Y) == n) &
-                  (moore | (abs(n_XY$n_X) + abs(n_XY$n_Y)) == n))
+                (type != "von_neumann" | (abs(n_XY$n_X) + abs(n_XY$n_Y)) == n) &
+                  (type != "moore" | abs(n_XY$n_X) == n | abs(n_XY$n_Y) == n))
     })
 
   neighbor <- tibble::tibble(grid = grid) |>
