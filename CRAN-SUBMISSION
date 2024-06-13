@@ -1,3 +1,31 @@
-Version: 0.3.1
-Date: 2023-03-26 12:43:13 UTC
-SHA: 437ceb588e77b24df078442ebcdc8841df7f7dd9
+Version: 0.4.0
+Date: 2024-05-26 13:16:13 UTC
+SHA: fatal: detected dubious ownership in repository at 'D:/uchid/Documents/GitHub/jpgrid'
+
+Version: 0.4.0
+Date: 2024-05-26 13:16:13 UTC
+SHA: 'D:/uchid/Documents/GitHub/jpgrid' is owned by:
+
+Version: 0.4.0
+Date: 2024-05-26 13:16:13 UTC
+SHA: 'S-1-5-21-1833494514-4000878029-2516405291-1001'
+
+Version: 0.4.0
+Date: 2024-05-26 13:16:13 UTC
+SHA: but the current user is:
+
+Version: 0.4.0
+Date: 2024-05-26 13:16:13 UTC
+SHA: 'S-1-5-21-2275834154-3469930228-4260842020-1001'
+
+Version: 0.4.0
+Date: 2024-05-26 13:16:13 UTC
+SHA: To add an exception for this directory, call:
+
+Version: 0.4.0
+Date: 2024-05-26 13:16:13 UTC
+SHA:
+
+Version: 0.4.0
+Date: 2024-05-26 13:16:13 UTC
+SHA: git config --global --add safe.directory D:/uchid/Documents/GitHub/jpgrid
