@@ -29,8 +29,11 @@ geometry_to_grid <- function(geometry, grid_size,
       bbox_to_grid(grid_size = grid_size) |>
       st_as_stars()
 
-    geometry |>
+    geometry <- geometry |>
       sf::st_as_sf() |>
+      tibble::rowid_to_column("id")
+
+    grid <- geometry |>
       stars::st_rasterize(grid,
                           options = options, ...) |>
       sf::st_as_sf(as_points = TRUE) |>
@@ -42,8 +45,11 @@ geometry_to_grid <- function(geometry, grid_size,
                                           grid_size = grid_size),
                     .keep = "unused") |>
       dplyr::summarise(dplyr::across(grid, list),
-                       .by = "ID") |>
-      dplyr::arrange(.data$ID) |>
+                       .by = "id")
+
+    geometry |>
+      dplyr::left_join(grid,
+                       by = "id") |>
       dplyr::pull("grid")
   }
 }
