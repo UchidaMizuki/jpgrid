@@ -24,26 +24,39 @@ geometry_to_grid <- function(geometry, grid_size,
                    Y = coords$Y,
                    grid_size = grid_size)
   } else {
+    geometry <- geometry |>
+      sf::st_as_sf() |>
+      tibble::rowid_to_column("id")
+
+    grid <- geometry |>
+      sf::st_bbox() |>
+      bbox_to_grid(grid_size = grid_size) |>
+      st_as_stars()
+
+    geometry_grid <- geometry |>
+      stars::st_rasterize(grid,
+                          options = options, ...) |>
+      sf::st_as_sf() |>
+      sf::st_set_crs(sf::st_crs(geometry)) |>
+      dplyr::select() |>
+      sf::st_join(geometry) |>
+      dplyr::mutate(.data$geometry |>
+                      sf::st_centroid() |>
+                      sf::st_coordinates() |>
+                      tibble::as_tibble()) |>
+      sf::st_drop_geometry() |>
+      dplyr::mutate(grid = coords_to_grid(X = .data$X,
+                                          Y = .data$Y,
+                                          grid_size = grid_size)) |>
+      dplyr::distinct(.data$id, .data$grid) |>
+      dplyr::summarise(dplyr::across("grid", list),
+                       .by = "id")
+
     geometry |>
-      purrr::map(function(x) {
-        grid <- x |>
-          sf::st_bbox() |>
-          bbox_to_grid(grid_size = grid_size) |>
-          st_as_stars()
-
-        coords <- x |>
-          sf::st_sfc() |>
-          sf::st_as_sf() |>
-          stars::st_rasterize(grid,
-                              options = options, ...) |>
-          sf::st_as_sf(as_points = TRUE) |>
-          sf::st_coordinates() |>
-          tibble::as_tibble()
-
-        coords_to_grid(X = coords$X,
-                       Y = coords$Y,
-                       grid_size = grid_size)
-      })
+      sf::st_drop_geometry() |>
+      dplyr::left_join(geometry_grid,
+                       by = "id") |>
+      dplyr::pull("grid")
   }
 }
 
