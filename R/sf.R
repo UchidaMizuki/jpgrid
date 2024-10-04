@@ -108,32 +108,29 @@ st_bbox.grid <- function(obj, ...) {
 st_as_sfc.grid <- function(x,
                            as_points = FALSE,
                            crs = sf::NA_crs_, ...) {
-  geometry <- tibble::tibble(grid = x) |>
-    vec_unique()
-  geometry <- vec_slice(geometry,
-                        !is.na(geometry$grid))
+  x <- tibble::tibble(grid = x)
+
+  x_unique <- vec_unique(x)
+  x_unique <- vec_slice(x_unique,
+                        !is.na(x_unique$grid))
 
   if (as_points) {
-    geometry$geometry <- grid_to_coords(geometry$grid,
+    x_unique$geometry <- grid_to_coords(x_unique$grid,
                                         center = TRUE) |>
       sf::st_as_sf(coords = c("X", "Y"), ...) |>
       sf::st_geometry()
   } else {
-    coords <- grid_to_coords(geometry$grid,
-                             center = FALSE)
-    geometry$geometry <- list(coords$X_min, coords$Y_min, coords$X_max, coords$Y_max) |>
-      purrr::pmap(function(X_min, Y_min, X_max, Y_max) {
-        sf::st_bbox(c(xmin = X_min,
-                      ymin = Y_min,
-                      xmax = X_max,
-                      ymax = Y_max)) |>
-          sf::st_as_sfc(...)
-      }) |>
-      purrr::list_c(ptype = sf::st_sfc(sf::st_polygon()))
+    geometry <- st_as_sfc(x_unique$grid,
+                          as_points = TRUE) |>
+      sf::st_as_sf() |>
+      stars::st_rasterize(st_as_stars(x_unique$grid)) |>
+      sf::st_as_sf(...)
+    x_unique$geometry <- vec_slice(sf::st_geometry(geometry),
+                          vec_match(vec_seq_along(x_unique), geometry$ID))
   }
 
-  tibble::tibble(grid = x) |>
-    dplyr::left_join(geometry,
+  x |>
+    dplyr::left_join(x_unique,
                      by = "grid") |>
     purrr::chuck("geometry") |>
     sf::st_set_crs(crs)

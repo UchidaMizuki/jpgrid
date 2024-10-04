@@ -37,11 +37,6 @@ test_that("bbox_to_grid", {
 
   grid <- bbox_to_grid(bbox, "1km")
   expect_equal(vctrs::vec_size(grid), 12L)
-
-  # grid <- bbox_to_grid(list(bbox, bbox),
-  #                      grid_size = "1km")
-  # expect_true(is.list(grid))
-  # expect_equal(vctrs::vec_size(grid[[1L]]), 12L)
 })
 
 test_that("grid_as_sf", {
@@ -65,6 +60,8 @@ test_that("st_bbox", {
 })
 
 test_that("grid_as_sf", {
+  set.seed(1234)
+
   grid <- parse_grid(c("533945263", "533935863", "533945764"), "500m")
   df_grid <- grid_as_sf(grid)
 
@@ -74,5 +71,20 @@ test_that("grid_as_sf", {
     grid_as_sf()
 
   expect_s3_class(df_grid, "sf")
+
+  grid <- parse_grid("5339",
+                     grid_size = "80km") |>
+    grid_subdivide(grid_size = "1km") |>
+    dplyr::first() |>
+    sample(size = 1e3)
+
+  expect_equal(grid,
+               st_as_sfc(grid,
+                         as_points = TRUE) |>
+                 geometry_to_grid(grid_size = "1km"))
+  expect_equal(grid,
+               st_as_sfc(grid) |>
+                 sf::st_centroid() |>
+                 geometry_to_grid(grid_size = "1km"))
 })
 
