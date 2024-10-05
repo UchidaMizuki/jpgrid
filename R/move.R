@@ -45,14 +45,15 @@ grid_neighborhood <- function(grid,
   }
 
   n_XY <- n |>
-    purrr::map_dfr(function(n) {
+    purrr::map(\(n) {
       n_XY <- tidyr::expand_grid(n = n,
                                  n_X = -n:n,
                                  n_Y = -n:n)
       vec_slice(n_XY,
                 (type != "von_neumann" | (abs(n_XY$n_X) + abs(n_XY$n_Y)) == n) &
                   (type != "moore" | abs(n_XY$n_X) == n | abs(n_XY$n_Y) == n))
-    })
+    }) |>
+    purrr::list_rbind()
 
   neighbor <- tibble::tibble(grid = grid) |>
     vec_unique() |>
@@ -66,7 +67,7 @@ grid_neighborhood <- function(grid,
 
   if (simplify) {
     neighbor$neighbor <- neighbor$neighbor |>
-      purrr::map(function(neighbor) {
+      purrr::map(\(neighbor) {
         neighbor |>
           purrr::chuck("grid_neighborhood")
       })
@@ -92,22 +93,22 @@ grid_neighborhood <- function(grid,
 grid_components <- function(grid,
                             n = 0:1,
                             type = NULL) {
-  edges <- tibble::tibble(grid_from = grid,
-                          grid_to = grid_neighborhood(grid,
+  grid_unique <- vec_unique(grid)
+
+  nodes <- tibble::tibble(grid = grid_unique)
+  edges <- tibble::tibble(grid_from = grid_unique,
+                          grid_to = grid_neighborhood(grid_unique,
                                                       n = n,
                                                       type = type)) |>
     tidyr::unnest("grid_to") |>
-    dplyr::filter(.data$grid_to %in% grid)
-
-  grid_unique <- vec_unique(c(edges$grid_from, edges$grid_to))
-
-  edges <- edges |>
+    dplyr::filter(.data$grid_to %in% grid_unique) |>
     dplyr::mutate(grid_from = vec_match(.data$grid_from, grid_unique),
                   grid_to = vec_match(.data$grid_to, grid_unique))
 
-  group <- tidygraph::tbl_graph(edges = edges) |>
+  group_nodes <- tidygraph::tbl_graph(nodes = nodes,
+                                      edges = edges) |>
     dplyr::mutate(group = tidygraph::group_components()) |>
-    dplyr::pull("group")
+    tibble::as_tibble()
 
-  vec_slice(group, vec_match(grid, grid_unique))
+  vec_slice(group_nodes$group, vec_match(grid, group_nodes$grid))
 }

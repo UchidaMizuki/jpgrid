@@ -122,7 +122,7 @@ st_as_sfc.grid <- function(x,
     coords <- grid_to_coords(geometry$grid,
                              center = FALSE)
     geometry$geometry <- list(coords$X_min, coords$Y_min, coords$X_max, coords$Y_max) |>
-      purrr::pmap(function(X_min, Y_min, X_max, Y_max) {
+      purrr::pmap(\(X_min, Y_min, X_max, Y_max) {
         sf::st_bbox(c(xmin = X_min,
                       ymin = Y_min,
                       xmax = X_max,
