@@ -1,9 +1,10 @@
-test_that("grid_strict", {
+test_that("strict parse_grid() works", {
   x <- c("53394526313", 5339358633, "533945764", 53394611, "523503", 5339)
 
   # strict
   grid_80km <- parse_grid(x, "80km")
   grid_10km <- parse_grid(x, "10km")
+  grid_5km <- parse_grid(x, "5km")
   grid_1km <- parse_grid(x, "1km")
   grid_500m <- parse_grid(x, "500m")
   grid_250m <- parse_grid(x, "250m")
@@ -12,6 +13,7 @@ test_that("grid_strict", {
 
   expect_s3_class(grid_80km, "grid_80km")
   expect_s3_class(grid_10km, "grid_10km")
+  expect_s3_class(grid_5km, "grid_5km")
   expect_s3_class(grid_1km, "grid_1km")
   expect_s3_class(grid_500m, "grid_500m")
   expect_s3_class(grid_250m, "grid_250m")
@@ -22,6 +24,8 @@ test_that("grid_strict", {
                stringr::str_extract(x, "^\\d{4}$"))
   expect_equal(as.character(grid_10km),
                stringr::str_extract(x, "^\\d{6}$"))
+  expect_equal(as.character(grid_5km),
+               stringr::str_extract(x, "^\\d{7}$"))
   expect_equal(as.character(grid_1km),
                stringr::str_extract(x, "^\\d{8}$"))
   expect_equal(as.character(grid_500m),
@@ -34,7 +38,7 @@ test_that("grid_strict", {
                stringr::str_extract(x, "^\\d{10}$"))
 })
 
-test_that("grid_notstrict", {
+test_that("non-strict parse_grid() works", {
   x <- c("53394526313", 5339358633, "533945764", 53394611, "523503", 5339)
 
   # not strict
@@ -42,6 +46,8 @@ test_that("grid_notstrict", {
                           strict = F)
   grid_10km <- parse_grid(x, "10km",
                           strict = F)
+  grid_5km <- parse_grid(x, "5km",
+                         strict = F)
   grid_1km <- parse_grid(x, "1km",
                          strict = F)
   grid_500m <- parse_grid(x, "500m",
@@ -55,6 +61,7 @@ test_that("grid_notstrict", {
 
   expect_s3_class(grid_80km, "grid_80km")
   expect_s3_class(grid_10km, "grid_10km")
+  expect_s3_class(grid_5km, "grid_5km")
   expect_s3_class(grid_1km, "grid_1km")
   expect_s3_class(grid_500m, "grid_500m")
   expect_s3_class(grid_250m, "grid_250m")
@@ -65,27 +72,30 @@ test_that("grid_notstrict", {
                stringr::str_extract(x, "^\\d{4}"))
   expect_equal(as.character(grid_10km),
                stringr::str_extract(x, "^\\d{6}"))
+  expect_equal(as.character(grid_5km),
+               stringr::str_extract(x, "^\\d{6}[1-4]"))
   expect_equal(as.character(grid_1km),
                stringr::str_extract(x, "^\\d{8}"))
   expect_equal(as.character(grid_500m),
-               stringr::str_extract(x, "^\\d{9}"))
+               stringr::str_extract(x, "^\\d{8}[1-4]"))
   expect_equal(as.character(grid_250m),
-               stringr::str_extract(x, "^\\d{10}"))
+               stringr::str_extract(x, "^\\d{9}[1-4]"))
   expect_equal(as.character(grid_125m),
-               stringr::str_extract(x, "^\\d{11}"))
+               stringr::str_extract(x, "^\\d{10}[1-4]"))
   expect_equal(as.character(grid_100m),
                stringr::str_extract(x, "^\\d{10}"))
 })
 
-test_that("grid_auto", {
-  x <- c("53394526313", 5339358633, "533945764", 53394611, "523503", 5339)
+test_that("auto parse_grid() works", {
+  x <- c("53394526313", 5339358633, "533945764", 53394611, "5339152", "523503", 5339)
 
   expect_s3_class(parse_grid(x[1]), "grid_125m")
   expect_s3_class(parse_grid(x[1:2]), "grid_250m")
   expect_s3_class(parse_grid(x[1:3]), "grid_500m")
   expect_s3_class(parse_grid(x[1:4]), "grid_1km")
-  expect_s3_class(parse_grid(x[1:5]), "grid_10km")
-  expect_s3_class(parse_grid(x[1:6]), "grid_80km")
+  expect_s3_class(parse_grid(x[1:5]), "grid_5km")
+  expect_s3_class(parse_grid(x[1:6]), "grid_10km")
+  expect_s3_class(parse_grid(x[1:7]), "grid_80km")
 })
 
 test_that("grid_250m_or_100m", {
