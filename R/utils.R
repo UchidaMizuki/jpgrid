@@ -9,6 +9,7 @@ grid_size_match <- function(grid_size) {
     grid_size <- switch(grid_size,
                         `80km` = 80000L,
                         `10km` = 10000L,
+                        `5km` = 5000L,
                         `1km` = 1000L,
                         `500m` = 500L,
                         `250m` = 250L,
@@ -17,8 +18,8 @@ grid_size_match <- function(grid_size) {
                         NA_integer_)
   }
 
-  if (!grid_size %in% c(80000L, 10000L, 1000L, 500L, 250L, 125L, 100L)) {
-    sizes <- cli_vec(c("80km", "10km", "1km", "500m", "250m", "125m", "100m"),
+  if (!grid_size %in% c(80000L, 10000L, 5000L, 1000L, 500L, 250L, 125L, 100L)) {
+    sizes <- cli_vec(c("80km", "10km", "5km", "1km", "500m", "250m", "125m", "100m"),
                      style = list("vec-last" = " or "))
     cli_abort("{.arg grid_size} must {.val {sizes}}")
   }
@@ -29,6 +30,7 @@ grid_size <- function(grid) {
   switch(class(grid)[1L],
          grid_80km = 80000L,
          grid_10km = 10000L,
+         grid_5km = 5000L,
          grid_1km = 1000L,
          grid_500m = 500L,
          grid_250m = 250L,

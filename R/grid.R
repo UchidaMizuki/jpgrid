@@ -9,6 +9,7 @@ new_grid <- function(grid_size,
            class = switch(as.character(grid_size),
                           "80000" = c("grid_80km", "grid"),
                           "10000" = c("grid_10km", "grid"),
+                          "5000" = c("grid_5km", "grid"),
                           "1000" = c("grid_1km", "grid"),
                           "500" = c("grid_500m", "grid"),
                           "250" = c("grid_250m", "grid"),
@@ -23,6 +24,8 @@ code_to_grid <- function(grid_size,
 
                          code_X_10km = NA_integer_,
                          code_Y_10km = NA_integer_,
+
+                         code_5km = NA_integer_,
 
                          code_X_1km = NA_integer_,
                          code_Y_1km = NA_integer_,
@@ -46,6 +49,10 @@ code_to_grid <- function(grid_size,
     if (grid_size == 10000L) {
       n_X <- n_X_10km
       n_Y <- n_Y_10km
+    } else if (grid_size == 5000L) {
+      code_5km <- code_to_number(code_5km, 1L, 4L)
+      n_X <- n_X_10km * 2L + code_2x2_to_X(code_5km)
+      n_Y <- n_Y_10km * 2L + code_2x2_to_Y(code_5km)
     } else {
       n_X_1km <- n_X_10km * 10L + code_to_number(code_X_1km, 0L, 9L)
       n_Y_1km <- n_Y_10km * 10L + code_to_number(code_Y_1km, 0L, 9L)
@@ -111,6 +118,12 @@ grid_to_code_impl <- function(grid_size, n_X, n_Y) {
                       grid_size = 80000L) |>
       c(list(code_X_10km = n_X %% 8L,
              code_Y_10km = n_Y %% 8L))
+  } else if (grid_size == 5000L) {
+    grid_to_code_impl(n_X = n_X %/% 2L,
+                      n_Y = n_Y %/% 2L,
+                      grid_size = 10000L) |>
+      c(list(code_5km = code_XY_to_2x2(code_X = n_X %% 2L,
+                                       code_Y = n_Y %% 2L)))
   } else if (grid_size == 1000L) {
     grid_to_code_impl(n_X = n_X %/% 10L,
                       n_Y = n_Y %/% 10L,
@@ -177,6 +190,18 @@ format.grid_10km <- function(x, ...) {
 
                  code$code_Y_10km,
                  code$code_X_10km)
+}
+
+#' @export
+format.grid_5km <- function(x, ...) {
+  code <- grid_to_code(x)
+  stringr::str_c(code$code_Y_80km,
+                 code$code_X_80km,
+
+                 code$code_Y_10km,
+                 code$code_X_10km,
+
+                 code$code_5km)
 }
 
 #' @export
@@ -269,6 +294,11 @@ vec_ptype_abbr.grid_80km <- function(x, ...) {
 #' @export
 vec_ptype_abbr.grid_10km <- function(x, ...) {
   "grd10k"
+}
+
+#' @export
+vec_ptype_abbr.grid_5km <- function(x, ...) {
+  "grd5k"
 }
 
 #' @export

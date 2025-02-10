@@ -29,8 +29,10 @@ parse_grid <- function(x,
 
     if (digit %in% 0L:1L) {
       grid_size <- 80000L
-    } else if (digit %in% 2L:3L) {
+    } else if (digit == 2L) {
       grid_size <- 10000L
+    } else if (digit == 3L) {
+      grid_size <- 5000L
     } else if (digit == 4L) {
       grid_size <- 1000L
     } else if (digit == 5L) {
@@ -51,6 +53,7 @@ parse_grid <- function(x,
     grid_size_name <- switch(as.character(grid_size),
                              `80000` = "80km",
                              `10000` = "10km",
+                             `5000` = "5km",
                              `1000` = "1km",
                              `500` = "500m",
                              `250` = "250m",
@@ -76,6 +79,9 @@ parse_grid <- function(x,
   } else if (grid_size == 10000L) {
     digit <- 2L
     name <- c(code_80km, code_10km)
+  } else if (grid_size == 5000L) {
+    digit <- 3L
+    name <- c(code_80km, code_10km, "code_5km")
   } else if (grid_size == 1000L) {
     digit <- 4L
     name <- c(code_80km, code_10km, code_1km)
