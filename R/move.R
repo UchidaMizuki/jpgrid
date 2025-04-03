@@ -58,7 +58,9 @@ grid_neighborhood <- function(grid, n = 1L, type = NULL, simplify = TRUE) {
     }) |>
     purrr::list_rbind()
 
-  neighbor <- tibble::tibble(grid = grid) |>
+  neighbor <- tibble::tibble(
+    grid = grid
+  ) |>
     vec_unique() |>
     tidyr::expand_grid(n_XY)
   neighbor$grid_neighborhood <- neighbor$grid |>
@@ -82,7 +84,7 @@ grid_neighborhood <- function(grid, n = 1L, type = NULL, simplify = TRUE) {
 #' Connected components of grid square codes
 #'
 #' @param grid A `grid` vector.
-#' @param n A numeric vector of degrees. By default, `0:1`.
+#' @param n A numeric vector of degrees. By default, `1`.
 #' @param type A character vector of neighborhood types, `"von_neumann"` or
 #' `"moore"`. By default, `"von_neumann"`.
 #' (`FALSE`, default).
@@ -90,7 +92,7 @@ grid_neighborhood <- function(grid, n = 1L, type = NULL, simplify = TRUE) {
 #' @return A integer vector of group IDs.
 #'
 #' @export
-grid_components <- function(grid, n = 0:1, type = NULL) {
+grid_components <- function(grid, n = 1, type = NULL) {
   grid_unique <- vec_unique(grid)
 
   nodes <- tibble::tibble(grid = grid_unique)
@@ -99,7 +101,7 @@ grid_components <- function(grid, n = 0:1, type = NULL) {
     grid_to = grid_neighborhood(grid_unique, n = n, type = type)
   ) |>
     tidyr::unnest("grid_to") |>
-    dplyr::filter(.data$grid_to %in% grid_unique) |>
+    dplyr::filter(vec_in(.data$grid_to, grid_unique)) |>
     dplyr::mutate(
       grid_from = vec_match(.data$grid_from, grid_unique),
       grid_to = vec_match(.data$grid_to, grid_unique)
@@ -110,4 +112,27 @@ grid_components <- function(grid, n = 0:1, type = NULL) {
     tibble::as_tibble()
 
   vec_slice(group_nodes$group, vec_match(grid, group_nodes$grid))
+}
+
+#' Grid square codes on the boundary
+#'
+#' @param grid A `grid` vector.
+#' @param n A numeric vector of degrees. By default, `1`.
+#' @param type A character vector of neighborhood types, `"von_neumann"` or
+#' `"moore"`. By default, `"von_neumann"`.
+#'
+#' @return A `grid` vector.
+#'
+#' @export
+grid_boundary <- function(grid, n = 1, type = NULL) {
+  grid_unique <- vec_unique(grid)
+
+  tibble::tibble(
+    grid = grid_unique,
+    grid_neighborhood = grid_neighborhood(grid_unique, n = n, type = type)
+  ) |>
+    tidyr::unnest("grid_neighborhood") |>
+    dplyr::filter(!vec_in(.data$grid_neighborhood, grid_unique)) |>
+    dplyr::distinct(.data$grid) |>
+    dplyr::pull("grid")
 }
