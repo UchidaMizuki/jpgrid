@@ -20,44 +20,28 @@ test_that("strict parse_grid() works", {
   expect_s3_class(grid_125m, "grid_125m")
   expect_s3_class(grid_100m, "grid_100m")
 
-  expect_equal(as.character(grid_80km),
-               stringr::str_extract(x, "^\\d{4}$"))
-  expect_equal(as.character(grid_10km),
-               stringr::str_extract(x, "^\\d{6}$"))
-  expect_equal(as.character(grid_5km),
-               stringr::str_extract(x, "^\\d{7}$"))
-  expect_equal(as.character(grid_1km),
-               stringr::str_extract(x, "^\\d{8}$"))
-  expect_equal(as.character(grid_500m),
-               stringr::str_extract(x, "^\\d{9}$"))
-  expect_equal(as.character(grid_250m),
-               stringr::str_extract(x, "^\\d{10}$"))
-  expect_equal(as.character(grid_125m),
-               stringr::str_extract(x, "^\\d{11}$"))
-  expect_equal(as.character(grid_100m),
-               stringr::str_extract(x, "^\\d{10}$"))
+  expect_equal(as.character(grid_80km), stringr::str_extract(x, "^\\d{4}$"))
+  expect_equal(as.character(grid_10km), stringr::str_extract(x, "^\\d{6}$"))
+  expect_equal(as.character(grid_5km), stringr::str_extract(x, "^\\d{7}$"))
+  expect_equal(as.character(grid_1km), stringr::str_extract(x, "^\\d{8}$"))
+  expect_equal(as.character(grid_500m), stringr::str_extract(x, "^\\d{9}$"))
+  expect_equal(as.character(grid_250m), stringr::str_extract(x, "^\\d{10}$"))
+  expect_equal(as.character(grid_125m), stringr::str_extract(x, "^\\d{11}$"))
+  expect_equal(as.character(grid_100m), stringr::str_extract(x, "^\\d{10}$"))
 })
 
 test_that("non-strict parse_grid() works", {
   x <- c("53394526313", 5339358633, "533945764", 53394611, "523503", 5339)
 
   # not strict
-  grid_80km <- parse_grid(x, "80km",
-                          strict = F)
-  grid_10km <- parse_grid(x, "10km",
-                          strict = F)
-  grid_5km <- parse_grid(x, "5km",
-                         strict = F)
-  grid_1km <- parse_grid(x, "1km",
-                         strict = F)
-  grid_500m <- parse_grid(x, "500m",
-                          strict = F)
-  grid_250m <- parse_grid(x, "250m",
-                          strict = F)
-  grid_125m <- parse_grid(x, "125m",
-                          strict = F)
-  grid_100m <- parse_grid(x, "100m",
-                          strict = F)
+  grid_80km <- parse_grid(x, "80km", strict = F)
+  grid_10km <- parse_grid(x, "10km", strict = F)
+  grid_5km <- parse_grid(x, "5km", strict = F)
+  grid_1km <- parse_grid(x, "1km", strict = F)
+  grid_500m <- parse_grid(x, "500m", strict = F)
+  grid_250m <- parse_grid(x, "250m", strict = F)
+  grid_125m <- parse_grid(x, "125m", strict = F)
+  grid_100m <- parse_grid(x, "100m", strict = F)
 
   expect_s3_class(grid_80km, "grid_80km")
   expect_s3_class(grid_10km, "grid_10km")
@@ -68,26 +52,29 @@ test_that("non-strict parse_grid() works", {
   expect_s3_class(grid_125m, "grid_125m")
   expect_s3_class(grid_100m, "grid_100m")
 
-  expect_equal(as.character(grid_80km),
-               stringr::str_extract(x, "^\\d{4}"))
-  expect_equal(as.character(grid_10km),
-               stringr::str_extract(x, "^\\d{6}"))
-  expect_equal(as.character(grid_5km),
-               stringr::str_extract(x, "^\\d{6}[1-4]"))
-  expect_equal(as.character(grid_1km),
-               stringr::str_extract(x, "^\\d{8}"))
-  expect_equal(as.character(grid_500m),
-               stringr::str_extract(x, "^\\d{8}[1-4]"))
-  expect_equal(as.character(grid_250m),
-               stringr::str_extract(x, "^\\d{9}[1-4]"))
-  expect_equal(as.character(grid_125m),
-               stringr::str_extract(x, "^\\d{10}[1-4]"))
-  expect_equal(as.character(grid_100m),
-               stringr::str_extract(x, "^\\d{10}"))
+  expect_equal(as.character(grid_80km), stringr::str_extract(x, "^\\d{4}"))
+  expect_equal(as.character(grid_10km), stringr::str_extract(x, "^\\d{6}"))
+  expect_equal(as.character(grid_5km), stringr::str_extract(x, "^\\d{6}[1-4]"))
+  expect_equal(as.character(grid_1km), stringr::str_extract(x, "^\\d{8}"))
+  expect_equal(as.character(grid_500m), stringr::str_extract(x, "^\\d{8}[1-4]"))
+  expect_equal(as.character(grid_250m), stringr::str_extract(x, "^\\d{9}[1-4]"))
+  expect_equal(
+    as.character(grid_125m),
+    stringr::str_extract(x, "^\\d{10}[1-4]")
+  )
+  expect_equal(as.character(grid_100m), stringr::str_extract(x, "^\\d{10}"))
 })
 
 test_that("auto parse_grid() works", {
-  x <- c("53394526313", 5339358633, "533945764", 53394611, "5339152", "523503", 5339)
+  x <- c(
+    "53394526313",
+    5339358633,
+    "533945764",
+    53394611,
+    "5339152",
+    "523503",
+    5339
+  )
 
   expect_s3_class(parse_grid(x[1]), "grid_125m")
   expect_s3_class(parse_grid(x[1:2]), "grid_250m")

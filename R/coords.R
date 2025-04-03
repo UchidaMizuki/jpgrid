@@ -18,9 +18,11 @@ coords_to_grid <- function(X, Y, grid_size) {
   length_X <- grid_size / 80000L
   length_Y <- length_X / 1.5
 
-  new_grid(grid_size = grid_size,
-           n_X = (X - 100) %/% length_X,
-           n_Y = Y %/% length_Y)
+  new_grid(
+    grid_size = grid_size,
+    n_X = (X - 100) %/% length_X,
+    n_Y = Y %/% length_Y
+  )
 }
 
 #' @rdname coords
@@ -44,11 +46,15 @@ grid_to_coords <- function(grid, center = TRUE) {
   n_Y <- field(grid, "n_Y")
 
   if (center) {
-    tibble::tibble(X = 100 + length_X * (n_X + .5),
-                   Y = length_Y * (n_Y + .5))
+    tibble::tibble(
+      X = 100 + length_X * (n_X + .5),
+      Y = length_Y * (n_Y + .5)
+    )
   } else {
-    coords <- tibble::tibble(X_min = 100 + length_X * n_X,
-                             Y_min = length_Y * n_Y)
+    coords <- tibble::tibble(
+      X_min = 100 + length_X * n_X,
+      Y_min = length_Y * n_Y
+    )
     coords$X_max <- coords$X_min + length_X
     coords$Y_max <- coords$Y_min + length_Y
     coords

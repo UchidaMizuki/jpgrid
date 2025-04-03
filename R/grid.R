@@ -1,41 +1,47 @@
 # grid --------------------------------------------------------------------
 
-new_grid <- function(grid_size,
-                     n_X = integer(),
-                     n_Y = integer()) {
-  new_rcrd(list_of(n_X = n_X,
-                   n_Y = n_Y,
-                   .ptype = integer()),
-           class = switch(as.character(grid_size),
-                          "80000" = c("grid_80km", "grid"),
-                          "10000" = c("grid_10km", "grid"),
-                          "5000" = c("grid_5km", "grid"),
-                          "1000" = c("grid_1km", "grid"),
-                          "500" = c("grid_500m", "grid"),
-                          "250" = c("grid_250m", "grid"),
-                          "125" = c("grid_125m", "grid"),
-                          "100" = c("grid_100m", "grid")))
+new_grid <- function(grid_size, n_X = integer(), n_Y = integer()) {
+  new_rcrd(
+    list_of(
+      n_X = n_X,
+      n_Y = n_Y,
+      .ptype = integer()
+    ),
+    class = switch(
+      as.character(grid_size),
+      "80000" = c("grid_80km", "grid"),
+      "10000" = c("grid_10km", "grid"),
+      "5000" = c("grid_5km", "grid"),
+      "1000" = c("grid_1km", "grid"),
+      "500" = c("grid_500m", "grid"),
+      "250" = c("grid_250m", "grid"),
+      "125" = c("grid_125m", "grid"),
+      "100" = c("grid_100m", "grid")
+    )
+  )
 }
 
-code_to_grid <- function(grid_size,
+code_to_grid <- function(
+  grid_size,
 
-                         code_X_80km = NA_integer_,
-                         code_Y_80km = NA_integer_,
+  code_X_80km = NA_integer_,
+  code_Y_80km = NA_integer_,
 
-                         code_X_10km = NA_integer_,
-                         code_Y_10km = NA_integer_,
+  code_X_10km = NA_integer_,
+  code_Y_10km = NA_integer_,
 
-                         code_5km = NA_integer_,
+  code_5km = NA_integer_,
 
-                         code_X_1km = NA_integer_,
-                         code_Y_1km = NA_integer_,
+  code_X_1km = NA_integer_,
+  code_Y_1km = NA_integer_,
 
-                         code_500m = NA_integer_,
-                         code_250m = NA_integer_,
-                         code_125m = NA_integer_,
+  code_500m = NA_integer_,
+  code_250m = NA_integer_,
+  code_125m = NA_integer_,
 
-                         code_X_100m = NA_integer_,
-                         code_Y_100m = NA_integer_) {
+  code_X_100m = NA_integer_,
+  code_Y_100m = NA_integer_
+) {
   n_X_80km <- code_80km_to_number(code_X_80km)
   n_Y_80km <- code_80km_to_number(code_Y_80km)
 
@@ -91,69 +97,91 @@ code_to_grid <- function(grid_size,
   }
 
   not_na_n <- !is.na(n_X) & !is.na(n_Y)
-  n_X <- dplyr::if_else(not_na_n,
-                        n_X,
-                        NA_integer_)
-  n_Y <- dplyr::if_else(not_na_n,
-                        n_Y,
-                        NA_integer_)
-  new_grid(grid_size = grid_size,
-           n_X = n_X,
-           n_Y = n_Y)
+  n_X <- dplyr::if_else(not_na_n, n_X, NA_integer_)
+  n_Y <- dplyr::if_else(not_na_n, n_Y, NA_integer_)
+  new_grid(grid_size = grid_size, n_X = n_X, n_Y = n_Y)
 }
 
 grid_to_code <- function(grid) {
-  grid_to_code_impl(grid_size = grid_size(grid),
-                    n_X = field(grid, "n_X"),
-                    n_Y = field(grid, "n_Y"))
+  grid_to_code_impl(
+    grid_size = grid_size(grid),
+    n_X = field(grid, "n_X"),
+    n_Y = field(grid, "n_Y")
+  )
 }
 
 grid_to_code_impl <- function(grid_size, n_X, n_Y) {
   if (grid_size == 80000L) {
-    list(code_X_80km = number_to_code_80km(n_X),
-         code_Y_80km = number_to_code_80km(n_Y))
+    list(
+      code_X_80km = number_to_code_80km(n_X),
+      code_Y_80km = number_to_code_80km(n_Y)
+    )
   } else if (grid_size == 10000L) {
-    grid_to_code_impl(n_X = n_X %/% 8L,
-                      n_Y = n_Y %/% 8L,
-                      grid_size = 80000L) |>
-      c(list(code_X_10km = n_X %% 8L,
-             code_Y_10km = n_Y %% 8L))
+    grid_to_code_impl(
+      n_X = n_X %/% 8L,
+      n_Y = n_Y %/% 8L,
+      grid_size = 80000L
+    ) |>
+      c(list(
+        code_X_10km = n_X %% 8L,
+        code_Y_10km = n_Y %% 8L
+      ))
   } else if (grid_size == 5000L) {
-    grid_to_code_impl(n_X = n_X %/% 2L,
-                      n_Y = n_Y %/% 2L,
-                      grid_size = 10000L) |>
-      c(list(code_5km = code_XY_to_2x2(code_X = n_X %% 2L,
-                                       code_Y = n_Y %% 2L)))
+    grid_to_code_impl(
+      n_X = n_X %/% 2L,
+      n_Y = n_Y %/% 2L,
+      grid_size = 10000L
+    ) |>
+      c(list(
+        code_5km = code_XY_to_2x2(code_X = n_X %% 2L, code_Y = n_Y %% 2L)
+      ))
   } else if (grid_size == 1000L) {
-    grid_to_code_impl(n_X = n_X %/% 10L,
-                      n_Y = n_Y %/% 10L,
-                      grid_size = 10000L) |>
-      c(list(code_X_1km = n_X %% 10L,
-             code_Y_1km = n_Y %% 10L))
+    grid_to_code_impl(
+      n_X = n_X %/% 10L,
+      n_Y = n_Y %/% 10L,
+      grid_size = 10000L
+    ) |>
+      c(list(
+        code_X_1km = n_X %% 10L,
+        code_Y_1km = n_Y %% 10L
+      ))
   } else if (grid_size == 500L) {
-    grid_to_code_impl(n_X = n_X %/% 2L,
-                      n_Y = n_Y %/% 2L,
-                      grid_size = 1000L) |>
-      c(list(code_500m = code_XY_to_2x2(code_X = n_X %% 2L,
-                                        code_Y = n_Y %% 2L)))
+    grid_to_code_impl(
+      n_X = n_X %/% 2L,
+      n_Y = n_Y %/% 2L,
+      grid_size = 1000L
+    ) |>
+      c(list(
+        code_500m = code_XY_to_2x2(code_X = n_X %% 2L, code_Y = n_Y %% 2L)
+      ))
   } else if (grid_size == 250L) {
-    grid_to_code_impl(n_X = n_X %/% 2L,
-                      n_Y = n_Y %/% 2L,
-                      grid_size = 500L) |>
-      c(list(code_250m = code_XY_to_2x2(code_X = n_X %% 2L,
-                                        code_Y = n_Y %% 2L)))
+    grid_to_code_impl(
+      n_X = n_X %/% 2L,
+      n_Y = n_Y %/% 2L,
+      grid_size = 500L
+    ) |>
+      c(list(
+        code_250m = code_XY_to_2x2(code_X = n_X %% 2L, code_Y = n_Y %% 2L)
+      ))
   } else if (grid_size == 125L) {
-    grid_to_code_impl(n_X = n_X %/% 2L,
-                      n_Y = n_Y %/% 2L,
-                      grid_size = 250L) |>
-      c(list(code_125m = code_XY_to_2x2(code_X = n_X %% 2L,
-                                        code_Y = n_Y %% 2L)))
+    grid_to_code_impl(
+      n_X = n_X %/% 2L,
+      n_Y = n_Y %/% 2L,
+      grid_size = 250L
+    ) |>
+      c(list(
+        code_125m = code_XY_to_2x2(code_X = n_X %% 2L, code_Y = n_Y %% 2L)
+      ))
   } else if (grid_size == 100L) {
-    grid_to_code_impl(n_X = n_X %/% 10L,
-                      n_Y = n_Y %/% 10L,
-                      grid_size = 1000L) |>
-      c(list(code_X_100m = n_X %% 10L,
-             code_Y_100m = n_Y %% 10L))
+    grid_to_code_impl(
+      n_X = n_X %/% 10L,
+      n_Y = n_Y %/% 10L,
+      grid_size = 1000L
+    ) |>
+      c(list(
+        code_X_100m = n_X %% 10L,
+        code_Y_100m = n_Y %% 10L
+      ))
   }
 }
 
@@ -165,8 +193,7 @@ grid_to_code_impl <- function(grid_size, n_X, n_Y) {
 #' @return `TRUE` if the object inherits from the `grid` class.
 #'
 #' @export
-is_grid <- function(x,
-                    grid_size = NULL) {
+is_grid <- function(x, grid_size = NULL) {
   if (is.null(grid_size)) {
     inherits(x, "grid")
   } else {
@@ -178,107 +205,120 @@ is_grid <- function(x,
 #' @export
 format.grid_80km <- function(x, ...) {
   code <- grid_to_code(x)
-  stringr::str_c(code$code_Y_80km,
-                 code$code_X_80km)
+  stringr::str_c(code$code_Y_80km, code$code_X_80km)
 }
 
 #' @export
 format.grid_10km <- function(x, ...) {
   code <- grid_to_code(x)
-  stringr::str_c(code$code_Y_80km,
-                 code$code_X_80km,
+  stringr::str_c(
+    code$code_Y_80km,
+    code$code_X_80km,
 
-                 code$code_Y_10km,
-                 code$code_X_10km)
+    code$code_Y_10km,
+    code$code_X_10km
+  )
 }
 
 #' @export
 format.grid_5km <- function(x, ...) {
   code <- grid_to_code(x)
-  stringr::str_c(code$code_Y_80km,
-                 code$code_X_80km,
+  stringr::str_c(
+    code$code_Y_80km,
+    code$code_X_80km,
 
-                 code$code_Y_10km,
-                 code$code_X_10km,
+    code$code_Y_10km,
+    code$code_X_10km,
 
-                 code$code_5km)
+    code$code_5km
+  )
 }
 
 #' @export
 format.grid_1km <- function(x, ...) {
   code <- grid_to_code(x)
-  stringr::str_c(code$code_Y_80km,
-                 code$code_X_80km,
+  stringr::str_c(
+    code$code_Y_80km,
+    code$code_X_80km,
 
-                 code$code_Y_10km,
-                 code$code_X_10km,
+    code$code_Y_10km,
+    code$code_X_10km,
 
-                 code$code_Y_1km,
-                 code$code_X_1km)
+    code$code_Y_1km,
+    code$code_X_1km
+  )
 }
 
 #' @export
 format.grid_500m <- function(x, ...) {
   code <- grid_to_code(x)
-  stringr::str_c(code$code_Y_80km,
-                 code$code_X_80km,
+  stringr::str_c(
+    code$code_Y_80km,
+    code$code_X_80km,
 
-                 code$code_Y_10km,
-                 code$code_X_10km,
+    code$code_Y_10km,
+    code$code_X_10km,
 
-                 code$code_Y_1km,
-                 code$code_X_1km,
+    code$code_Y_1km,
+    code$code_X_1km,
 
-                 code$code_500m)
+    code$code_500m
+  )
 }
 
 #' @export
 format.grid_250m <- function(x, ...) {
   code <- grid_to_code(x)
-  stringr::str_c(code$code_Y_80km,
-                 code$code_X_80km,
+  stringr::str_c(
+    code$code_Y_80km,
+    code$code_X_80km,
 
-                 code$code_Y_10km,
-                 code$code_X_10km,
+    code$code_Y_10km,
+    code$code_X_10km,
 
-                 code$code_Y_1km,
-                 code$code_X_1km,
+    code$code_Y_1km,
+    code$code_X_1km,
 
-                 code$code_500m,
-                 code$code_250m)
+    code$code_500m,
+    code$code_250m
+  )
 }
 
 #' @export
 format.grid_125m <- function(x, ...) {
   code <- grid_to_code(x)
-  stringr::str_c(code$code_Y_80km,
-                 code$code_X_80km,
+  stringr::str_c(
+    code$code_Y_80km,
+    code$code_X_80km,
 
-                 code$code_Y_10km,
-                 code$code_X_10km,
+    code$code_Y_10km,
+    code$code_X_10km,
 
-                 code$code_Y_1km,
-                 code$code_X_1km,
+    code$code_Y_1km,
+    code$code_X_1km,
 
-                 code$code_500m,
-                 code$code_250m,
-                 code$code_125m)
+    code$code_500m,
+    code$code_250m,
+    code$code_125m
+  )
 }
 
 #' @export
 format.grid_100m <- function(x, ...) {
   code <- grid_to_code(x)
-  stringr::str_c(code$code_Y_80km,
-                 code$code_X_80km,
+  stringr::str_c(
+    code$code_Y_80km,
+    code$code_X_80km,
 
-                 code$code_Y_10km,
-                 code$code_X_10km,
+    code$code_Y_10km,
+    code$code_X_10km,
 
-                 code$code_Y_1km,
-                 code$code_X_1km,
+    code$code_Y_1km,
+    code$code_X_1km,
 
-                 code$code_Y_100m,
-                 code$code_X_100m)
+    code$code_Y_100m,
+    code$code_X_100m
+  )
 }
 
 #' @export

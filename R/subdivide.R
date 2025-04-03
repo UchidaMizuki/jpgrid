@@ -24,22 +24,18 @@ grid_subdivide <- function(grid, grid_size) {
   n_X <- field(grid, "n_X")
   n_Y <- field(grid, "n_Y")
 
-  purrr::map2(n_X, n_Y,
-              \(n_X, n_Y) {
-                if (!is.na(n_X) && !is.na(n_Y)) {
-                  n_X_min <- n_X * ratio
-                  n_X_max <- (n_X + 1L) * ratio - 1L
+  purrr::map2(n_X, n_Y, \(n_X, n_Y) {
+    if (!is.na(n_X) && !is.na(n_Y)) {
+      n_X_min <- n_X * ratio
+      n_X_max <- (n_X + 1L) * ratio - 1L
 
-                  n_Y_min <- n_Y * ratio
-                  n_Y_max <- (n_Y + 1L) * ratio - 1L
+      n_Y_min <- n_Y * ratio
+      n_Y_max <- (n_Y + 1L) * ratio - 1L
 
-                  n_XY <- tidyr::expand_grid(n_X = n_X_min:n_X_max,
-                                             n_Y = n_Y_min:n_Y_max)
-                  new_grid(grid_size = grid_size,
-                           n_X = n_XY$n_X,
-                           n_Y = n_XY$n_Y)
-                } else {
-                  new_grid(grid_size = grid_size)
-                }
-              })
+      n_XY <- tidyr::expand_grid(n_X = n_X_min:n_X_max, n_Y = n_Y_min:n_Y_max)
+      new_grid(grid_size = grid_size, n_X = n_XY$n_X, n_Y = n_XY$n_Y)
+    } else {
+      new_grid(grid_size = grid_size)
+    }
+  })
 }

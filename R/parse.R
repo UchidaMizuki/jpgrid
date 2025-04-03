@@ -12,16 +12,18 @@
 #'            strict = FALSE)
 #'
 #' @export
-parse_grid <- function(x,
-                       grid_size = NULL,
-                       strict = TRUE) {
+parse_grid <- function(x, grid_size = NULL, strict = TRUE) {
   if (is.null(grid_size)) {
-    pattern <- stringr::str_c("^",
-                              stringr::str_dup("(<\\-?\\d+>|\\d{2})", 2),
-                              "(\\d*)")
+    pattern <- stringr::str_c(
+      "^",
+      stringr::str_dup("(<\\-?\\d+>|\\d{2})", 2),
+      "(\\d*)"
+    )
     code_others <- x |>
       stringr::str_match(pattern) |>
-      tibble::as_tibble(.name_repair = ~ c("code", "code_Y_80km", "code_X_80km", "code_others")) |>
+      tibble::as_tibble(
+        .name_repair = ~ c("code", "code_Y_80km", "code_X_80km", "code_others")
+      ) |>
       tidyr::drop_na(code_others) |>
       dplyr::pull("code_others")
 
@@ -50,23 +52,27 @@ parse_grid <- function(x,
       grid_size <- 125L
     }
 
-    grid_size_name <- switch(as.character(grid_size),
-                             `80000` = "80km",
-                             `10000` = "10km",
-                             `5000` = "5km",
-                             `1000` = "1km",
-                             `500` = "500m",
-                             `250` = "250m",
-                             `125` = "125m",
-                             `100` = "100m")
+    grid_size_name <- switch(
+      as.character(grid_size),
+      `80000` = "80km",
+      `10000` = "10km",
+      `5000` = "5km",
+      `1000` = "1km",
+      `500` = "500m",
+      `250` = "250m",
+      `125` = "125m",
+      `100` = "100m"
+    )
 
     cli_inform("Guessing, grid_size = {.val {grid_size_name}}")
   } else {
     grid_size <- grid_size_match(grid_size)
   }
 
-  pattern_80km <- stringr::str_c("^",
-                                 stringr::str_dup("(<\\-*\\d+>|\\d{2})", 2L))
+  pattern_80km <- stringr::str_c(
+    "^",
+    stringr::str_dup("(<\\-*\\d+>|\\d{2})", 2L)
+  )
 
   code_80km <- c("code_Y_80km", "code_X_80km")
   code_10km <- c("code_Y_10km", "code_X_10km")
@@ -93,7 +99,14 @@ parse_grid <- function(x,
     name <- c(code_80km, code_10km, code_1km, "code_500m", "code_250m")
   } else if (grid_size == 125L) {
     digit <- 7L
-    name <- c(code_80km, code_10km, code_1km, "code_500m", "code_250m", "code_125m")
+    name <- c(
+      code_80km,
+      code_10km,
+      code_1km,
+      "code_500m",
+      "code_250m",
+      "code_125m"
+    )
   } else if (grid_size == 100L) {
     digit <- 6L
     name <- c(code_80km, code_10km, code_1km, code_100m)
@@ -105,15 +118,15 @@ parse_grid <- function(x,
     strict <- ""
   }
 
-  pattern <- stringr::str_c(pattern_80km,
-                            stringr::str_dup("(\\d)", digit),
-                            strict)
+  pattern <- stringr::str_c(
+    pattern_80km,
+    stringr::str_dup("(\\d)", digit),
+    strict
+  )
   args <- x |>
     stringr::str_match(pattern) |>
     tibble::as_tibble(.name_repair = ~ c("code", name)) |>
     dplyr::select(!"code")
 
-  exec(code_to_grid,
-       grid_size = grid_size,
-       !!!args)
+  exec(code_to_grid, grid_size = grid_size, !!!args)
 }

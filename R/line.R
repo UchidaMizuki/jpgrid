@@ -14,10 +14,7 @@
 #' @return A list of `grid` vectors.
 #'
 #' @export
-grid_line <- function(grid,
-                      grid_to = NULL,
-                      close = FALSE,
-                      skip_na = FALSE) {
+grid_line <- function(grid, grid_to = NULL, close = FALSE, skip_na = FALSE) {
   if (is_grid(grid)) {
     if (!is_grid(grid_to)) {
       cli_abort("{.arg grid_to} must be a vector with type {.cls grid}.")
@@ -25,16 +22,22 @@ grid_line <- function(grid,
 
     grid_size <- grid_size(grid)
     if (grid_size != grid_size(grid_to)) {
-      cli_abort("The grid size of {.arg grid} and {.arg grid_to} must be the same.")
+      cli_abort(
+        "The grid size of {.arg grid} and {.arg grid_to} must be the same."
+      )
     }
 
-    grid <- tibble::tibble(grid = grid,
-                           grid_to = grid_to)
+    grid <- tibble::tibble(
+      grid = grid,
+      grid_to = grid_to
+    )
 
     line <- vec_unique(grid)
-    line <- vec_slice(line,
-                      !is.na(line$grid) &
-                        !is.na(line$grid_to))
+    line <- vec_slice(
+      line,
+      !is.na(line$grid) &
+        !is.na(line$grid_to)
+    )
 
     # Bresenham's line algorithm
     x <- field(line$grid, "n_X")
@@ -53,9 +56,7 @@ grid_line <- function(grid,
     line$line <- list(x, y, x_to, y_to, dx, dy, err, sx, sy) |>
       purrr::pmap(\(x, y, x_to, y_to, dx, dy, err, sx, sy) {
         if (is.na(x) || is.na(y) || is.na(x_to) || is.na(y_to)) {
-          new_grid(grid_size = grid_size,
-                   n_X = NA_integer_,
-                   n_Y = NA_integer_)
+          new_grid(grid_size = grid_size, n_X = NA_integer_, n_Y = NA_integer_)
         } else {
           xs <- x
           ys <- y
@@ -73,22 +74,21 @@ grid_line <- function(grid,
             xs <- c(xs, x)
             ys <- c(ys, y)
           }
-          new_grid(grid_size = grid_size,
-                   n_X = xs,
-                   n_Y = ys)
+          new_grid(grid_size = grid_size, n_X = xs, n_Y = ys)
         }
       })
 
     grid |>
-      dplyr::left_join(line,
-                       by = c("grid", "grid_to")) |>
+      dplyr::left_join(line, by = c("grid", "grid_to")) |>
       purrr::chuck("line")
   } else {
     if (!is.list(grid)) {
       cli_abort("{.arg grid} must be a {.cls list}.")
     }
     if (!is.null(grid_to)) {
-      cli_abort("If {.arg grid} is a {.cls list}, {.arg grid_to} must be {.var NULL}.")
+      cli_abort(
+        "If {.arg grid} is a {.cls list}, {.arg grid_to} must be {.var NULL}."
+      )
     }
 
     grid |>
